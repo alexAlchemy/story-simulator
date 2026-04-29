@@ -1,5 +1,6 @@
 import type { GameContent, GameState } from "../domain/types";
 import { applyEffects } from "./applyEffects";
+import { canSeeScene } from "./sceneAvailability";
 
 export function resolveChoice(
   state: GameState,
@@ -23,6 +24,10 @@ export function resolveChoice(
   const choice = scene.choices.find((candidate) => candidate.id === choiceId);
   if (!choice) {
     throw new Error(`Unknown choice id "${choiceId}" for scene "${sceneId}"`);
+  }
+
+  if (!canSeeScene(scene, state, content)) {
+    throw new Error(`Scene is not currently available: ${sceneId}`);
   }
 
   const withEffects = applyEffects(state, choice.effects, {

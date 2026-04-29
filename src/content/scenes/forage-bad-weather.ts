@@ -11,6 +11,16 @@ const scene: SceneCard = {
   type: "shop",
   description:
     "The marsh path is slick, but the shelves look thin enough to make the walk tempting.",
+  availability: {
+    all: [
+      {
+        kind: "entityQuantity",
+        entityId: "shop",
+        key: "stock",
+        max: 2
+      }
+    ]
+  },
   choices: [
     {
       id: "go-yourself",

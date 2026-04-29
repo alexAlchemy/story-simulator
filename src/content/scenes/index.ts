@@ -3,6 +3,7 @@ import apprenticeBreaksRule from "./apprentice-breaks-rule";
 import apprenticeAsksTrust from "./apprentice-asks-trust";
 import apprenticeFirstCure from "./apprentice-first-cure";
 import apprenticeHidingMistake from "./apprentice-hiding-mistake";
+import afterHoursTea from "./after-hours-tea";
 import countingCoins from "./counting-coins";
 import debtCalledIn from "./debt-called-in";
 import desperateStablehand from "./desperate-stablehand";
@@ -17,6 +18,7 @@ const sceneList: SceneCard[] = [
   desperateStablehand,
   apprenticeHidingMistake,
   giftAtDoor,
+  afterHoursTea,
   countingCoins,
   forageBadWeather,
   apprenticeAsksTrust,
@@ -36,6 +38,7 @@ export {
   apprenticeAsksTrust,
   apprenticeFirstCure,
   apprenticeHidingMistake,
+  afterHoursTea,
   countingCoins,
   debtCalledIn,
   desperateStablehand,

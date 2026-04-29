@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { content } from "./scenes";
 import { dayPlan } from "./dayPlan";
 import { scenes } from "./scenes";
+import { validateSceneAvailability } from "../engine/sceneAvailability";
 
 describe("content integrity", () => {
   it("references only existing day-plan scenes", () => {
@@ -67,5 +69,13 @@ describe("content integrity", () => {
       ).length;
 
     expect(tokenChoiceCount).toBeGreaterThanOrEqual(2);
+  });
+
+  it("validates scene availability references and labels", () => {
+    const issues = Object.values(scenes).flatMap((scene) =>
+      validateSceneAvailability(scene, content)
+    );
+
+    expect(issues).toEqual([]);
   });
 });

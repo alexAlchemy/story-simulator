@@ -84,7 +84,8 @@ export function createInitialState(): GameState {
     sceneTableau: [
       "desperate-stablehand",
       "apprentice-hiding-mistake",
-      "gift-at-door"
+      "gift-at-door",
+      "after-hours-tea"
     ],
     resolvedScenes: [],
     log: [

@@ -1,4 +1,5 @@
 import type { GameContent, GameState, SceneCard } from "../domain/types";
+import { canSeeScene } from "./sceneAvailability";
 
 export function getVisibleScenes(
   state: GameState,
@@ -6,5 +7,6 @@ export function getVisibleScenes(
 ): SceneCard[] {
   return state.sceneTableau
     .map((sceneId) => content.scenes[sceneId])
-    .filter((scene): scene is SceneCard => Boolean(scene));
+    .filter((scene): scene is SceneCard => Boolean(scene))
+    .filter((scene) => canSeeScene(scene, state, content));
 }

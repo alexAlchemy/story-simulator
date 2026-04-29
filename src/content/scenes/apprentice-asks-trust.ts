@@ -19,6 +19,7 @@ const scene: SceneCard = {
         gainQuantity("shop", "coins", 5),
         decreaseEntityGauge("player", "fatigue", "slightly"),
         increaseRelationshipDimension("apprentice->player", "trust", "moderately"),
+        increaseRelationshipDimension("apprentice->player", "affection", "slightly"),
         { kind: "log", text: "They mispronounce one tincture and make three honest sales anyway." }
       ]
     },
@@ -28,6 +29,7 @@ const scene: SceneCard = {
       effects: [
         gainQuantity("shop", "coins", 4),
         decreaseRelationshipDimension("apprentice->player", "trust", "slightly"),
+        decreaseRelationshipDimension("apprentice->player", "affection", "slightly"),
         increaseEntityGauge("player", "prudence", "slightly"),
         { kind: "log", text: "Nothing goes wrong, which somehow proves less than either of you hoped." }
       ]

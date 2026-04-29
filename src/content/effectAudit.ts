@@ -11,12 +11,21 @@ export type EffectAuditTarget = {
   ownerId: string;
   key: string;
   label: string;
+  initialValue: number;
   increments: number;
   decrements: number;
   unchanged: number;
+  positiveDeltaTotal: number;
+  negativeDeltaTotal: number;
   totalChanges: number;
   totalDelta: number;
   totalAbsoluteDelta: number;
+  potentialMinimum: number;
+  potentialNegative50: number;
+  potentialNegative75: number;
+  potentialPositive50: number;
+  potentialPositive75: number;
+  potentialMaximum: number;
   averageDelta: number;
   averageAbsoluteDelta: number;
   minDelta: number;
@@ -130,23 +139,35 @@ function seedBaselineTargets(
   state: GameState
 ): void {
   for (const entity of Object.values(state.world.entities)) {
-    for (const key of Object.keys(entity.gauges)) {
+    for (const [key, value] of Object.entries(entity.gauges)) {
       const id = `entity:${entity.id}.gauge:${key}`;
-      targets.set(id, createEmptyTarget(id, "entityGauge", entity.id, key));
+      targets.set(
+        id,
+        createEmptyTarget(id, "entityGauge", entity.id, key, value ?? 0)
+      );
     }
 
-    for (const key of Object.keys(entity.quantities)) {
+    for (const [key, value] of Object.entries(entity.quantities)) {
       const id = `entity:${entity.id}.quantity:${key}`;
-      targets.set(id, createEmptyTarget(id, "entityQuantity", entity.id, key));
+      targets.set(
+        id,
+        createEmptyTarget(id, "entityQuantity", entity.id, key, value ?? 0)
+      );
     }
   }
 
   for (const relationship of Object.values(state.world.relationships)) {
-    for (const key of Object.keys(relationship.dimensions)) {
+    for (const [key, value] of Object.entries(relationship.dimensions)) {
       const id = `relationship:${relationship.id}.dimension:${key}`;
       targets.set(
         id,
-        createEmptyTarget(id, "relationshipDimension", relationship.id, key)
+        createEmptyTarget(
+          id,
+          "relationshipDimension",
+          relationship.id,
+          key,
+          value ?? 0
+        )
       );
     }
   }
@@ -156,7 +177,8 @@ function createEmptyTarget(
   id: string,
   kind: AuditedEffectKind,
   ownerId: string,
-  key: string
+  key: string,
+  initialValue = 0
 ): MutableEffectAuditTarget {
   return {
     id,
@@ -164,12 +186,21 @@ function createEmptyTarget(
     ownerId,
     key,
     label: `${ownerId}.${key}`,
+    initialValue,
     increments: 0,
     decrements: 0,
     unchanged: 0,
+    positiveDeltaTotal: 0,
+    negativeDeltaTotal: 0,
     totalChanges: 0,
     totalDelta: 0,
     totalAbsoluteDelta: 0,
+    potentialMinimum: initialValue,
+    potentialNegative50: initialValue,
+    potentialNegative75: initialValue,
+    potentialPositive50: initialValue,
+    potentialPositive75: initialValue,
+    potentialMaximum: initialValue,
     minDelta: 0,
     maxDelta: 0,
     sceneIds: new Set<string>(),
@@ -184,16 +215,25 @@ function recordDelta(
   choiceId: string
 ): void {
   const { delta } = target;
-  const existing =
+ const existing =
     targets.get(target.id) ??
     {
       ...target,
+      initialValue: 0,
       increments: 0,
       decrements: 0,
       unchanged: 0,
+      positiveDeltaTotal: 0,
+      negativeDeltaTotal: 0,
       totalChanges: 0,
       totalDelta: 0,
       totalAbsoluteDelta: 0,
+      potentialMinimum: 0,
+      potentialNegative50: 0,
+      potentialNegative75: 0,
+      potentialPositive50: 0,
+      potentialPositive75: 0,
+      potentialMaximum: 0,
       minDelta: delta,
       maxDelta: delta,
       sceneIds: new Set<string>(),
@@ -202,8 +242,10 @@ function recordDelta(
 
   if (delta > 0) {
     existing.increments += 1;
+    existing.positiveDeltaTotal += delta;
   } else if (delta < 0) {
     existing.decrements += 1;
+    existing.negativeDeltaTotal += delta;
   } else {
     existing.unchanged += 1;
   }
@@ -220,10 +262,30 @@ function recordDelta(
 }
 
 function finalizeTarget(target: MutableEffectAuditTarget): EffectAuditTarget {
+  const potentialMinimum = target.initialValue + target.negativeDeltaTotal;
+  const potentialMaximum = target.initialValue + target.positiveDeltaTotal;
+
   return {
     ...target,
+    initialValue: formatAuditNumber(target.initialValue),
+    positiveDeltaTotal: formatAuditNumber(target.positiveDeltaTotal),
+    negativeDeltaTotal: formatAuditNumber(target.negativeDeltaTotal),
     totalDelta: formatAuditNumber(target.totalDelta),
     totalAbsoluteDelta: formatAuditNumber(target.totalAbsoluteDelta),
+    potentialMinimum: formatAuditNumber(potentialMinimum),
+    potentialNegative50: formatAuditNumber(
+      target.initialValue + target.negativeDeltaTotal * 0.5
+    ),
+    potentialNegative75: formatAuditNumber(
+      target.initialValue + target.negativeDeltaTotal * 0.75
+    ),
+    potentialPositive50: formatAuditNumber(
+      target.initialValue + target.positiveDeltaTotal * 0.5
+    ),
+    potentialPositive75: formatAuditNumber(
+      target.initialValue + target.positiveDeltaTotal * 0.75
+    ),
+    potentialMaximum: formatAuditNumber(potentialMaximum),
     averageDelta:
       target.totalChanges === 0
         ? 0

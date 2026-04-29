@@ -17,6 +17,7 @@ const scene: SceneCard = {
       label: "Ask gently what happened",
       effects: [
         increaseRelationshipDimension("apprentice->player", "trust", "moderately"),
+        increaseRelationshipDimension("apprentice->player", "affection", "strongly"),
         {
           kind: "addRelationshipToken",
           relationshipId: "apprentice->player",
@@ -38,6 +39,7 @@ const scene: SceneCard = {
       label: "Turn it into a lesson",
       effects: [
         increaseRelationshipDimension("apprentice->player", "trust", "slightly"),
+        increaseRelationshipDimension("apprentice->player", "affection", "slightly"),
         increaseEntityGauge("player", "prudence", "slightly"),
         { kind: "log", text: "You clean the glass together and write a safer shelf rule in chalk." }
       ]

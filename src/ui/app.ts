@@ -119,7 +119,7 @@ function createAppModel(): AppModel {
       if (!this.selectedSceneId) {
         return null;
       }
-      return content.scenes[this.selectedSceneId] ?? null;
+      return this.visibleScenes.find((scene) => scene.id === this.selectedSceneId) ?? null;
     },
     get resourceRows() {
       return getResourceRows(this.state);

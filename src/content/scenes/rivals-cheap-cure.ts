@@ -11,6 +11,23 @@ const scene: SceneCard = {
   type: "town",
   description:
     "A travelling seller sets up near your door with a cheaper fever cure. It may work. It may also be mostly coloured water.",
+  availability: {
+    all: [{ kind: "day", min: 4 }],
+    any: [
+      {
+        kind: "entityGauge",
+        entityId: "player",
+        key: "ambition",
+        minLabel: "Driven"
+      },
+      {
+        kind: "entityGauge",
+        entityId: "town",
+        key: "gossipHeat",
+        minLabel: "Buzzing"
+      }
+    ]
+  },
   choices: [
     {
       id: "warn-honestly",

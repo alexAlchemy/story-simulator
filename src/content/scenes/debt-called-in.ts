@@ -11,6 +11,16 @@ const scene: SceneCard = {
   type: "shop",
   description:
     "The stablehand returns with a cousin who can bring paying customers, if you will quietly supply one restricted tonic tonight.",
+  availability: {
+    all: [
+      { kind: "day", min: 4 },
+      {
+        kind: "relationshipToken",
+        relationshipId: "town->shop",
+        tokenId: "stablehand-helped"
+      }
+    ]
+  },
   choices: [
     {
       id: "accept-favour",

@@ -11,6 +11,23 @@ const scene: SceneCard = {
   type: "staff",
   description:
     "A relieved parent returns with thanks for your apprentice. The child recovered, but the dosage advice was not quite right.",
+  availability: {
+    all: [{ kind: "day", min: 3 }],
+    any: [
+      {
+        kind: "relationshipDimension",
+        relationshipId: "apprentice->player",
+        key: "affection",
+        minLabel: "Warm"
+      },
+      {
+        kind: "relationshipDimension",
+        relationshipId: "apprentice->player",
+        key: "trust",
+        minLabel: "Trusting"
+      }
+    ]
+  },
   choices: [
     {
       id: "praise-in-public",
