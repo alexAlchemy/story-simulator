@@ -83,7 +83,6 @@ export function createInitialState(): GameState {
     flags: {},
     sceneTableau: [
       "desperate-stablehand",
-      "moon-tonic-order",
       "apprentice-hiding-mistake",
       "gift-at-door"
     ],

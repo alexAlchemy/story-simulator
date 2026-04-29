@@ -46,7 +46,6 @@ describe("resolveChoice", () => {
     });
     expect(next.flags.stablehand_grateful).toBe(true);
     expect(next.sceneTableau).not.toContain("desperate-stablehand");
-    expect(next.sceneTableau).toContain("temple-healer-visits");
     expect(next.resolvedScenes).toContain("desperate-stablehand");
   });
 });

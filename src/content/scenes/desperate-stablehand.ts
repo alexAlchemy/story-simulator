@@ -39,7 +39,6 @@ const scene: SceneCard = {
           }
         },
         { kind: "setFlag", key: "stablehand_grateful", value: true },
-        { kind: "addScene", sceneId: "temple-healer-visits" },
         { kind: "log", text: "The stablehand leaves clutching the draught like a candle in the rain." }
       ]
     },
@@ -74,7 +73,6 @@ const scene: SceneCard = {
           delta: -0.1
         },
         { kind: "setFlag", key: "stablehand_refused", value: true },
-        { kind: "addScene", sceneId: "rumour-at-market" },
         { kind: "log", text: "He nods once, too politely, and the bell over the door sounds colder." }
       ]
     }

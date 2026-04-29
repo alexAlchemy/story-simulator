@@ -19,7 +19,6 @@ const scene: SceneCard = {
       label: "Plan to raise prices tomorrow",
       effects: [
         { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
-        { kind: "addScene", sceneId: "raise-prices" },
         { kind: "log", text: "You mark three prices in darker ink and do not sleep immediately after." }
       ]
     },

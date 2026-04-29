@@ -9,7 +9,6 @@ describe("simulateFlagMetrics", () => {
     const report = simulateFlagMetrics(content);
 
     expect(report.flagsDefinedInContent).toEqual([
-      "cheap_stock_bought",
       "left_thanks_for_gift",
       "mysterious_gift_accepted",
       "stablehand_grateful",
