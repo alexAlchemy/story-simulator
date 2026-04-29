@@ -1,4 +1,5 @@
 import type { SceneCard } from "../../domain/types";
+import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "../effects";
 
 /**
  * PREMISE: The apprentice gives away a minor potion without asking.
@@ -16,21 +17,11 @@ const scene: SceneCard = {
       label: "Defend the act",
       description: "Let them know the impulse was not wrong.",
       effects: [
-        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: -1 },
-        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.2 },
-        { kind: "entityGauge", entityId: "player", key: "prudence", delta: -0.1 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "apprentice->player",
-          key: "affection",
-          delta: 0.2
-        },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "apprentice->player",
-          key: "fear",
-          delta: -0.1
-        },
+        spendQuantity("shop", "stock", 1),
+        increaseEntityGauge("player", "compassion", "moderately"),
+        decreaseEntityGauge("player", "prudence", "slightly"),
+        increaseRelationshipDimension("apprentice->player", "affection", "moderately"),
+        decreaseRelationshipDimension("apprentice->player", "fear", "slightly"),
         { kind: "log", text: "Their relief is too bright to look at directly." }
       ]
     },
@@ -39,21 +30,11 @@ const scene: SceneCard = {
       label: "Discipline them clearly",
       description: "A shop cannot run on surprise mercy.",
       effects: [
-        { kind: "entityGauge", entityId: "apprentice", key: "confidence", delta: -0.1 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "apprentice->player",
-          key: "fear",
-          delta: 0.2
-        },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "apprentice->player",
-          key: "affection",
-          delta: -0.1
-        },
-        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.2 },
-        { kind: "entityGauge", entityId: "player", key: "compassion", delta: -0.1 },
+        decreaseEntityGauge("apprentice", "confidence", "slightly"),
+        increaseRelationshipDimension("apprentice->player", "fear", "moderately"),
+        decreaseRelationshipDimension("apprentice->player", "affection", "slightly"),
+        increaseEntityGauge("player", "prudence", "moderately"),
+        decreaseEntityGauge("player", "compassion", "slightly"),
         { kind: "log", text: "They nod at every rule and touch nothing without asking all morning." }
       ]
     },
@@ -62,20 +43,10 @@ const scene: SceneCard = {
       label: "Write a mercy rule for small remedies",
       description: "Turn a mistake into a boundary both of you can stand inside.",
       effects: [
-        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: -1 },
-        { kind: "entityGauge", entityId: "apprentice", key: "confidence", delta: 0.2 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "apprentice->player",
-          key: "trust",
-          delta: 0.1
-        },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "town->shop",
-          key: "goodwill",
-          delta: 0.1
-        },
+        spendQuantity("shop", "coins", 1),
+        increaseEntityGauge("apprentice", "confidence", "moderately"),
+        increaseRelationshipDimension("apprentice->player", "trust", "slightly"),
+        increaseRelationshipDimension("town->shop", "goodwill", "slightly"),
         { kind: "log", text: "The new chalk rule is short, strict, and somehow gentle." }
       ]
     }

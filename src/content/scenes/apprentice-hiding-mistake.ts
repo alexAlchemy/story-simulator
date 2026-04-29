@@ -1,4 +1,5 @@
 import type { SceneCard } from "../../domain/types";
+import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension } from "../effects";
 
 /**
  * PREMISE: You discover your apprentice has hidden a mistake—a cracked vial in the back shelf.
@@ -15,12 +16,7 @@ const scene: SceneCard = {
       id: "ask-gently",
       label: "Ask gently what happened",
       effects: [
-        {
-          kind: "relationshipDimension",
-          relationshipId: "apprentice->player",
-          key: "trust",
-          delta: 0.2
-        },
+        increaseRelationshipDimension("apprentice->player", "trust", "moderately"),
         {
           kind: "addRelationshipToken",
           relationshipId: "apprentice->player",
@@ -32,8 +28,8 @@ const scene: SceneCard = {
             sourceSceneId: "apprentice-hiding-mistake"
           }
         },
-        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.1 },
-        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: 0.1 },
+        increaseEntityGauge("player", "compassion", "slightly"),
+        increaseEntityGauge("player", "fatigue", "slightly"),
         { kind: "log", text: "The story comes out slowly: fear first, then the mistake itself." }
       ]
     },
@@ -41,13 +37,8 @@ const scene: SceneCard = {
       id: "lesson",
       label: "Turn it into a lesson",
       effects: [
-        {
-          kind: "relationshipDimension",
-          relationshipId: "apprentice->player",
-          key: "trust",
-          delta: 0.1
-        },
-        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
+        increaseRelationshipDimension("apprentice->player", "trust", "slightly"),
+        increaseEntityGauge("player", "prudence", "slightly"),
         { kind: "log", text: "You clean the glass together and write a safer shelf rule in chalk." }
       ]
     },
@@ -55,14 +46,9 @@ const scene: SceneCard = {
       id: "sharp-confrontation",
       label: "Confront them sharply",
       effects: [
-        {
-          kind: "relationshipDimension",
-          relationshipId: "apprentice->player",
-          key: "trust",
-          delta: -0.2
-        },
-        { kind: "entityGauge", entityId: "player", key: "ambition", delta: 0.1 },
-        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: -0.1 },
+        decreaseRelationshipDimension("apprentice->player", "trust", "moderately"),
+        increaseEntityGauge("player", "ambition", "slightly"),
+        decreaseEntityGauge("player", "fatigue", "slightly"),
         { kind: "log", text: "The shop is efficient for the next hour, and painfully quiet." }
       ]
     }

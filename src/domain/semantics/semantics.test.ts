@@ -91,6 +91,17 @@ describe("semantic primitives", () => {
     }
   });
 
+  it("names the poles authors can write scene effects toward or away from", () => {
+    expect(entityGaugeDefinitions.prudence.poles).toMatchObject({
+      negative: { name: "impulse" },
+      positive: { name: "prudence" }
+    });
+    expect(relationshipDimensionDefinitions.fear.poles).toMatchObject({
+      low: { name: "courage" },
+      high: { name: "fear" }
+    });
+  });
+
   it("treats dramatic values as signed axes with neutral at zero", () => {
     expect(describeSignedGauge(entityGaugeDefinitions.compassion, 0)).toMatchObject({
       label: "Neutral",

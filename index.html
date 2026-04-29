@@ -9,7 +9,16 @@
     <div id="app" x-data="potionsShop()" x-init="init()">
       <header class="shop-header">
         <div>
+          <div class="shop-nameplate">
           <h1>Briarwick Apothecary</h1>
+                  <div class="day-card">
+          <div class="day-chip-line">
+            <span>Day</span>
+            <strong x-text="state.day"></strong>
+          </div>
+          <small x-text="rentText"></small>
+        </div>
+          </div>
           <nav class="tabs" aria-label="Primary views">
             <button
               type="button"
@@ -45,13 +54,7 @@
             </button>
           </nav>
         </div>
-        <div class="day-card">
-          <div class="day-chip-line">
-            <span>Day</span>
-            <strong x-text="state.day"></strong>
-          </div>
-          <small x-text="rentText"></small>
-        </div>
+
       </header>
 
       <section

@@ -1,4 +1,5 @@
 import type { SceneCard } from "../../domain/types";
+import { decreaseEntityGauge, decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension } from "../effects";
 
 /**
  * PREMISE: Your apprentice asks to handle the front counter alone while you work the back room.
@@ -15,14 +16,9 @@ const scene: SceneCard = {
       id: "trust-counter",
       label: "Trust them with the counter",
       effects: [
-        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 5 },
-        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: -0.1 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "apprentice->player",
-          key: "trust",
-          delta: 0.2
-        },
+        gainQuantity("shop", "coins", 5),
+        decreaseEntityGauge("player", "fatigue", "slightly"),
+        increaseRelationshipDimension("apprentice->player", "trust", "moderately"),
         { kind: "log", text: "They mispronounce one tincture and make three honest sales anyway." }
       ]
     },
@@ -30,14 +26,9 @@ const scene: SceneCard = {
       id: "supervise",
       label: "Supervise closely",
       effects: [
-        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 4 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "apprentice->player",
-          key: "trust",
-          delta: -0.1
-        },
-        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
+        gainQuantity("shop", "coins", 4),
+        decreaseRelationshipDimension("apprentice->player", "trust", "slightly"),
+        increaseEntityGauge("player", "prudence", "slightly"),
         { kind: "log", text: "Nothing goes wrong, which somehow proves less than either of you hoped." }
       ]
     }

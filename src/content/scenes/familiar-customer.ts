@@ -1,4 +1,5 @@
 import type { SceneCard } from "../../domain/types";
+import { decreaseEntityGauge, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "../effects";
 
 /**
  * PREMISE: A regular customer notices your exhaustion and offers ordinary help.
@@ -16,14 +17,9 @@ const scene: SceneCard = {
       label: "Accept the help",
       description: "Let the relationship be warmer than the receipt.",
       effects: [
-        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: -0.2 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "town->shop",
-          key: "goodwill",
-          delta: 0.1
-        },
-        { kind: "entityGauge", entityId: "player", key: "ambition", delta: -0.1 },
+        decreaseEntityGauge("player", "fatigue", "moderately"),
+        increaseRelationshipDimension("town->shop", "goodwill", "slightly"),
+        decreaseEntityGauge("player", "ambition", "slightly"),
         { kind: "log", text: "They sweep badly, but they hum while doing it, and the room softens." }
       ]
     },
@@ -32,13 +28,8 @@ const scene: SceneCard = {
       label: "Keep the boundary",
       description: "Thank them, but close the shop yourself.",
       effects: [
-        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: 0.1 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "town->shop",
-          key: "trust",
-          delta: 0.1
-        },
+        increaseEntityGauge("player", "fatigue", "slightly"),
+        increaseRelationshipDimension("town->shop", "trust", "slightly"),
         { kind: "log", text: "They leave with respect intact and a little unanswered kindness." }
       ]
     },
@@ -47,14 +38,9 @@ const scene: SceneCard = {
       label: "Trade the help for a discount",
       description: "Make the kindness clean by giving it a price.",
       effects: [
-        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: -2 },
-        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: -0.1 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "town->shop",
-          key: "goodwill",
-          delta: 0.1
-        },
+        spendQuantity("shop", "coins", 2),
+        decreaseEntityGauge("player", "fatigue", "slightly"),
+        increaseRelationshipDimension("town->shop", "goodwill", "slightly"),
         { kind: "log", text: "The bargain is fair, though something tender goes unnamed." }
       ]
     }

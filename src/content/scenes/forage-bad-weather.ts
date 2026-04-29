@@ -1,4 +1,5 @@
 import type { SceneCard } from "../../domain/types";
+import { decreaseEntityGauge, gainQuantity, increaseEntityGauge, increaseRelationshipDimension } from "../effects";
 
 /**
  * PREMISE: The shelves are thin and the marsh path is slick with rain—but mooncap mushrooms bloom.
@@ -15,9 +16,9 @@ const scene: SceneCard = {
       id: "go-yourself",
       label: "Go yourself",
       effects: [
-        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: 2 },
-        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: 0.2 },
-        { kind: "entityGauge", entityId: "player", key: "ambition", delta: 0.1 },
+        gainQuantity("shop", "stock", 2),
+        increaseEntityGauge("player", "fatigue", "moderately"),
+        increaseEntityGauge("player", "ambition", "slightly"),
         { kind: "log", text: "You return mud-streaked, triumphant, and more tired than you admit." }
       ]
     },
@@ -25,14 +26,9 @@ const scene: SceneCard = {
       id: "send-apprentice",
       label: "Send the apprentice with instructions",
       effects: [
-        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: 1 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "apprentice->player",
-          key: "trust",
-          delta: 0.1
-        },
-        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
+        gainQuantity("shop", "stock", 1),
+        increaseRelationshipDimension("apprentice->player", "trust", "slightly"),
+        increaseEntityGauge("player", "prudence", "slightly"),
         { kind: "log", text: "They return soaked, proud, and carrying almost the right mushrooms." }
       ]
     },
@@ -40,8 +36,8 @@ const scene: SceneCard = {
       id: "stay-in",
       label: "Stay in and preserve your strength",
       effects: [
-        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: -0.1 },
-        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
+        decreaseEntityGauge("player", "fatigue", "slightly"),
+        increaseEntityGauge("player", "prudence", "slightly"),
         { kind: "log", text: "The shelves stay thin, but your hands stop shaking." }
       ]
     }

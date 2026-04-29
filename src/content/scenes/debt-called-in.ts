@@ -1,4 +1,5 @@
 import type { SceneCard } from "../../domain/types";
+import { decreaseEntityGauge, decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "../effects";
 
 /**
  * PREMISE: Gratitude becomes leverage when a helped family asks for a rule to bend back.
@@ -16,16 +17,11 @@ const scene: SceneCard = {
       label: "Accept the favour",
       description: "Let gratitude become a useful arrangement.",
       effects: [
-        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 6 },
-        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: -1 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "town->shop",
-          key: "goodwill",
-          delta: 0.1
-        },
-        { kind: "entityGauge", entityId: "town", key: "gossipHeat", delta: 0.2 },
-        { kind: "entityGauge", entityId: "player", key: "prudence", delta: -0.2 },
+        gainQuantity("shop", "coins", 6),
+        spendQuantity("shop", "stock", 1),
+        increaseRelationshipDimension("town->shop", "goodwill", "slightly"),
+        increaseEntityGauge("town", "gossipHeat", "moderately"),
+        decreaseEntityGauge("player", "prudence", "moderately"),
         { kind: "log", text: "The cousin pays in advance and leaves through the side door." }
       ]
     },
@@ -34,20 +30,10 @@ const scene: SceneCard = {
       label: "Refuse the pressure gently",
       description: "Keep the old kindness from becoming a hook.",
       effects: [
-        {
-          kind: "relationshipDimension",
-          relationshipId: "town->shop",
-          key: "goodwill",
-          delta: 0.1
-        },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "town->shop",
-          key: "trust",
-          delta: 0.1
-        },
-        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: -1 },
-        { kind: "entityGauge", entityId: "player", key: "ambition", delta: -0.1 },
+        increaseRelationshipDimension("town->shop", "goodwill", "slightly"),
+        increaseRelationshipDimension("town->shop", "trust", "slightly"),
+        spendQuantity("shop", "coins", 1),
+        decreaseEntityGauge("player", "ambition", "slightly"),
         { kind: "log", text: "The stablehand looks embarrassed, then relieved to still be welcome." }
       ]
     },
@@ -56,21 +42,11 @@ const scene: SceneCard = {
       label: "Write formal terms",
       description: "Make the favour lawful, limited, and a little cold.",
       effects: [
-        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 3 },
-        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
-        { kind: "entityGauge", entityId: "player", key: "compassion", delta: -0.1 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "town->shop",
-          key: "trust",
-          delta: 0.1
-        },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "town->shop",
-          key: "goodwill",
-          delta: -0.1
-        },
+        gainQuantity("shop", "coins", 3),
+        increaseEntityGauge("player", "prudence", "slightly"),
+        decreaseEntityGauge("player", "compassion", "slightly"),
+        increaseRelationshipDimension("town->shop", "trust", "slightly"),
+        decreaseRelationshipDimension("town->shop", "goodwill", "slightly"),
         { kind: "log", text: "The paper protects everyone and warms no one." }
       ]
     }

@@ -1,4 +1,5 @@
 import type { SceneCard } from "../../domain/types";
+import { decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "../effects";
 
 /**
  * PREMISE: A soaked stranger arrives at closing with three copper coins and a dying sister.
@@ -16,14 +17,9 @@ const scene: SceneCard = {
       label: "Give him the draught for free",
       description: "Let need matter more than the till.",
       effects: [
-        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: -1 },
-        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.2 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "town->shop",
-          key: "trust",
-          delta: 0.1
-        },
+        spendQuantity("shop", "stock", 1),
+        increaseEntityGauge("player", "compassion", "moderately"),
+        increaseRelationshipDimension("town->shop", "trust", "slightly"),
         {
           kind: "addRelationshipToken",
           relationshipId: "town->shop",
@@ -44,16 +40,11 @@ const scene: SceneCard = {
       label: "Take his three coins",
       description: "Help him, but keep the sale recorded.",
       effects: [
-        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: -1 },
-        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 3 },
-        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
-        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.1 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "town->shop",
-          key: "trust",
-          delta: 0.1
-        },
+        spendQuantity("shop", "stock", 1),
+        gainQuantity("shop", "coins", 3),
+        increaseEntityGauge("player", "prudence", "slightly"),
+        increaseEntityGauge("player", "compassion", "slightly"),
+        increaseRelationshipDimension("town->shop", "trust", "slightly"),
         { kind: "log", text: "Three wet coins land in the drawer, lighter than they should feel." }
       ]
     },
@@ -62,13 +53,8 @@ const scene: SceneCard = {
       label: "Refuse the sale",
       description: "You cannot keep the doors open by giving away what you need.",
       effects: [
-        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.2 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "town->shop",
-          key: "trust",
-          delta: -0.1
-        },
+        increaseEntityGauge("player", "prudence", "moderately"),
+        decreaseRelationshipDimension("town->shop", "trust", "slightly"),
         { kind: "setFlag", key: "stablehand_refused", value: true },
         { kind: "log", text: "He nods once, too politely, and the bell over the door sounds colder." }
       ]

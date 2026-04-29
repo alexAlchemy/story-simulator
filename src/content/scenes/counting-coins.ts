@@ -1,4 +1,5 @@
 import type { SceneCard } from "../../domain/types";
+import { decreaseEntityGauge, gainQuantity, increaseEntityGauge } from "../effects";
 
 /**
  * PREMISE: Midnight arrives. The shop is quiet. You count the coins twice and the number stays wrong.
@@ -15,7 +16,7 @@ const scene: SceneCard = {
       id: "raise-prices-tomorrow",
       label: "Plan to raise prices tomorrow",
       effects: [
-        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
+        increaseEntityGauge("player", "prudence", "slightly"),
         { kind: "log", text: "You mark three prices in darker ink and do not sleep immediately after." }
       ]
     },
@@ -23,9 +24,9 @@ const scene: SceneCard = {
       id: "work-late",
       label: "Work late bottling simple remedies",
       effects: [
-        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: 1 },
-        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: 0.2 },
-        { kind: "entityGauge", entityId: "player", key: "ambition", delta: 0.1 },
+        gainQuantity("shop", "stock", 1),
+        increaseEntityGauge("player", "fatigue", "moderately"),
+        increaseEntityGauge("player", "ambition", "slightly"),
         { kind: "log", text: "By candle-end, six labels are straight and your hands ache." }
       ]
     },
@@ -33,8 +34,8 @@ const scene: SceneCard = {
       id: "rest",
       label: "Close your eyes and rest",
       effects: [
-        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: -0.2 },
-        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.1 },
+        decreaseEntityGauge("player", "fatigue", "moderately"),
+        increaseEntityGauge("player", "compassion", "slightly"),
         { kind: "log", text: "For one night, you treat yourself like someone worth preserving." }
       ]
     }

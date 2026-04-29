@@ -1,4 +1,5 @@
 import type { SceneCard } from "../../domain/types";
+import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension } from "../effects";
 
 /**
  * PREMISE: A parent returns to thank the apprentice for advice that helped, but the remedy was incomplete.
@@ -16,20 +17,10 @@ const scene: SceneCard = {
       label: "Praise them where the parent can hear",
       description: "Let the apprentice feel the warmth of a win.",
       effects: [
-        { kind: "entityGauge", entityId: "apprentice", key: "confidence", delta: 0.2 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "apprentice->player",
-          key: "affection",
-          delta: 0.2
-        },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "apprentice->player",
-          key: "fear",
-          delta: -0.1
-        },
-        { kind: "entityGauge", entityId: "player", key: "prudence", delta: -0.1 },
+        increaseEntityGauge("apprentice", "confidence", "moderately"),
+        increaseRelationshipDimension("apprentice->player", "affection", "moderately"),
+        decreaseRelationshipDimension("apprentice->player", "fear", "slightly"),
+        decreaseEntityGauge("player", "prudence", "slightly"),
         { kind: "log", text: "The apprentice stands a little taller for the rest of the afternoon." }
       ]
     },
@@ -38,13 +29,8 @@ const scene: SceneCard = {
       label: "Thank the parent, then correct the method privately",
       description: "Protect the truth without turning the praise sour.",
       effects: [
-        { kind: "entityGauge", entityId: "apprentice", key: "confidence", delta: 0.1 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "apprentice->player",
-          key: "trust",
-          delta: 0.1
-        },
+        increaseEntityGauge("apprentice", "confidence", "slightly"),
+        increaseRelationshipDimension("apprentice->player", "trust", "slightly"),
         { kind: "log", text: "They copy the dosage note twice and keep the thank-you like a secret." }
       ]
     },
@@ -53,19 +39,9 @@ const scene: SceneCard = {
       label: "Ask them to explain the mistake aloud",
       description: "Make competence public, including the rough edge.",
       effects: [
-        { kind: "entityGauge", entityId: "apprentice", key: "confidence", delta: -0.1 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "apprentice->player",
-          key: "fear",
-          delta: 0.1
-        },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "apprentice->player",
-          key: "affection",
-          delta: -0.1
-        },
+        decreaseEntityGauge("apprentice", "confidence", "slightly"),
+        increaseRelationshipDimension("apprentice->player", "fear", "slightly"),
+        decreaseRelationshipDimension("apprentice->player", "affection", "slightly"),
         { kind: "log", text: "The explanation is accurate, quiet, and hard for both of you." }
       ]
     }

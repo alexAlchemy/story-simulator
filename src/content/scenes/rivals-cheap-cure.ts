@@ -1,4 +1,5 @@
 import type { SceneCard } from "../../domain/types";
+import { decreaseEntityGauge, decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "../effects";
 
 /**
  * PREMISE: A rival seller offers a cheaper cure outside your door.
@@ -16,20 +17,10 @@ const scene: SceneCard = {
       label: "Warn customers honestly",
       description: "Name the risk without making it a duel.",
       effects: [
-        {
-          kind: "relationshipDimension",
-          relationshipId: "town->shop",
-          key: "trust",
-          delta: 0.1
-        },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "town->shop",
-          key: "goodwill",
-          delta: 0.1
-        },
-        { kind: "entityGauge", entityId: "town", key: "gossipHeat", delta: 0.1 },
-        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: -2 },
+        increaseRelationshipDimension("town->shop", "trust", "slightly"),
+        increaseRelationshipDimension("town->shop", "goodwill", "slightly"),
+        increaseEntityGauge("town", "gossipHeat", "slightly"),
+        spendQuantity("shop", "coins", 2),
         { kind: "log", text: "Some listen. Some resent listening. No one can say you lied." }
       ]
     },
@@ -38,11 +29,11 @@ const scene: SceneCard = {
       label: "Undercut the rival for one afternoon",
       description: "Win the crowd before the crowd decides what is true.",
       effects: [
-        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 4 },
-        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: -2 },
-        { kind: "entityGauge", entityId: "player", key: "ambition", delta: 0.2 },
-        { kind: "entityGauge", entityId: "player", key: "compassion", delta: -0.1 },
-        { kind: "entityGauge", entityId: "town", key: "gossipHeat", delta: 0.2 },
+        gainQuantity("shop", "coins", 4),
+        spendQuantity("shop", "stock", 2),
+        increaseEntityGauge("player", "ambition", "moderately"),
+        decreaseEntityGauge("player", "compassion", "slightly"),
+        increaseEntityGauge("town", "gossipHeat", "moderately"),
         { kind: "log", text: "By dusk, the rival is gone and the town is full of comparisons." }
       ]
     },
@@ -51,14 +42,9 @@ const scene: SceneCard = {
       label: "Let the town choose",
       description: "Refuse to turn the street into a trial.",
       effects: [
-        { kind: "entityGauge", entityId: "player", key: "prudence", delta: -0.1 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "town->shop",
-          key: "goodwill",
-          delta: -0.1
-        },
-        { kind: "entityGauge", entityId: "town", key: "gossipHeat", delta: 0.1 },
+        decreaseEntityGauge("player", "prudence", "slightly"),
+        decreaseRelationshipDimension("town->shop", "goodwill", "slightly"),
+        increaseEntityGauge("town", "gossipHeat", "slightly"),
         { kind: "log", text: "The street makes its own judgement, as streets always do." }
       ]
     }

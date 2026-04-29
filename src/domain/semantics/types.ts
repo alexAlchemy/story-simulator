@@ -1,5 +1,10 @@
 export type SemanticFamily = "boundedGauge" | "signedGauge" | "openQuantity";
 
+export type SemanticPole = {
+  name: string;
+  aliases?: string[];
+};
+
 export type SemanticThreshold<TLabel extends string = string> = {
   rank: number;
   min: number;
@@ -44,6 +49,10 @@ export type BoundedGaugeDefinition<
   maximumValue: 1;
   thresholds: readonly SemanticThreshold<TLabel>[];
   curve?: GaugeCurve;
+  poles?: {
+    low: SemanticPole;
+    high: SemanticPole;
+  };
 };
 
 export type SignedGaugeDefinition<
@@ -56,6 +65,10 @@ export type SignedGaugeDefinition<
   maximumValue: 1;
   thresholds: readonly SemanticThreshold<TLabel>[];
   curve?: GaugeCurve;
+  poles?: {
+    negative: SemanticPole;
+    positive: SemanticPole;
+  };
 };
 
 export type OpenQuantityContext = {

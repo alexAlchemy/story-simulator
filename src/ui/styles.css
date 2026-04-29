@@ -66,6 +66,12 @@ p {
   margin-top: 0;
 }
 
+.shop-nameplate {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
 h1 {
   margin-bottom: 0;
   font-size: clamp(2rem, 6vw, 4.5rem);
@@ -100,6 +106,7 @@ h3 {
 }
 
 .day-card {
+  margin-left: auto;
   min-width: 150px;
   padding: 14px;
   text-align: right;
@@ -664,11 +671,16 @@ pre {
     gap: 8px 10px;
   }
 
+  .shop-nameplate {
+    align-items: center;
+    gap: 10px;
+  }
+
   .tabs {
     flex-wrap: nowrap;
     overflow-x: auto;
     max-width: 100%;
-    margin-top: 12px;
+    margin-top: 16px;
     padding-bottom: 2px;
     scrollbar-width: none;
   }
@@ -687,7 +699,8 @@ pre {
   .day-card {
     min-width: 0;
     width: max-content;
-    padding: 8px 9px;
+    padding: 7px 10px;
+    border-radius: 7px;
     text-align: left;
   }
 
