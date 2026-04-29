@@ -18,9 +18,14 @@ const scene: SceneCard = {
       id: "share-referrals",
       label: "Create a referral arrangement",
       effects: [
-        { kind: "relationship", key: "townTrust", delta: 2 },
-        { kind: "resource", key: "coins", delta: 4 },
-        { kind: "value", key: "compassion", delta: 1 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: 0.2
+        },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 4 },
+        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.1 },
         { kind: "log", text: "The healer promises small payments, honest referrals, and fewer desperate surprises." }
       ]
     },
@@ -28,8 +33,13 @@ const scene: SceneCard = {
       id: "keep-boundary",
       label: "Set a firm charity boundary",
       effects: [
-        { kind: "value", key: "prudence", delta: 2 },
-        { kind: "relationship", key: "townTrust", delta: 0 },
+        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.2 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: 0
+        },
         { kind: "log", text: "The healer respects the answer, though neither of you enjoys it." }
       ]
     }

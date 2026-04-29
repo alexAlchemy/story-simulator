@@ -19,9 +19,25 @@ const scene: SceneCard = {
       label: "Give him the draught for free",
       description: "Let need matter more than the till.",
       effects: [
-        { kind: "resource", key: "stock", delta: -1 },
-        { kind: "value", key: "compassion", delta: 2 },
-        { kind: "relationship", key: "townTrust", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: -1 },
+        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.2 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: 0.1
+        },
+        {
+          kind: "addRelationshipToken",
+          relationshipId: "town->shop",
+          token: {
+            id: "stablehand-helped",
+            kind: "favour",
+            label: "Helped the stablehand's sister",
+            description: "Word may spread that the shop helps desperate families.",
+            sourceSceneId: "desperate-stablehand"
+          }
+        },
         { kind: "setFlag", key: "stablehand_grateful", value: true },
         { kind: "addScene", sceneId: "temple-healer-visits" },
         { kind: "log", text: "The stablehand leaves clutching the draught like a candle in the rain." }
@@ -32,11 +48,16 @@ const scene: SceneCard = {
       label: "Take his three coins",
       description: "Help him, but keep the sale recorded.",
       effects: [
-        { kind: "resource", key: "stock", delta: -1 },
-        { kind: "resource", key: "coins", delta: 3 },
-        { kind: "value", key: "prudence", delta: 1 },
-        { kind: "value", key: "compassion", delta: 1 },
-        { kind: "relationship", key: "townTrust", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: -1 },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 3 },
+        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
+        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.1 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: 0.1
+        },
         { kind: "log", text: "Three wet coins land in the drawer, lighter than they should feel." }
       ]
     },
@@ -45,8 +66,13 @@ const scene: SceneCard = {
       label: "Refuse the sale",
       description: "You cannot keep the doors open by giving away what you need.",
       effects: [
-        { kind: "value", key: "prudence", delta: 2 },
-        { kind: "relationship", key: "townTrust", delta: -1 },
+        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.2 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: -0.1
+        },
         { kind: "setFlag", key: "stablehand_refused", value: true },
         { kind: "addScene", sceneId: "rumour-at-market" },
         { kind: "log", text: "He nods once, too politely, and the bell over the door sounds colder." }

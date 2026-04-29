@@ -37,6 +37,6 @@ describe("advanceDay", () => {
 
     expect(state.day).toBe(5);
     expect(state.ended).toBe(true);
-    expect(buildEnding(state).title).toBeTruthy();
+    expect(buildEnding(state, content).title).toBeTruthy();
   });
 });

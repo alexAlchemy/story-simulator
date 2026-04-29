@@ -40,7 +40,7 @@ export function advanceDay(state: GameState, content: GameContent): GameState {
   if (nextDay === content.rentDueDay) {
     next = applyEffects(
       next,
-      [{ kind: "log", text: buildEnding(next).shopOutcome }],
+      [{ kind: "log", text: buildEnding(next, content).shopOutcome }],
       { day: nextDay }
     );
   }

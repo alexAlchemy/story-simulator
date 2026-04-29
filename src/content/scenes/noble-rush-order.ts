@@ -18,10 +18,15 @@ const scene: SceneCard = {
       id: "take-order",
       label: "Take the order",
       effects: [
-        { kind: "resource", key: "stock", delta: -2 },
-        { kind: "resource", key: "coins", delta: 18 },
-        { kind: "value", key: "ambition", delta: 2 },
-        { kind: "relationship", key: "townTrust", delta: -1 },
+        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: -2 },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 18 },
+        { kind: "entityGauge", entityId: "player", key: "ambition", delta: 0.2 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: -0.1
+        },
         { kind: "log", text: "The steward pays in silver. The shelf behind you looks suddenly vulnerable." }
       ]
     },
@@ -29,9 +34,9 @@ const scene: SceneCard = {
       id: "redirect",
       label: "Offer a cheaper harmless tonic",
       effects: [
-        { kind: "resource", key: "stock", delta: -1 },
-        { kind: "resource", key: "coins", delta: 8 },
-        { kind: "value", key: "prudence", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: -1 },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 8 },
+        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
         { kind: "log", text: "The steward sniffs at the bottle, then pays because it is still fashionable." }
       ]
     },
@@ -39,8 +44,13 @@ const scene: SceneCard = {
       id: "refuse-vanity",
       label: "Refuse to spend medicine on vanity",
       effects: [
-        { kind: "value", key: "compassion", delta: 2 },
-        { kind: "relationship", key: "townTrust", delta: 1 },
+        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.2 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: 0.1
+        },
         {
           kind: "log",
           text: "The steward is offended. The next fever case will not know your name, but they may live."

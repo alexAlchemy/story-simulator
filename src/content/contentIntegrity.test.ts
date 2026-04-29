@@ -40,4 +40,36 @@ describe("content integrity", () => {
       }
     }
   });
+
+  it("uses only world effect types for stateful scene effects", () => {
+    for (const sceneId of Object.keys(scenes)) {
+      const legacyEffects = scenes[sceneId].choices.flatMap((choice) =>
+        choice.effects.filter(
+          (effect) =>
+            ![
+              "entityGauge",
+              "entityQuantity",
+              "relationshipDimension",
+              "addRelationshipToken",
+              "setFlag",
+              "addScene",
+              "removeScene",
+              "log"
+            ].includes(effect.kind)
+        )
+      );
+
+      expect(legacyEffects, sceneId).toEqual([]);
+    }
+  });
+
+  it("defines relationship tokens on at least two choices", () => {
+    const tokenChoiceCount = Object.values(scenes)
+      .flatMap((scene) => scene.choices)
+      .filter((choice) =>
+        choice.effects.some((effect) => effect.kind === "addRelationshipToken")
+      ).length;
+
+    expect(tokenChoiceCount).toBeGreaterThanOrEqual(2);
+  });
 });

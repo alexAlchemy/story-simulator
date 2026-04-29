@@ -18,7 +18,7 @@ const scene: SceneCard = {
       id: "raise-prices-tomorrow",
       label: "Plan to raise prices tomorrow",
       effects: [
-        { kind: "value", key: "prudence", delta: 1 },
+        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
         { kind: "addScene", sceneId: "raise-prices" },
         { kind: "log", text: "You mark three prices in darker ink and do not sleep immediately after." }
       ]
@@ -27,9 +27,9 @@ const scene: SceneCard = {
       id: "work-late",
       label: "Work late bottling simple remedies",
       effects: [
-        { kind: "resource", key: "stock", delta: 1 },
-        { kind: "resource", key: "fatigue", delta: 2 },
-        { kind: "value", key: "ambition", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: 1 },
+        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: 0.2 },
+        { kind: "entityGauge", entityId: "player", key: "ambition", delta: 0.1 },
         { kind: "log", text: "By candle-end, six labels are straight and your hands ache." }
       ]
     },
@@ -37,8 +37,8 @@ const scene: SceneCard = {
       id: "rest",
       label: "Close your eyes and rest",
       effects: [
-        { kind: "resource", key: "fatigue", delta: -2 },
-        { kind: "value", key: "compassion", delta: 1 },
+        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: -0.2 },
+        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.1 },
         { kind: "log", text: "For one night, you treat yourself like someone worth preserving." }
       ]
     }

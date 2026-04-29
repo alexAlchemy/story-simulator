@@ -1,6 +1,10 @@
 import type { Effect, EffectContext, GameState } from "../domain/types";
-
-const CLAMPED_RESOURCES = new Set(["coins", "stock", "fatigue"]);
+import {
+  addRelationshipToken,
+  adjustEntityGauge,
+  adjustEntityQuantity,
+  adjustRelationshipDimension
+} from "./worldAccess";
 
 export function applyEffects(
   state: GameState,
@@ -11,18 +15,22 @@ export function applyEffects(
 
   for (const effect of effects) {
     switch (effect.kind) {
-      case "resource": {
-        const rawValue = next.resources[effect.key] + effect.delta;
-        next.resources[effect.key] = CLAMPED_RESOURCES.has(effect.key)
-          ? Math.max(0, rawValue)
-          : rawValue;
+      case "entityGauge":
+        next = adjustEntityGauge(next, effect.entityId, effect.key, effect.delta);
         break;
-      }
-      case "value":
-        next.values[effect.key] += effect.delta;
+      case "entityQuantity":
+        next = adjustEntityQuantity(next, effect.entityId, effect.key, effect.delta);
         break;
-      case "relationship":
-        next.relationships[effect.key] += effect.delta;
+      case "relationshipDimension":
+        next = adjustRelationshipDimension(
+          next,
+          effect.relationshipId,
+          effect.key,
+          effect.delta
+        );
+        break;
+      case "addRelationshipToken":
+        next = addRelationshipToken(next, effect.relationshipId, effect.token);
         break;
       case "setFlag":
         next.flags[effect.key] = effect.value;
@@ -60,9 +68,31 @@ export function applyEffects(
 function cloneState(state: GameState): GameState {
   return {
     ...state,
-    resources: { ...state.resources },
-    values: { ...state.values },
-    relationships: { ...state.relationships },
+    world: {
+      entities: Object.fromEntries(
+        Object.entries(state.world.entities).map(([id, entity]) => [
+          id,
+          {
+            ...entity,
+            tags: [...entity.tags],
+            gauges: { ...entity.gauges },
+            quantities: { ...entity.quantities },
+            flags: { ...entity.flags }
+          }
+        ])
+      ),
+      relationships: Object.fromEntries(
+        Object.entries(state.world.relationships).map(([id, relationship]) => [
+          id,
+          {
+            ...relationship,
+            dimensions: { ...relationship.dimensions },
+            flags: { ...relationship.flags },
+            tokens: relationship.tokens.map((token) => ({ ...token }))
+          }
+        ])
+      )
+    },
     flags: { ...state.flags },
     sceneTableau: [...state.sceneTableau],
     resolvedScenes: [...state.resolvedScenes],

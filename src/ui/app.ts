@@ -7,12 +7,12 @@ import { advanceDay } from "../engine/advanceDay";
 import { buildEnding } from "../engine/buildEnding";
 import { resolveChoice } from "../engine/resolveChoice";
 import { getVisibleScenes } from "../engine/sceneTableau";
-
-type LabelledValue = {
-  key: string;
-  label: string;
-  value: number;
-};
+import {
+  getRelationshipRows,
+  getResourceRows,
+  getValueRows,
+  type DashboardRow
+} from "../engine/selectors";
 
 type AppModel = {
   state: GameState;
@@ -26,9 +26,9 @@ type AppModel = {
   visibleScenes: SceneCard[];
   selectedScene: SceneCard | null;
   visibleBanes: NonNullable<SceneCard["banes"]>;
-  resourceRows: LabelledValue[];
-  valueRows: LabelledValue[];
-  relationshipRows: LabelledValue[];
+  resourceRows: DashboardRow[];
+  valueRows: DashboardRow[];
+  relationshipRows: DashboardRow[];
   recentLog: GameState["log"];
   showEmptyTableau: boolean;
   rentText: string;
@@ -62,13 +62,13 @@ function createAppModel(): AppModel {
 
       if (this.state.day >= content.rentDueDay && this.state.sceneTableau.length === 0) {
         this.state = { ...this.state, ended: true };
-        this.ending = buildEnding(this.state);
+        this.ending = buildEnding(this.state, content);
       }
     },
     advance() {
       this.state = advanceDay(this.state, content);
       if (this.state.ended) {
-        this.ending = buildEnding(this.state);
+        this.ending = buildEnding(this.state, content);
         this.selectedSceneId = null;
         return;
       }
@@ -87,32 +87,13 @@ function createAppModel(): AppModel {
       return this.selectedScene?.banes?.filter((bane) => !bane.hidden) ?? [];
     },
     get resourceRows() {
-      return [
-        { key: "coins", label: "Coins", value: this.state.resources.coins },
-        { key: "stock", label: "Stock", value: this.state.resources.stock },
-        { key: "fatigue", label: "Fatigue", value: this.state.resources.fatigue }
-      ];
+      return getResourceRows(this.state);
     },
     get valueRows() {
-      return [
-        { key: "compassion", label: "Compassion", value: this.state.values.compassion },
-        { key: "prudence", label: "Prudence", value: this.state.values.prudence },
-        { key: "ambition", label: "Ambition", value: this.state.values.ambition }
-      ];
+      return getValueRows(this.state);
     },
     get relationshipRows() {
-      return [
-        {
-          key: "apprenticeTrust",
-          label: "Apprentice Trust",
-          value: this.state.relationships.apprenticeTrust
-        },
-        {
-          key: "townTrust",
-          label: "Town Trust",
-          value: this.state.relationships.townTrust
-        }
-      ];
+      return getRelationshipRows(this.state);
     },
     get recentLog() {
       return this.state.log.slice(-6).reverse();

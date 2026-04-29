@@ -18,9 +18,14 @@ const scene: SceneCard = {
       id: "ask-hard",
       label: "Ask the harder question",
       effects: [
-        { kind: "relationship", key: "townTrust", delta: 2 },
-        { kind: "value", key: "compassion", delta: 2 },
-        { kind: "resource", key: "coins", delta: 2 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: 0.2
+        },
+        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.2 },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 2 },
         { kind: "log", text: "They do not answer fully, but they sit down before leaving." }
       ]
     },
@@ -28,9 +33,9 @@ const scene: SceneCard = {
       id: "sell-drops",
       label: "Sell the drops without prying",
       effects: [
-        { kind: "resource", key: "stock", delta: -1 },
-        { kind: "resource", key: "coins", delta: 6 },
-        { kind: "value", key: "prudence", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: -1 },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 6 },
+        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
         { kind: "log", text: "The sale is clean. The smile is not." }
       ]
     }

@@ -18,9 +18,14 @@ const scene: SceneCard = {
       id: "trust-counter",
       label: "Trust them with the counter",
       effects: [
-        { kind: "resource", key: "coins", delta: 5 },
-        { kind: "resource", key: "fatigue", delta: -1 },
-        { kind: "relationship", key: "apprenticeTrust", delta: 2 },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 5 },
+        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: -0.1 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "apprentice->player",
+          key: "trust",
+          delta: 0.2
+        },
         { kind: "log", text: "They mispronounce one tincture and make three honest sales anyway." }
       ]
     },
@@ -28,9 +33,14 @@ const scene: SceneCard = {
       id: "supervise",
       label: "Supervise closely",
       effects: [
-        { kind: "resource", key: "coins", delta: 4 },
-        { kind: "relationship", key: "apprenticeTrust", delta: -1 },
-        { kind: "value", key: "prudence", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 4 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "apprentice->player",
+          key: "trust",
+          delta: -0.1
+        },
+        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
         { kind: "log", text: "Nothing goes wrong, which somehow proves less than either of you hoped." }
       ]
     }

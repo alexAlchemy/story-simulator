@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { createInitialState } from "../domain/initialState";
 import { applyEffects } from "./applyEffects";
+import {
+  getEntityGauge,
+  getEntityQuantity,
+  getRelationshipDimension
+} from "./worldAccess";
 
 describe("applyEffects", () => {
   it("applies all supported effect kinds", () => {
@@ -9,9 +14,14 @@ describe("applyEffects", () => {
     const next = applyEffects(
       state,
       [
-        { kind: "resource", key: "coins", delta: 5 },
-        { kind: "value", key: "compassion", delta: 2 },
-        { kind: "relationship", key: "townTrust", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 5 },
+        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.2 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: 0.1
+        },
         { kind: "setFlag", key: "sample_flag", value: true },
         { kind: "addScene", sceneId: "counting-coins" },
         { kind: "removeScene", sceneId: "gift-at-door" },
@@ -20,9 +30,9 @@ describe("applyEffects", () => {
       { day: 1, sceneId: "test-scene" }
     );
 
-    expect(next.resources.coins).toBe(23);
-    expect(next.values.compassion).toBe(2);
-    expect(next.relationships.townTrust).toBe(1);
+    expect(getEntityQuantity(next, "shop", "coins")).toBe(23);
+    expect(getEntityGauge(next, "player", "compassion")).toBe(0.2);
+    expect(getRelationshipDimension(next, "town->shop", "trust")).toBe(0.1);
     expect(next.flags.sample_flag).toBe(true);
     expect(next.sceneTableau).toContain("counting-coins");
     expect(next.sceneTableau).not.toContain("gift-at-door");
@@ -44,13 +54,37 @@ describe("applyEffects", () => {
     expect(next.sceneTableau.filter((id) => id === "counting-coins")).toHaveLength(1);
   });
 
-  it("clamps resources at zero", () => {
+  it("clamps quantities at zero", () => {
     const next = applyEffects(
       createInitialState(),
-      [{ kind: "resource", key: "stock", delta: -99 }],
+      [{ kind: "entityQuantity", entityId: "shop", key: "stock", delta: -99 }],
       { day: 1 }
     );
 
-    expect(next.resources.stock).toBe(0);
+    expect(getEntityQuantity(next, "shop", "stock")).toBe(0);
+  });
+
+  it("applies relationship tokens", () => {
+    const next = applyEffects(
+      createInitialState(),
+      [
+        {
+          kind: "addRelationshipToken",
+          relationshipId: "apprentice->player",
+          token: {
+            id: "test-token",
+            kind: "promise",
+            label: "A test promise"
+          }
+        }
+      ],
+      { day: 1, sceneId: "test-scene" }
+    );
+
+    expect(next.world.relationships["apprentice->player"].tokens).toContainEqual({
+      id: "test-token",
+      kind: "promise",
+      label: "A test promise"
+    });
   });
 });

@@ -2,6 +2,11 @@ import { describe, expect, it } from "vitest";
 import { content } from "../content/scenes";
 import { createInitialState } from "../domain/initialState";
 import { resolveChoice } from "./resolveChoice";
+import {
+  getEntityGauge,
+  getEntityQuantity,
+  getRelationshipDimension
+} from "./worldAccess";
 
 describe("resolveChoice", () => {
   it("rejects unknown scene ids", () => {
@@ -29,9 +34,16 @@ describe("resolveChoice", () => {
       content
     );
 
-    expect(next.resources.stock).toBe(2);
-    expect(next.values.compassion).toBe(2);
-    expect(next.relationships.townTrust).toBe(1);
+    expect(getEntityQuantity(next, "shop", "stock")).toBe(2);
+    expect(getEntityGauge(next, "player", "compassion")).toBe(0.2);
+    expect(getRelationshipDimension(next, "town->shop", "trust")).toBe(0.1);
+    expect(next.world.relationships["town->shop"].tokens).toContainEqual({
+      id: "stablehand-helped",
+      kind: "favour",
+      label: "Helped the stablehand's sister",
+      description: "Word may spread that the shop helps desperate families.",
+      sourceSceneId: "desperate-stablehand"
+    });
     expect(next.flags.stablehand_grateful).toBe(true);
     expect(next.sceneTableau).not.toContain("desperate-stablehand");
     expect(next.sceneTableau).toContain("temple-healer-visits");

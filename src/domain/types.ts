@@ -1,8 +1,59 @@
-export type ResourceKey = "coins" | "stock" | "fatigue";
+export type EntityId = string;
+export type RelationshipId = string;
 
-export type ValueKey = "compassion" | "prudence" | "ambition";
+export type EntityKind = "person" | "group" | "shop" | "place";
 
-export type RelationshipKey = "apprenticeTrust" | "townTrust";
+export type GaugeKey =
+  | "fatigue"
+  | "compassion"
+  | "prudence"
+  | "ambition"
+  | "confidence"
+  | "gossipHeat";
+
+export type QuantityKey = "coins" | "stock";
+
+export type RelationshipDimensionKey =
+  | "trust"
+  | "affection"
+  | "respect"
+  | "fear"
+  | "resentment"
+  | "obligation"
+  | "goodwill"
+  | "familiarity";
+
+export type RelationshipToken = {
+  id: string;
+  kind: "debt" | "promise" | "wound" | "secret" | "favour" | "obligation";
+  label: string;
+  description?: string;
+  sourceSceneId?: string;
+};
+
+export type EntityState = {
+  id: EntityId;
+  kind: EntityKind;
+  displayName: string;
+  tags: string[];
+  gauges: Partial<Record<GaugeKey, number>>;
+  quantities: Partial<Record<QuantityKey, number>>;
+  flags: Record<string, boolean>;
+};
+
+export type RelationshipState = {
+  id: RelationshipId;
+  from: EntityId;
+  to: EntityId;
+  dimensions: Partial<Record<RelationshipDimensionKey, number>>;
+  flags: Record<string, boolean>;
+  tokens: RelationshipToken[];
+};
+
+export type WorldState = {
+  entities: Record<EntityId, EntityState>;
+  relationships: Record<RelationshipId, RelationshipState>;
+};
 
 export type SceneType =
   | "customer"
@@ -21,9 +72,7 @@ export type GameLogEntry = {
 
 export type GameState = {
   day: number;
-  resources: Record<ResourceKey, number>;
-  values: Record<ValueKey, number>;
-  relationships: Record<RelationshipKey, number>;
+  world: WorldState;
   flags: Record<string, boolean>;
   sceneTableau: string[];
   resolvedScenes: string[];
@@ -69,9 +118,19 @@ export type SceneCard = {
 };
 
 export type Effect =
-  | { kind: "resource"; key: ResourceKey; delta: number }
-  | { kind: "value"; key: ValueKey; delta: number }
-  | { kind: "relationship"; key: RelationshipKey; delta: number }
+  | { kind: "entityGauge"; entityId: EntityId; key: GaugeKey; delta: number }
+  | { kind: "entityQuantity"; entityId: EntityId; key: QuantityKey; delta: number }
+  | {
+      kind: "relationshipDimension";
+      relationshipId: RelationshipId;
+      key: RelationshipDimensionKey;
+      delta: number;
+    }
+  | {
+      kind: "addRelationshipToken";
+      relationshipId: RelationshipId;
+      token: RelationshipToken;
+    }
   | { kind: "setFlag"; key: string; value: boolean }
   | { kind: "addScene"; sceneId: string }
   | { kind: "removeScene"; sceneId: string }

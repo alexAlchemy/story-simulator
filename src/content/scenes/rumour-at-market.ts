@@ -18,8 +18,13 @@ const scene: SceneCard = {
       id: "explain-rent",
       label: "Explain the rent pressure plainly",
       effects: [
-        { kind: "relationship", key: "townTrust", delta: 1 },
-        { kind: "value", key: "prudence", delta: 1 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: 0.1
+        },
+        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
         { kind: "log", text: "Some faces soften. Others simply file the explanation away." }
       ]
     },
@@ -27,9 +32,14 @@ const scene: SceneCard = {
       id: "offer-small-remedy",
       label: "Offer small remedies at cost",
       effects: [
-        { kind: "resource", key: "stock", delta: -1 },
-        { kind: "relationship", key: "townTrust", delta: 2 },
-        { kind: "value", key: "compassion", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: -1 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: 0.2
+        },
+        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.1 },
         { kind: "log", text: "You cannot fix one closed door, but you open a smaller one." }
       ]
     }

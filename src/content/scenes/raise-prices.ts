@@ -18,9 +18,14 @@ const scene: SceneCard = {
       id: "raise-all",
       label: "Raise all prices",
       effects: [
-        { kind: "resource", key: "coins", delta: 10 },
-        { kind: "relationship", key: "townTrust", delta: -2 },
-        { kind: "value", key: "prudence", delta: 2 },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 10 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: -0.2
+        },
+        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.2 },
         { kind: "log", text: "The new numbers look sensible until the first customer reads them." }
       ]
     },
@@ -28,9 +33,14 @@ const scene: SceneCard = {
       id: "sliding-scale",
       label: "Use a quiet sliding scale",
       effects: [
-        { kind: "resource", key: "coins", delta: 5 },
-        { kind: "relationship", key: "townTrust", delta: 1 },
-        { kind: "value", key: "compassion", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 5 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: 0.1
+        },
+        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.1 },
         { kind: "log", text: "Nobody sees the whole system, but several people leave breathing easier." }
       ]
     }

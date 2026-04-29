@@ -27,7 +27,7 @@ const scene: SceneCard = {
       label: "Look around the shop first",
       description: "Notice who you became before the bell finishes ringing.",
       effects: [
-        { kind: "value", key: "compassion", delta: 0 },
+        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0 },
         { kind: "log", text: "The bottles, broom, counter, and apprentice all seem to be waiting with you." }
       ]
     }

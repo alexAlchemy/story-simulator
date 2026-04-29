@@ -18,10 +18,10 @@ const scene: SceneCard = {
       id: "careful-full-price",
       label: "Brew carefully and charge full price",
       effects: [
-        { kind: "resource", key: "stock", delta: -1 },
-        { kind: "resource", key: "coins", delta: 12 },
-        { kind: "resource", key: "fatigue", delta: 1 },
-        { kind: "value", key: "ambition", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: -1 },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 12 },
+        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: 0.1 },
+        { kind: "entityGauge", entityId: "player", key: "ambition", delta: 0.1 },
         { kind: "log", text: "The Moon-Tonic clears silver in the vial, and the courier pays without haggling." }
       ]
     },
@@ -30,10 +30,15 @@ const scene: SceneCard = {
       label: "Ask the apprentice to help",
       description: "Share the work and the risk.",
       effects: [
-        { kind: "resource", key: "stock", delta: -1 },
-        { kind: "resource", key: "coins", delta: 10 },
-        { kind: "relationship", key: "apprenticeTrust", delta: 1 },
-        { kind: "value", key: "compassion", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: -1 },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 10 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "apprentice->player",
+          key: "trust",
+          delta: 0.1
+        },
+        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.1 },
         { kind: "addScene", sceneId: "apprentice-asks-trust" },
         { kind: "log", text: "Your apprentice steadies the flame, glowing with the terror of being useful." }
       ]
@@ -42,8 +47,13 @@ const scene: SceneCard = {
       id: "decline",
       label: "Decline and preserve stock",
       effects: [
-        { kind: "value", key: "prudence", delta: 2 },
-        { kind: "relationship", key: "townTrust", delta: -1 },
+        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.2 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: -0.1
+        },
         { kind: "log", text: "The courier leaves for a rival shop, but your shelves remain less bare." }
       ]
     }

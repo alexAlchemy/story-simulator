@@ -18,9 +18,14 @@ const scene: SceneCard = {
       id: "accept-mentor",
       label: "Accept her strange mentorship",
       effects: [
-        { kind: "resource", key: "stock", delta: 2 },
-        { kind: "relationship", key: "townTrust", delta: 1 },
-        { kind: "value", key: "prudence", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: 2 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: 0.1
+        },
+        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
         { kind: "log", text: "She laughs when you ask for clearer terms, which is almost an answer." }
       ]
     },
@@ -28,8 +33,13 @@ const scene: SceneCard = {
       id: "decline-test",
       label: "Decline the relationship",
       effects: [
-        { kind: "value", key: "ambition", delta: 1 },
-        { kind: "relationship", key: "townTrust", delta: -1 },
+        { kind: "entityGauge", entityId: "player", key: "ambition", delta: 0.1 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: -0.1
+        },
         {
           kind: "log",
           text: "She respects the refusal, perhaps more than she would have respected obedience."

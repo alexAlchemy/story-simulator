@@ -129,3 +129,37 @@ Good:
 resolveChoice(state, sceneId, choiceId, content)
 advanceDay(state, content)
 getVisibleScenes(state, content)
+```
+
+## State model principles
+
+Do not add new global meters for people or groups.
+
+Bad:
+- apprenticeTrust
+- townTrust
+- rivalHate
+
+Good:
+- relationship apprentice->player dimension trust
+- relationship town->shop dimension trust
+- relationship rival->player dimension resentment
+
+People, groups, shops, and places should be entities.
+
+Material quantities belong to entities:
+- shop.coins
+- shop.stock
+- player.fatigue
+
+Relationship qualities belong to relationships:
+- trust
+- affection
+- respect
+- fear
+- resentment
+- obligation
+
+Semantic primitives describe what state means. They must not fire events, add scenes, or decide NPC behaviour.
+
+Scene orchestration and NPC/agent behaviour may read semantic state later, but semantic state must not depend on scenes or agents.

@@ -18,9 +18,14 @@ const scene: SceneCard = {
       id: "close-early",
       label: "Close early and make tea",
       effects: [
-        { kind: "resource", key: "fatigue", delta: -2 },
-        { kind: "relationship", key: "apprenticeTrust", delta: 2 },
-        { kind: "value", key: "compassion", delta: 1 },
+        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: -0.2 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "apprentice->player",
+          key: "trust",
+          delta: 0.2
+        },
+        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.1 },
         {
           kind: "log",
           text: "You lose an hour of trade and gain a conversation that should have happened sooner."
@@ -31,9 +36,14 @@ const scene: SceneCard = {
       id: "push-through",
       label: "Push through until closing",
       effects: [
-        { kind: "resource", key: "coins", delta: 6 },
-        { kind: "relationship", key: "apprenticeTrust", delta: -2 },
-        { kind: "value", key: "ambition", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 6 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "apprentice->player",
+          key: "trust",
+          delta: -0.2
+        },
+        { kind: "entityGauge", entityId: "player", key: "ambition", delta: 0.1 },
         { kind: "log", text: "The drawer is heavier. So is the silence." }
       ]
     }

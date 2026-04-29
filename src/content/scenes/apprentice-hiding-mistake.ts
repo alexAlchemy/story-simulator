@@ -18,9 +18,25 @@ const scene: SceneCard = {
       id: "ask-gently",
       label: "Ask gently what happened",
       effects: [
-        { kind: "relationship", key: "apprenticeTrust", delta: 2 },
-        { kind: "value", key: "compassion", delta: 1 },
-        { kind: "resource", key: "fatigue", delta: 1 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "apprentice->player",
+          key: "trust",
+          delta: 0.2
+        },
+        {
+          kind: "addRelationshipToken",
+          relationshipId: "apprentice->player",
+          token: {
+            id: "mistake-handled-gently",
+            kind: "promise",
+            label: "Mistakes can be admitted",
+            description: "The apprentice has seen that honesty is not always punished.",
+            sourceSceneId: "apprentice-hiding-mistake"
+          }
+        },
+        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.1 },
+        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: 0.1 },
         { kind: "log", text: "The story comes out slowly: fear first, then the mistake itself." }
       ]
     },
@@ -28,8 +44,13 @@ const scene: SceneCard = {
       id: "lesson",
       label: "Turn it into a lesson",
       effects: [
-        { kind: "relationship", key: "apprenticeTrust", delta: 1 },
-        { kind: "value", key: "prudence", delta: 1 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "apprentice->player",
+          key: "trust",
+          delta: 0.1
+        },
+        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
         { kind: "log", text: "You clean the glass together and write a safer shelf rule in chalk." }
       ]
     },
@@ -37,9 +58,14 @@ const scene: SceneCard = {
       id: "sharp-confrontation",
       label: "Confront them sharply",
       effects: [
-        { kind: "relationship", key: "apprenticeTrust", delta: -2 },
-        { kind: "value", key: "ambition", delta: 1 },
-        { kind: "resource", key: "fatigue", delta: -1 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "apprentice->player",
+          key: "trust",
+          delta: -0.2
+        },
+        { kind: "entityGauge", entityId: "player", key: "ambition", delta: 0.1 },
+        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: -0.1 },
         { kind: "log", text: "The shop is efficient for the next hour, and painfully quiet." }
       ]
     }

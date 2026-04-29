@@ -18,9 +18,14 @@ const scene: SceneCard = {
       id: "repair-carefully",
       label: "Repair it carefully",
       effects: [
-        { kind: "relationship", key: "townTrust", delta: 1 },
-        { kind: "value", key: "compassion", delta: 1 },
-        { kind: "resource", key: "fatigue", delta: 1 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "town->shop",
+          key: "trust",
+          delta: 0.1
+        },
+        { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.1 },
+        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: 0.1 },
         { kind: "log", text: "By dusk, the painted mortar and pestle swings straight again." }
       ]
     },
@@ -28,8 +33,8 @@ const scene: SceneCard = {
       id: "paint-bold",
       label: "Paint it brighter",
       effects: [
-        { kind: "resource", key: "coins", delta: 4 },
-        { kind: "value", key: "ambition", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 4 },
+        { kind: "entityGauge", entityId: "player", key: "ambition", delta: 0.1 },
         { kind: "log", text: "Two new customers find you before supper." }
       ]
     }

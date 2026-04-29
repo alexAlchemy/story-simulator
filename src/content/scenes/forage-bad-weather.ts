@@ -18,9 +18,9 @@ const scene: SceneCard = {
       id: "go-yourself",
       label: "Go yourself",
       effects: [
-        { kind: "resource", key: "stock", delta: 2 },
-        { kind: "resource", key: "fatigue", delta: 2 },
-        { kind: "value", key: "ambition", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: 2 },
+        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: 0.2 },
+        { kind: "entityGauge", entityId: "player", key: "ambition", delta: 0.1 },
         { kind: "log", text: "You return mud-streaked, triumphant, and more tired than you admit." }
       ]
     },
@@ -28,9 +28,14 @@ const scene: SceneCard = {
       id: "send-apprentice",
       label: "Send the apprentice with instructions",
       effects: [
-        { kind: "resource", key: "stock", delta: 1 },
-        { kind: "relationship", key: "apprenticeTrust", delta: 1 },
-        { kind: "value", key: "prudence", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: 1 },
+        {
+          kind: "relationshipDimension",
+          relationshipId: "apprentice->player",
+          key: "trust",
+          delta: 0.1
+        },
+        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
         { kind: "log", text: "They return soaked, proud, and carrying almost the right mushrooms." }
       ]
     },
@@ -38,8 +43,8 @@ const scene: SceneCard = {
       id: "stay-in",
       label: "Stay in and preserve your strength",
       effects: [
-        { kind: "resource", key: "fatigue", delta: -1 },
-        { kind: "value", key: "prudence", delta: 1 },
+        { kind: "entityGauge", entityId: "player", key: "fatigue", delta: -0.1 },
+        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
         { kind: "log", text: "The shelves stay thin, but your hands stop shaking." }
       ]
     }

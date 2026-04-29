@@ -18,9 +18,9 @@ const scene: SceneCard = {
       id: "buy-cheap",
       label: "Buy the cheap stock",
       effects: [
-        { kind: "resource", key: "coins", delta: -6 },
-        { kind: "resource", key: "stock", delta: 3 },
-        { kind: "value", key: "ambition", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: -6 },
+        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: 3 },
+        { kind: "entityGauge", entityId: "player", key: "ambition", delta: 0.1 },
         { kind: "setFlag", key: "cheap_stock_bought", value: true },
         { kind: "log", text: "The bottles clink cheerfully in the crate. Too cheerfully, maybe." }
       ]
@@ -29,9 +29,9 @@ const scene: SceneCard = {
       id: "buy-little",
       label: "Buy only what you can inspect",
       effects: [
-        { kind: "resource", key: "coins", delta: -3 },
-        { kind: "resource", key: "stock", delta: 1 },
-        { kind: "value", key: "prudence", delta: 1 },
+        { kind: "entityQuantity", entityId: "shop", key: "coins", delta: -3 },
+        { kind: "entityQuantity", entityId: "shop", key: "stock", delta: 1 },
+        { kind: "entityGauge", entityId: "player", key: "prudence", delta: 0.1 },
         { kind: "log", text: "You reject half the crate and sleep better for it." }
       ]
     }
