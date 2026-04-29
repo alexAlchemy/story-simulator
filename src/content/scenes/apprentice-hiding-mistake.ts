@@ -10,9 +10,6 @@ const scene: SceneCard = {
   type: "staff",
   description:
     "You find a cracked vial tucked behind the lower shelf. The label is in your apprentice's handwriting.",
-  coreQuestion: "Are you a mentor, a manager, or someone too exhausted to be either?",
-  boons: [{ label: "You noticed before anyone was hurt." }],
-  banes: [{ label: "The apprentice has been quiet all morning." }],
   choices: [
     {
       id: "ask-gently",

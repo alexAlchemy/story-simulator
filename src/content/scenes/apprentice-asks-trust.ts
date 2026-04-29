@@ -10,9 +10,6 @@ const scene: SceneCard = {
   type: "staff",
   description:
     "Your apprentice asks to handle the front counter alone for one hour while you prepare the back room.",
-  coreQuestion: "Do you make room for someone else to become capable?",
-  boons: [{ label: "They know the regulars by name." }],
-  banes: [{ label: "One bad sale could cost more than time." }],
   choices: [
     {
       id: "trust-counter",

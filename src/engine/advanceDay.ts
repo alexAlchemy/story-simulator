@@ -18,7 +18,7 @@ export function advanceDay(state: GameState, content: GameContent): GameState {
   let next: GameState = {
     ...state,
     day: nextDay,
-    sceneTableau: applyClockChanges(state.sceneTableau, nextDay, content),
+    sceneTableau: [...state.sceneTableau],
     log: [
       ...state.log,
       {
@@ -43,42 +43,6 @@ export function advanceDay(state: GameState, content: GameContent): GameState {
       [{ kind: "log", text: buildEnding(next, content).shopOutcome }],
       { day: nextDay }
     );
-  }
-
-  return next;
-}
-
-function applyClockChanges(
-  sceneTableau: string[],
-  day: number,
-  content: GameContent
-): string[] {
-  const next: string[] = [];
-
-  for (const sceneId of sceneTableau) {
-    const scene = content.scenes[sceneId];
-    if (!scene) {
-      continue;
-    }
-
-    if (scene.clock?.expiresOnDay && day >= scene.clock.expiresOnDay) {
-      continue;
-    }
-
-    if (
-      scene.clock?.transformsOnDay &&
-      scene.clock.transformsInto &&
-      day >= scene.clock.transformsOnDay
-    ) {
-      if (!next.includes(scene.clock.transformsInto)) {
-        next.push(scene.clock.transformsInto);
-      }
-      continue;
-    }
-
-    if (!next.includes(sceneId)) {
-      next.push(sceneId);
-    }
   }
 
   return next;

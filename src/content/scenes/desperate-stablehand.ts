@@ -10,9 +10,6 @@ const scene: SceneCard = {
   type: "customer",
   description:
     "A soaked stablehand arrives near closing. His little sister has a fever, and he has only three copper coins.",
-  coreQuestion: "Is your shop a business, a refuge, or something in between?",
-  boons: [{ label: "You have one fever draught already brewed." }],
-  banes: [{ label: "Stock is low." }, { label: "Rent is due soon." }],
   choices: [
     {
       id: "free-draught",

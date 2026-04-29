@@ -10,9 +10,6 @@ const scene: SceneCard = {
   type: "town",
   description:
     "Before opening, you find rare moonleaf tied with blue thread. No note, no footprints, no explanation.",
-  coreQuestion: "Can you accept kindness without knowing what it will cost?",
-  boons: [{ label: "Rare moonleaf can stretch your stock." }],
-  banes: [{ label: "Gifts often mean obligations." }, { label: "The source is unknown.", hidden: true }],
   choices: [
     {
       id: "accept-use",
@@ -56,8 +53,7 @@ const scene: SceneCard = {
         { kind: "log", text: "The charm warms once at dusk, as if someone passed close enough to notice." }
       ]
     }
-  ],
-  clock: { transformsOnDay: 4, transformsInto: "gift-giver-revealed" }
+  ]
 };
 
 export default scene;

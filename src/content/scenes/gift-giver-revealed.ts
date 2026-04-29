@@ -10,9 +10,6 @@ const scene: SceneCard = {
   type: "town",
   description:
     "An old hedge-witch admits the moonleaf was hers. She wanted to know what you do with unpriced kindness.",
-  coreQuestion: "Do you accept a relationship that begins as a test?",
-  boons: [{ label: "She knows suppliers nobody else trusts." }],
-  banes: [{ label: "She has already judged you once." }],
   choices: [
     {
       id: "accept-mentor",

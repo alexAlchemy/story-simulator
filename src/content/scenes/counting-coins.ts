@@ -10,9 +10,6 @@ const scene: SceneCard = {
   type: "reflection",
   description:
     "The shop is quiet. Rain taps the window. You count the coins twice and still imagine the rent bell.",
-  coreQuestion: "What does security cost you?",
-  boons: [{ label: "A clear ledger can calm the heart." }],
-  banes: [{ label: "Every plan costs either time, pride, or sleep." }],
   choices: [
     {
       id: "raise-prices-tomorrow",

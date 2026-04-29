@@ -15,10 +15,6 @@ describe("content integrity", () => {
     const referenced = new Set<string>();
 
     for (const scene of Object.values(scenes)) {
-      if (scene.clock?.transformsInto) {
-        referenced.add(scene.clock.transformsInto);
-      }
-
       for (const choice of scene.choices) {
         for (const effect of choice.effects) {
           if (effect.kind === "addScene" || effect.kind === "removeScene") {

@@ -58,7 +58,6 @@ const fixtureContent: GameContent = {
       title: "Flag Scene",
       type: "shop",
       description: "A small fixture scene.",
-      coreQuestion: "Which way should the flag move?",
       choices: [
         {
           id: "set-true",
@@ -85,7 +84,6 @@ const unreachableFlagContent: GameContent = {
       title: "Hidden Scene",
       type: "shop",
       description: "A fixture scene that never enters the tableau.",
-      coreQuestion: "Can this ever happen?",
       choices: [
         {
           id: "hidden-choice",

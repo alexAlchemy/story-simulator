@@ -13,7 +13,7 @@ describe("advanceDay", () => {
     expect(next.sceneTableau).toContain("forage-bad-weather");
   });
 
-  it("applies scene transformations", () => {
+  it("keeps existing scenes while advancing the day", () => {
     const state = {
       ...createInitialState(),
       day: 3,
@@ -23,8 +23,12 @@ describe("advanceDay", () => {
     const next = advanceDay(state, content);
 
     expect(next.day).toBe(4);
-    expect(next.sceneTableau).toContain("gift-giver-revealed");
-    expect(next.sceneTableau).not.toContain("gift-at-door");
+    expect(next.sceneTableau).toEqual([
+      "gift-at-door",
+      "apprentice-breaks-rule",
+      "rivals-cheap-cure",
+      "debt-called-in"
+    ]);
   });
 
   it("can reach a Day 5 ending", () => {

@@ -10,9 +10,6 @@ const scene: SceneCard = {
   type: "shop",
   description:
     "The marsh path is slick, but the shelves look thin enough to make the walk tempting.",
-  coreQuestion: "How much of tomorrow's strength do you spend on today's shortage?",
-  boons: [{ label: "Mooncap mushrooms bloom after rain." }],
-  banes: [{ label: "A bad fall could ruin the day." }],
   choices: [
     {
       id: "go-yourself",

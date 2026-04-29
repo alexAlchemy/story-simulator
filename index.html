@@ -9,7 +9,6 @@
     <div id="app" x-data="potionsShop()" x-init="init()">
       <header class="shop-header">
         <div>
-          <p class="eyebrow">Aphebis prototype</p>
           <h1>Briarwick Apothecary</h1>
           <nav class="tabs" aria-label="Primary views">
             <button
@@ -28,11 +27,29 @@
             >
               State
             </button>
+            <button
+              type="button"
+              :class="{ active: activeTab === 'scenes' }"
+              :aria-selected="activeTab === 'scenes'"
+              @click="selectTab('scenes')"
+            >
+              Scenes
+            </button>
+            <button
+              type="button"
+              :class="{ active: activeTab === 'history' }"
+              :aria-selected="activeTab === 'history'"
+              @click="selectTab('history')"
+            >
+              History
+            </button>
           </nav>
         </div>
         <div class="day-card">
-          <span>Day</span>
-          <strong x-text="state.day"></strong>
+          <div class="day-chip-line">
+            <span>Day</span>
+            <strong x-text="state.day"></strong>
+          </div>
           <small x-text="rentText"></small>
         </div>
       </header>
@@ -121,22 +138,6 @@
                   <h2 x-text="selectedScene.title"></h2>
                 </div>
                 <p x-text="selectedScene.description"></p>
-                <blockquote x-text="selectedScene.coreQuestion"></blockquote>
-
-                <div class="stakes-grid">
-                  <div>
-                    <h3>Boons</h3>
-                    <template x-for="boon in selectedScene.boons ?? []" :key="boon.label">
-                      <p class="stake boon" x-text="boon.label"></p>
-                    </template>
-                  </div>
-                  <div>
-                    <h3>Banes</h3>
-                    <template x-for="bane in visibleBanes" :key="bane.label">
-                      <p class="stake bane" x-text="bane.label"></p>
-                    </template>
-                  </div>
-                </div>
 
                 <div class="choices">
                   <template x-for="choice in selectedScene.choices" :key="choice.id">
@@ -169,17 +170,118 @@
           </section>
         </main>
 
-        <aside class="log-panel" aria-label="Recent consequences">
-          <div>
-            <h2>Recent Consequences</h2>
-            <template x-for="entry in recentLog" :key="entry.id">
-              <p><span x-text="'Day ' + entry.day"></span> · <span x-text="entry.text"></span></p>
+      </section>
+
+      <section
+        x-data="dashboardPanel()"
+        x-show="activeTab === 'scenes'"
+        x-cloak
+        class="tab-window scenes-window"
+        aria-label="Scenes"
+      >
+        <template x-if="!state.ended && sceneBrowserView === 'list'">
+          <section class="scene-browser" aria-label="Available scenes">
+            <div class="section-heading">
+              <h2>Scenes</h2>
+              <span x-text="tableauStatus"></span>
+            </div>
+
+            <div class="scene-route-list">
+              <template x-if="showEmptyTableau">
+                <div class="empty-tableau">
+                  <span class="scene-type">day complete</span>
+                  <strong>No scenes available</strong>
+                  <p>The shop has given you all it can for today.</p>
+                  <button type="button" class="primary" @click="advance()">Advance day</button>
+                </div>
+              </template>
+
+              <template x-for="scene in visibleScenes" :key="scene.id">
+                <button
+                  type="button"
+                  class="scene-route-card"
+                  @click="openScene(scene.id)"
+                  :aria-label="'Open ' + scene.title"
+                >
+                  <span>
+                    <span class="scene-type" x-text="scene.type"></span>
+                    <strong x-text="scene.title"></strong>
+                    <small x-text="scene.description"></small>
+                  </span>
+                  <span class="scene-chevron" aria-hidden="true">&gt;</span>
+                </button>
+              </template>
+            </div>
+          </section>
+        </template>
+
+        <template x-if="!state.ended && sceneBrowserView === 'detail' && selectedScene">
+          <article class="scene-detail scene-route-detail">
+            <button type="button" class="back-button" @click="backToSceneList()">
+              <span aria-hidden="true">&lt;</span>
+              <span>Scenes</span>
+            </button>
+
+            <div class="scene-detail-head">
+              <span class="scene-type" x-text="selectedScene.type"></span>
+              <h2 x-text="selectedScene.title"></h2>
+            </div>
+            <p x-text="selectedScene.description"></p>
+
+            <div class="choices">
+              <template x-for="choice in selectedScene.choices" :key="choice.id">
+                <button type="button" @click="choose(choice.id)">
+                  <strong x-text="choice.label"></strong>
+                  <span x-show="choice.description" x-text="choice.description"></span>
+                </button>
+              </template>
+            </div>
+          </article>
+        </template>
+
+        <template x-if="state.ended && ending">
+          <article class="scene-detail ending">
+            <span class="scene-type">ending</span>
+            <h2 x-text="ending.title"></h2>
+            <p x-text="ending.shopOutcome"></p>
+            <p x-text="ending.identityOutcome"></p>
+            <p x-text="ending.relationshipOutcome"></p>
+            <p class="hook" x-text="ending.futureHook"></p>
+          </article>
+        </template>
+      </section>
+
+      <section
+        x-data="dashboardPanel()"
+        x-show="activeTab === 'history'"
+        x-cloak
+        class="tab-window history-window"
+        aria-label="History"
+      >
+        <aside class="history-panel" aria-label="Recent consequences and debug state">
+          <div class="panel">
+            <div class="section-heading">
+              <h2>Recent Consequences</h2>
+              <span x-text="recentLog.length + ' entries'"></span>
+            </div>
+            <template x-if="recentLog.length">
+              <div class="history-list">
+                <template x-for="entry in recentLog" :key="entry.id">
+                  <p><span x-text="'Day ' + entry.day"></span> · <span x-text="entry.text"></span></p>
+                </template>
+              </div>
+            </template>
+            <template x-if="!recentLog.length">
+              <p class="history-empty">No consequences have been logged yet.</p>
             </template>
           </div>
-          <details>
-            <summary>Debug state</summary>
-            <pre x-text="debugState"></pre>
-          </details>
+
+          <div class="panel">
+            <details>
+              <summary>Debug state</summary>
+              <pre x-text="debugState"></pre>
+            </details>
+          </div>
         </aside>
       </section>
 

@@ -19,23 +19,26 @@ import {
   type WorldStateSemanticContext
 } from "../engine/selectors";
 
-type AppTab = "dashboard" | "state";
+type AppTab = "dashboard" | "scenes" | "state" | "history";
+type SceneBrowserView = "list" | "detail";
 const EXPECTED_STOCK_DEMAND = 4;
 
 type AppModel = {
   state: GameState;
   activeTab: AppTab;
+  sceneBrowserView: SceneBrowserView;
   selectedSceneId: string | null;
   ending: EndingSummary | null;
   init: () => void;
   restart: () => void;
   selectTab: (tab: AppTab) => void;
   selectScene: (sceneId: string) => void;
+  openScene: (sceneId: string) => void;
+  backToSceneList: () => void;
   choose: (choiceId: string) => void;
   advance: () => void;
   visibleScenes: SceneCard[];
   selectedScene: SceneCard | null;
-  visibleBanes: NonNullable<SceneCard["banes"]>;
   resourceRows: DashboardRow[];
   valueRows: DashboardRow[];
   relationshipRows: DashboardRow[];
@@ -53,6 +56,7 @@ function createAppModel(): AppModel {
   return {
     state: createInitialState(),
     activeTab: "dashboard",
+    sceneBrowserView: "list",
     selectedSceneId: null,
     ending: null,
     init() {
@@ -62,13 +66,24 @@ function createAppModel(): AppModel {
       this.state = createInitialState();
       this.ending = null;
       this.activeTab = "dashboard";
+      this.sceneBrowserView = "list";
       this.selectedSceneId = this.visibleScenes[0]?.id ?? null;
     },
     selectTab(tab) {
       this.activeTab = tab;
+      if (tab === "scenes") {
+        this.sceneBrowserView = "list";
+      }
     },
     selectScene(sceneId: string) {
       this.selectedSceneId = sceneId;
+    },
+    openScene(sceneId: string) {
+      this.selectedSceneId = sceneId;
+      this.sceneBrowserView = "detail";
+    },
+    backToSceneList() {
+      this.sceneBrowserView = "list";
     },
     choose(choiceId: string) {
       if (!this.selectedSceneId) {
@@ -77,6 +92,9 @@ function createAppModel(): AppModel {
 
       this.state = resolveChoice(this.state, this.selectedSceneId, choiceId, content);
       this.selectedSceneId = this.visibleScenes[0]?.id ?? null;
+      if (this.activeTab === "scenes") {
+        this.sceneBrowserView = "list";
+      }
 
       if (this.state.day >= content.rentDueDay && this.state.sceneTableau.length === 0) {
         this.state = { ...this.state, ended: true };
@@ -88,9 +106,11 @@ function createAppModel(): AppModel {
       if (this.state.ended) {
         this.ending = buildEnding(this.state, content);
         this.selectedSceneId = null;
+        this.sceneBrowserView = "list";
         return;
       }
       this.selectedSceneId = this.visibleScenes[0]?.id ?? null;
+      this.sceneBrowserView = "list";
     },
     get visibleScenes() {
       return getVisibleScenes(this.state, content);
@@ -100,9 +120,6 @@ function createAppModel(): AppModel {
         return null;
       }
       return content.scenes[this.selectedSceneId] ?? null;
-    },
-    get visibleBanes() {
-      return this.selectedScene?.banes?.filter((bane) => !bane.hidden) ?? [];
     },
     get resourceRows() {
       return getResourceRows(this.state);
@@ -136,10 +153,7 @@ function createAppModel(): AppModel {
       if (this.state.ended) {
         return "Run complete";
       }
-      if (daysLeft === 0) {
-        return `${content.rentAmount} coins due today`;
-      }
-      return `${content.rentAmount} coins due in ${daysLeft} day${daysLeft === 1 ? "" : "s"}`;
+      return `${daysLeft} day${daysLeft === 1 ? "" : "s"} left`;
     },
     get tableauStatus() {
       const count = this.visibleScenes.length;

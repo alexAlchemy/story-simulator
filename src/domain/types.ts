@@ -80,23 +80,6 @@ export type GameState = {
   ended: boolean;
 };
 
-export type Boon = {
-  label: string;
-  description?: string;
-};
-
-export type Bane = {
-  label: string;
-  description?: string;
-  hidden?: boolean;
-};
-
-export type SceneClock = {
-  expiresOnDay?: number;
-  transformsOnDay?: number;
-  transformsInto?: string;
-};
-
 export type SceneChoice = {
   id: string;
   label: string;
@@ -110,11 +93,7 @@ export type SceneCard = {
   title: string;
   type: SceneType;
   description: string;
-  coreQuestion: string;
-  boons?: Boon[];
-  banes?: Bane[];
   choices: SceneChoice[];
-  clock?: SceneClock;
 };
 
 export type Effect =

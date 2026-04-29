@@ -1,11 +1,17 @@
 import type { SceneCard } from "../../domain/types";
+import apprenticeBreaksRule from "./apprentice-breaks-rule";
 import apprenticeAsksTrust from "./apprentice-asks-trust";
+import apprenticeFirstCure from "./apprentice-first-cure";
 import apprenticeHidingMistake from "./apprentice-hiding-mistake";
 import countingCoins from "./counting-coins";
+import debtCalledIn from "./debt-called-in";
 import desperateStablehand from "./desperate-stablehand";
+import familiarCustomer from "./familiar-customer";
 import forageBadWeather from "./forage-bad-weather";
 import giftAtDoor from "./gift-at-door";
 import giftGiverRevealed from "./gift-giver-revealed";
+import rivalsCheapCure from "./rivals-cheap-cure";
+import rumourAtWell from "./rumour-at-well";
 
 const sceneList: SceneCard[] = [
   desperateStablehand,
@@ -14,17 +20,29 @@ const sceneList: SceneCard[] = [
   countingCoins,
   forageBadWeather,
   apprenticeAsksTrust,
-  giftGiverRevealed
+  giftGiverRevealed,
+  apprenticeFirstCure,
+  rumourAtWell,
+  apprenticeBreaksRule,
+  familiarCustomer,
+  rivalsCheapCure,
+  debtCalledIn
 ];
 
 export const scenes: Record<string, SceneCard> = Object.fromEntries(sceneList.map((scene) => [scene.id, scene]));
 
 export {
+  apprenticeBreaksRule,
   apprenticeAsksTrust,
+  apprenticeFirstCure,
   apprenticeHidingMistake,
   countingCoins,
+  debtCalledIn,
   desperateStablehand,
+  familiarCustomer,
   forageBadWeather,
   giftAtDoor,
-  giftGiverRevealed
+  giftGiverRevealed,
+  rivalsCheapCure,
+  rumourAtWell
 };
