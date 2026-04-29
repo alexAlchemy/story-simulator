@@ -65,6 +65,14 @@
             <span x-text="tableauStatus"></span>
           </div>
           <div class="scene-list">
+            <template x-if="showEmptyTableau">
+              <div class="empty-tableau">
+                <span class="scene-type">day complete</span>
+                <strong>No scenes available</strong>
+                <p>The shop has given you all it can for today.</p>
+                <button type="button" class="primary" @click="advance()">Advance day</button>
+              </div>
+            </template>
             <template x-for="scene in visibleScenes" :key="scene.id">
               <button
                 type="button"

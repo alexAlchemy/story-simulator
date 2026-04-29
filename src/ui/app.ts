@@ -30,6 +30,7 @@ type AppModel = {
   valueRows: LabelledValue[];
   relationshipRows: LabelledValue[];
   recentLog: GameState["log"];
+  showEmptyTableau: boolean;
   rentText: string;
   tableauStatus: string;
   debugState: string;
@@ -115,6 +116,9 @@ function createAppModel(): AppModel {
     },
     get recentLog() {
       return this.state.log.slice(-6).reverse();
+    },
+    get showEmptyTableau() {
+      return !this.state.ended && this.visibleScenes.length === 0;
     },
     get rentText() {
       const daysLeft = Math.max(0, content.rentDueDay - this.state.day);

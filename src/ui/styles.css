@@ -152,6 +152,7 @@ h3 {
 }
 
 .actions button,
+.empty-tableau button,
 .choices button {
   min-height: 44px;
   padding: 10px 12px;
@@ -162,6 +163,7 @@ h3 {
 }
 
 .actions .primary,
+.empty-tableau .primary,
 .choices button:hover,
 .scene-card:hover,
 .scene-card.selected {
@@ -210,6 +212,28 @@ h3 {
   line-height: 1.35;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+}
+
+.empty-tableau {
+  display: grid;
+  gap: 10px;
+  min-height: 188px;
+  padding: 16px;
+  border: 1px dashed #b8aa94;
+  border-radius: 8px;
+  background: #fbf3e4;
+}
+
+.empty-tableau p {
+  margin-bottom: 4px;
+  color: #596254;
+  line-height: 1.4;
+}
+
+.empty-tableau button {
+  width: 100%;
+  cursor: pointer;
+  text-align: center;
 }
 
 .scene-detail {
