@@ -11,6 +11,24 @@
         <div>
           <p class="eyebrow">Aphebis prototype</p>
           <h1>Briarwick Apothecary</h1>
+          <nav class="tabs" aria-label="Primary views">
+            <button
+              type="button"
+              :class="{ active: activeTab === 'dashboard' }"
+              :aria-selected="activeTab === 'dashboard'"
+              @click="selectTab('dashboard')"
+            >
+              Dashboard
+            </button>
+            <button
+              type="button"
+              :class="{ active: activeTab === 'state' }"
+              :aria-selected="activeTab === 'state'"
+              @click="selectTab('state')"
+            >
+              State
+            </button>
+          </nav>
         </div>
         <div class="day-card">
           <span>Day</span>
@@ -19,143 +37,286 @@
         </div>
       </header>
 
-      <main class="layout">
-        <section class="state-column" aria-label="Shop state">
-          <div class="panel">
-            <h2>Shop</h2>
-            <template x-for="item in resourceRows" :key="item.key">
-              <div class="stat-row">
-                <span x-text="item.label"></span>
-                <strong x-text="item.value"></strong>
-              </div>
-            </template>
-          </div>
+      <section
+        x-data="dashboardPanel()"
+        x-show="activeTab === 'dashboard'"
+        x-cloak
+        class="tab-window"
+        aria-label="Dashboard"
+      >
+        <main class="layout">
+          <section class="state-column" aria-label="Shop state">
+            <div class="panel">
+              <h2>Shop</h2>
+              <template x-for="item in resourceRows" :key="item.key">
+                <div class="stat-row">
+                  <span x-text="item.label"></span>
+                  <strong x-text="item.value"></strong>
+                </div>
+              </template>
+            </div>
 
-          <div class="panel">
-            <h2>Values</h2>
-            <template x-for="item in valueRows" :key="item.key">
-              <div class="stat-row">
-                <span x-text="item.label"></span>
-                <strong x-text="item.value"></strong>
-              </div>
-            </template>
-          </div>
+            <div class="panel">
+              <h2>Values</h2>
+              <template x-for="item in valueRows" :key="item.key">
+                <div class="stat-row">
+                  <span x-text="item.label"></span>
+                  <strong x-text="item.value"></strong>
+                </div>
+              </template>
+            </div>
 
-          <div class="panel">
-            <h2>Relationships</h2>
-            <template x-for="item in relationshipRows" :key="item.key">
-              <div class="stat-row">
-                <span x-text="item.label"></span>
-                <strong x-text="item.value"></strong>
-              </div>
-            </template>
-          </div>
+            <div class="panel">
+              <h2>Relationships</h2>
+              <template x-for="item in relationshipRows" :key="item.key">
+                <div class="stat-row">
+                  <span x-text="item.label"></span>
+                  <strong x-text="item.value"></strong>
+                </div>
+              </template>
+            </div>
 
-          <div class="panel actions">
-            <button type="button" class="primary" @click="advance()" :disabled="state.ended">
-              Advance day
-            </button>
-            <button type="button" @click="restart()">Restart run</button>
-          </div>
-        </section>
-
-        <section class="tableau-column" aria-label="Scene tableau">
-          <div class="section-heading">
-            <h2>Scene Tableau</h2>
-            <span x-text="tableauStatus"></span>
-          </div>
-          <div class="scene-list">
-            <template x-if="showEmptyTableau">
-              <div class="empty-tableau">
-                <span class="scene-type">day complete</span>
-                <strong>No scenes available</strong>
-                <p>The shop has given you all it can for today.</p>
-                <button type="button" class="primary" @click="advance()">Advance day</button>
-              </div>
-            </template>
-            <template x-for="scene in visibleScenes" :key="scene.id">
-              <button
-                type="button"
-                class="scene-card"
-                :class="{ selected: selectedSceneId === scene.id }"
-                @click="selectScene(scene.id)"
-              >
-                <span class="scene-type" x-text="scene.type"></span>
-                <strong x-text="scene.title"></strong>
-                <small x-text="scene.description"></small>
+            <div class="panel actions">
+              <button type="button" class="primary" @click="advance()" :disabled="state.ended">
+                Advance day
               </button>
+              <button type="button" @click="restart()">Restart run</button>
+            </div>
+          </section>
+
+          <section class="tableau-column" aria-label="Scene tableau">
+            <div class="section-heading">
+              <h2>Scene Tableau</h2>
+              <span x-text="tableauStatus"></span>
+            </div>
+            <div class="scene-list">
+              <template x-if="showEmptyTableau">
+                <div class="empty-tableau">
+                  <span class="scene-type">day complete</span>
+                  <strong>No scenes available</strong>
+                  <p>The shop has given you all it can for today.</p>
+                  <button type="button" class="primary" @click="advance()">Advance day</button>
+                </div>
+              </template>
+              <template x-for="scene in visibleScenes" :key="scene.id">
+                <button
+                  type="button"
+                  class="scene-card"
+                  :class="{ selected: selectedSceneId === scene.id }"
+                  @click="selectScene(scene.id)"
+                >
+                  <span class="scene-type" x-text="scene.type"></span>
+                  <strong x-text="scene.title"></strong>
+                  <small x-text="scene.description"></small>
+                </button>
+              </template>
+            </div>
+          </section>
+
+          <section class="detail-column" aria-label="Selected scene">
+            <template x-if="!state.ended && selectedScene">
+              <article class="scene-detail">
+                <div class="scene-detail-head">
+                  <span class="scene-type" x-text="selectedScene.type"></span>
+                  <h2 x-text="selectedScene.title"></h2>
+                </div>
+                <p x-text="selectedScene.description"></p>
+                <blockquote x-text="selectedScene.coreQuestion"></blockquote>
+
+                <div class="stakes-grid">
+                  <div>
+                    <h3>Boons</h3>
+                    <template x-for="boon in selectedScene.boons ?? []" :key="boon.label">
+                      <p class="stake boon" x-text="boon.label"></p>
+                    </template>
+                  </div>
+                  <div>
+                    <h3>Banes</h3>
+                    <template x-for="bane in visibleBanes" :key="bane.label">
+                      <p class="stake bane" x-text="bane.label"></p>
+                    </template>
+                  </div>
+                </div>
+
+                <div class="choices">
+                  <template x-for="choice in selectedScene.choices" :key="choice.id">
+                    <button type="button" @click="choose(choice.id)">
+                      <strong x-text="choice.label"></strong>
+                      <span x-show="choice.description" x-text="choice.description"></span>
+                    </button>
+                  </template>
+                </div>
+              </article>
+            </template>
+
+            <template x-if="!state.ended && !selectedScene">
+              <article class="scene-detail empty">
+                <h2>Choose a scene</h2>
+                <p>The counter is open, the rain is steady, and somebody needs something from you.</p>
+              </article>
+            </template>
+
+            <template x-if="state.ended && ending">
+              <article class="scene-detail ending">
+                <span class="scene-type">ending</span>
+                <h2 x-text="ending.title"></h2>
+                <p x-text="ending.shopOutcome"></p>
+                <p x-text="ending.identityOutcome"></p>
+                <p x-text="ending.relationshipOutcome"></p>
+                <p class="hook" x-text="ending.futureHook"></p>
+              </article>
+            </template>
+          </section>
+        </main>
+
+        <aside class="log-panel" aria-label="Recent consequences">
+          <div>
+            <h2>Recent Consequences</h2>
+            <template x-for="entry in recentLog" :key="entry.id">
+              <p><span x-text="'Day ' + entry.day"></span> · <span x-text="entry.text"></span></p>
             </template>
           </div>
-        </section>
+          <details>
+            <summary>Debug state</summary>
+            <pre x-text="debugState"></pre>
+          </details>
+        </aside>
+      </section>
 
-        <section class="detail-column" aria-label="Selected scene">
-          <template x-if="!state.ended && selectedScene">
-            <article class="scene-detail">
-              <div class="scene-detail-head">
-                <span class="scene-type" x-text="selectedScene.type"></span>
-                <h2 x-text="selectedScene.title"></h2>
-              </div>
-              <p x-text="selectedScene.description"></p>
-              <blockquote x-text="selectedScene.coreQuestion"></blockquote>
-
-              <div class="stakes-grid">
-                <div>
-                  <h3>Boons</h3>
-                  <template x-for="boon in selectedScene.boons ?? []" :key="boon.label">
-                    <p class="stake boon" x-text="boon.label"></p>
-                  </template>
-                </div>
-                <div>
-                  <h3>Banes</h3>
-                  <template x-for="bane in visibleBanes" :key="bane.label">
-                    <p class="stake bane" x-text="bane.label"></p>
-                  </template>
-                </div>
-              </div>
-
-              <div class="choices">
-                <template x-for="choice in selectedScene.choices" :key="choice.id">
-                  <button type="button" @click="choose(choice.id)">
-                    <strong x-text="choice.label"></strong>
-                    <span x-show="choice.description" x-text="choice.description"></span>
-                  </button>
-                </template>
-              </div>
-            </article>
-          </template>
-
-          <template x-if="!state.ended && !selectedScene">
-            <article class="scene-detail empty">
-              <h2>Choose a scene</h2>
-              <p>The counter is open, the rain is steady, and somebody needs something from you.</p>
-            </article>
-          </template>
-
-          <template x-if="state.ended && ending">
-            <article class="scene-detail ending">
-              <span class="scene-type">ending</span>
-              <h2 x-text="ending.title"></h2>
-              <p x-text="ending.shopOutcome"></p>
-              <p x-text="ending.identityOutcome"></p>
-              <p x-text="ending.relationshipOutcome"></p>
-              <p class="hook" x-text="ending.futureHook"></p>
-            </article>
-          </template>
-        </section>
-      </main>
-
-      <aside class="log-panel" aria-label="Recent consequences">
-        <div>
-          <h2>Recent Consequences</h2>
-          <template x-for="entry in recentLog" :key="entry.id">
-            <p><span x-text="'Day ' + entry.day"></span> · <span x-text="entry.text"></span></p>
-          </template>
+      <section
+        x-data="worldStatePanel()"
+        x-show="activeTab === 'state'"
+        x-cloak
+        class="tab-window world-state"
+        aria-label="World state"
+      >
+        <div class="section-heading">
+          <h2>World State</h2>
+          <span x-text="entityCards.length + ' entities, ' + relationshipCards.length + ' relationships'"></span>
         </div>
-        <details>
-          <summary>Debug state</summary>
-          <pre x-text="debugState"></pre>
-        </details>
-      </aside>
+
+        <div class="state-grid">
+          <section aria-label="Entities">
+            <h2>Entities</h2>
+            <div class="state-card-list">
+              <template x-for="entity in entityCards" :key="entity.id">
+                <article class="state-card" x-data="entityCard(entity.id)">
+                  <div class="state-card-head">
+                    <div>
+                      <span class="scene-type" x-text="currentEntity(entityCards).kind"></span>
+                      <h3 x-text="currentEntity(entityCards).displayName"></h3>
+                    </div>
+                    <small x-text="currentEntity(entityCards).id"></small>
+                  </div>
+
+                  <div class="tag-list" x-show="currentEntity(entityCards).tags.length">
+                    <template x-for="tag in currentEntity(entityCards).tags" :key="tag">
+                      <span x-text="tag"></span>
+                    </template>
+                  </div>
+
+                  <div class="state-section" x-show="currentEntity(entityCards).quantities.length">
+                    <h4>Quantities</h4>
+                    <template x-for="item in currentEntity(entityCards).quantities" :key="item.key">
+                      <div class="stat-row compact">
+                        <span x-text="item.label"></span>
+                        <span class="stat-value">
+                          <strong x-text="item.value"></strong>
+                          <small x-show="item.semantic" x-text="item.semantic ? item.semantic.label + ': ' + item.semantic.description : ''"></small>
+                        </span>
+                      </div>
+                    </template>
+                  </div>
+
+                  <div class="state-section" x-show="currentEntity(entityCards).gauges.length">
+                    <h4>Gauges</h4>
+                    <template x-for="item in currentEntity(entityCards).gauges" :key="item.key">
+                      <div class="stat-row compact">
+                        <span x-text="item.label"></span>
+                        <span class="stat-value">
+                          <strong x-text="item.value"></strong>
+                          <small x-show="item.semantic" x-text="item.semantic ? item.semantic.label + ': ' + item.semantic.description : ''"></small>
+                        </span>
+                      </div>
+                    </template>
+                  </div>
+
+                  <div class="state-section" x-show="currentEntity(entityCards).flags.length">
+                    <h4>Flags</h4>
+                    <template x-for="item in currentEntity(entityCards).flags" :key="item.key">
+                      <div class="stat-row compact">
+                        <span x-text="item.label"></span>
+                        <span class="stat-value">
+                          <strong x-text="item.value"></strong>
+                          <small x-show="item.semantic" x-text="item.semantic ? item.semantic.label + ': ' + item.semantic.description : ''"></small>
+                        </span>
+                      </div>
+                    </template>
+                  </div>
+                </article>
+              </template>
+            </div>
+          </section>
+
+          <section aria-label="Relationships">
+            <h2>Relationships</h2>
+            <div class="state-card-list">
+              <template x-for="relationship in relationshipCards" :key="relationship.id">
+                <article class="state-card" x-data="relationshipCard(relationship.id)">
+                  <div class="state-card-head">
+                    <div>
+                      <span class="scene-type">relationship</span>
+                      <h3>
+                        <span x-text="currentRelationship(relationshipCards).from"></span>
+                        <span> to </span>
+                        <span x-text="currentRelationship(relationshipCards).to"></span>
+                      </h3>
+                    </div>
+                    <small x-text="currentRelationship(relationshipCards).id"></small>
+                  </div>
+
+                  <div class="state-section" x-show="currentRelationship(relationshipCards).dimensions.length">
+                    <h4>Dimensions</h4>
+                    <template x-for="item in currentRelationship(relationshipCards).dimensions" :key="item.key">
+                      <div class="stat-row compact">
+                        <span x-text="item.label"></span>
+                        <span class="stat-value">
+                          <strong x-text="item.value"></strong>
+                          <small x-show="item.semantic" x-text="item.semantic ? item.semantic.label + ': ' + item.semantic.description : ''"></small>
+                        </span>
+                      </div>
+                    </template>
+                  </div>
+
+                  <div class="state-section" x-show="currentRelationship(relationshipCards).flags.length">
+                    <h4>Flags</h4>
+                    <template x-for="item in currentRelationship(relationshipCards).flags" :key="item.key">
+                      <div class="stat-row compact">
+                        <span x-text="item.label"></span>
+                        <span class="stat-value">
+                          <strong x-text="item.value"></strong>
+                          <small x-show="item.semantic" x-text="item.semantic ? item.semantic.label + ': ' + item.semantic.description : ''"></small>
+                        </span>
+                      </div>
+                    </template>
+                  </div>
+
+                  <div class="state-section" x-show="currentRelationship(relationshipCards).tokens.length">
+                    <h4>Tokens</h4>
+                    <template x-for="token in currentRelationship(relationshipCards).tokens" :key="token.id">
+                      <div class="token-row">
+                        <strong x-text="token.label"></strong>
+                        <span x-text="token.kind"></span>
+                        <p x-show="token.description" x-text="token.description"></p>
+                      </div>
+                    </template>
+                  </div>
+                </article>
+              </template>
+            </div>
+          </section>
+        </div>
+      </section>
     </div>
     <script type="module" src="/src/ui/app.ts"></script>
   </body>

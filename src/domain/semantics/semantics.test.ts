@@ -1,12 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { applyBoundedGaugeChange, applySignedGaugeChange } from "./change";
 import {
+  entityGaugeDefinitions,
   fatigueDefinition,
   coinsDefinition,
+  relationshipDimensionDefinitions,
   stockDefinition,
   signedGaugeDefinition,
   trustDefinition
 } from "./definitions";
+import type { GaugeKey, RelationshipDimensionKey } from "../types";
 import {
   describeBoundedGauge,
   describeOpenQuantity,
@@ -47,6 +50,65 @@ describe("semantic primitives", () => {
     expect(describeBoundedGauge(trustDefinition, 0.1).label).toBe("Distrustful");
     expect(describeBoundedGauge(trustDefinition, 0.5).label).toBe("Tentative");
     expect(describeBoundedGauge(trustDefinition, 0.95).label).toBe("Devoted");
+  });
+
+  it("defines semantic descriptions for every world gauge and relationship dimension", () => {
+    const gaugeKeys = [
+      "fatigue",
+      "compassion",
+      "prudence",
+      "ambition",
+      "confidence",
+      "gossipHeat"
+    ] satisfies GaugeKey[];
+    const relationshipDimensionKeys = [
+      "trust",
+      "affection",
+      "respect",
+      "fear",
+      "resentment",
+      "obligation",
+      "goodwill",
+      "familiarity"
+    ] satisfies RelationshipDimensionKey[];
+
+    expect(Object.keys(entityGaugeDefinitions).sort()).toEqual([...gaugeKeys].sort());
+    expect(Object.keys(relationshipDimensionDefinitions).sort()).toEqual(
+      [...relationshipDimensionKeys].sort()
+    );
+
+    for (const definition of [
+      ...Object.values(entityGaugeDefinitions),
+      ...Object.values(relationshipDimensionDefinitions)
+    ]) {
+      const described =
+        definition.family === "signedGauge"
+          ? describeSignedGauge(definition, 0)
+          : describeBoundedGauge(definition, 0.5);
+
+      expect(described.label).toBeTruthy();
+      expect(described.description).toBeTruthy();
+    }
+  });
+
+  it("treats dramatic values as signed axes with neutral at zero", () => {
+    expect(describeSignedGauge(entityGaugeDefinitions.compassion, 0)).toMatchObject({
+      label: "Neutral",
+      description: "Compassion and detachment are still in ordinary balance."
+    });
+    expect(describeSignedGauge(entityGaugeDefinitions.compassion, -0.5).label).toBe("Cold");
+    expect(describeSignedGauge(entityGaugeDefinitions.compassion, 0.7).label).toBe(
+      "Compassionate"
+    );
+
+    expect(describeSignedGauge(entityGaugeDefinitions.prudence, 0)).toMatchObject({
+      label: "Neutral",
+      description: "Prudence and impulse are still in ordinary balance."
+    });
+    expect(describeSignedGauge(entityGaugeDefinitions.ambition, 0)).toMatchObject({
+      label: "Neutral",
+      description: "Ambition and contentment are still in ordinary balance."
+    });
   });
 
   it("validates threshold scales", () => {

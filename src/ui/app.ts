@@ -8,18 +8,28 @@ import { buildEnding } from "../engine/buildEnding";
 import { resolveChoice } from "../engine/resolveChoice";
 import { getVisibleScenes } from "../engine/sceneTableau";
 import {
+  getEntityCards,
   getRelationshipRows,
   getResourceRows,
   getValueRows,
-  type DashboardRow
+  getRelationshipCards,
+  type DashboardRow,
+  type EntityCardViewModel,
+  type RelationshipCardViewModel,
+  type WorldStateSemanticContext
 } from "../engine/selectors";
+
+type AppTab = "dashboard" | "state";
+const EXPECTED_STOCK_DEMAND = 4;
 
 type AppModel = {
   state: GameState;
+  activeTab: AppTab;
   selectedSceneId: string | null;
   ending: EndingSummary | null;
   init: () => void;
   restart: () => void;
+  selectTab: (tab: AppTab) => void;
   selectScene: (sceneId: string) => void;
   choose: (choiceId: string) => void;
   advance: () => void;
@@ -29,6 +39,9 @@ type AppModel = {
   resourceRows: DashboardRow[];
   valueRows: DashboardRow[];
   relationshipRows: DashboardRow[];
+  entityCards: EntityCardViewModel[];
+  relationshipCards: RelationshipCardViewModel[];
+  worldStateSemanticContext: WorldStateSemanticContext;
   recentLog: GameState["log"];
   showEmptyTableau: boolean;
   rentText: string;
@@ -39,6 +52,7 @@ type AppModel = {
 function createAppModel(): AppModel {
   return {
     state: createInitialState(),
+    activeTab: "dashboard",
     selectedSceneId: null,
     ending: null,
     init() {
@@ -47,7 +61,11 @@ function createAppModel(): AppModel {
     restart() {
       this.state = createInitialState();
       this.ending = null;
+      this.activeTab = "dashboard";
       this.selectedSceneId = this.visibleScenes[0]?.id ?? null;
+    },
+    selectTab(tab) {
+      this.activeTab = tab;
     },
     selectScene(sceneId: string) {
       this.selectedSceneId = sceneId;
@@ -95,6 +113,18 @@ function createAppModel(): AppModel {
     get relationshipRows() {
       return getRelationshipRows(this.state);
     },
+    get entityCards() {
+      return getEntityCards(this.state, this.worldStateSemanticContext);
+    },
+    get relationshipCards() {
+      return getRelationshipCards(this.state, this.worldStateSemanticContext);
+    },
+    get worldStateSemanticContext() {
+      return {
+        rentAmount: content.rentAmount,
+        expectedDemand: EXPECTED_STOCK_DEMAND
+      };
+    },
     get recentLog() {
       return this.state.log.slice(-6).reverse();
     },
@@ -121,6 +151,44 @@ function createAppModel(): AppModel {
   };
 }
 
+function createDashboardPanel() {
+  return {};
+}
+
+function createWorldStatePanel() {
+  return {};
+}
+
+function createEntityCard(entityId: string) {
+  return {
+    entityId,
+    currentEntity(cards: EntityCardViewModel[]) {
+      const entity = cards.find((card) => card.id === this.entityId);
+
+      if (!entity) {
+        throw new Error(`Missing entity card view model: ${this.entityId}`);
+      }
+
+      return entity;
+    }
+  };
+}
+
+function createRelationshipCard(relationshipId: string) {
+  return {
+    relationshipId,
+    currentRelationship(cards: RelationshipCardViewModel[]) {
+      const relationship = cards.find((card) => card.id === this.relationshipId);
+
+      if (!relationship) {
+        throw new Error(`Missing relationship card view model: ${this.relationshipId}`);
+      }
+
+      return relationship;
+    }
+  };
+}
+
 declare global {
   interface Window {
     Alpine: typeof Alpine;
@@ -130,4 +198,8 @@ declare global {
 
 window.Alpine = Alpine;
 window.potionsShop = createAppModel;
+Alpine.data("dashboardPanel", createDashboardPanel);
+Alpine.data("worldStatePanel", createWorldStatePanel);
+Alpine.data("entityCard", createEntityCard);
+Alpine.data("relationshipCard", createRelationshipCard);
 Alpine.start();

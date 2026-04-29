@@ -2,6 +2,7 @@
 
 declare module "alpinejs" {
   const Alpine: {
+    data: (name: string, callback: (...args: any[]) => unknown) => void;
     start: () => void;
   };
 

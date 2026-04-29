@@ -5,6 +5,10 @@ import type {
   SemanticThreshold,
   SignedGaugeDefinition
 } from "./types";
+import type {
+  GaugeKey as DomainGaugeKey,
+  RelationshipDimensionKey as DomainRelationshipDimensionKey
+} from "../types";
 
 export type FatigueLabel =
   | "Rested"
@@ -33,6 +37,90 @@ export type StockLabel =
   | "Manageable"
   | "WellStocked"
   | "Abundant";
+
+export type CompassionLabel =
+  | "Cold"
+  | "Reserved"
+  | "Neutral"
+  | "Tender"
+  | "Compassionate";
+
+export type PrudenceLabel =
+  | "Impulsive"
+  | "Instinctive"
+  | "Neutral"
+  | "Careful"
+  | "Prudent";
+
+export type AmbitionLabel =
+  | "Humble"
+  | "Content"
+  | "Neutral"
+  | "Driven"
+  | "Ambitious";
+
+export type ConfidenceLabel =
+  | "Shaken"
+  | "Unsure"
+  | "FindingFooting"
+  | "Assured"
+  | "Radiant";
+
+export type GossipHeatLabel =
+  | "Quiet"
+  | "Murmuring"
+  | "Buzzing"
+  | "Volatile"
+  | "Scandalous";
+
+export type AffectionLabel =
+  | "Cool"
+  | "Softening"
+  | "Fond"
+  | "Warm"
+  | "Cherished";
+
+export type RespectLabel =
+  | "Dismissive"
+  | "Noticing"
+  | "Credible"
+  | "Esteemed"
+  | "Admired";
+
+export type FearLabel =
+  | "Unafraid"
+  | "Uneasy"
+  | "Cautious"
+  | "Frightened"
+  | "Dreadful";
+
+export type ResentmentLabel =
+  | "Clear"
+  | "Irritated"
+  | "Sore"
+  | "Bitter"
+  | "Grievance";
+
+export type ObligationLabel =
+  | "Free"
+  | "Owing"
+  | "Indebted"
+  | "Bound"
+  | "Beholden";
+
+export type GoodwillLabel =
+  | "Indifferent"
+  | "Open"
+  | "Kindly"
+  | "Generous"
+  | "Protective";
+
+export type FamiliarityLabel =
+  | "Unknown"
+  | "Recognized"
+  | "Known"
+  | "Comfortable"
+  | "Intimate";
 
 export const fatigueThresholds = [
   { rank: 0, min: 0, label: "Rested", description: "Clear-headed and physically steady." },
@@ -141,6 +229,212 @@ export const stockThresholds = [
   }
 ] as const satisfies readonly SemanticThreshold<StockLabel>[];
 
+export const compassionThresholds = [
+  {
+    rank: 0,
+    min: -1,
+    label: "Cold",
+    description: "Care is being withheld, even when need is visible."
+  },
+  {
+    rank: 1,
+    min: -0.4,
+    label: "Reserved",
+    description: "Feeling is present, but kept at a careful distance."
+  },
+  {
+    rank: 2,
+    min: -0.1,
+    label: "Neutral",
+    description: "Compassion and detachment are still in ordinary balance."
+  },
+  {
+    rank: 3,
+    min: 0.25,
+    label: "Tender",
+    description: "Care is beginning to shape decisions."
+  },
+  {
+    rank: 4,
+    min: 0.65,
+    label: "Compassionate",
+    description: "The shopkeeper is strongly moved by the needs of others."
+  }
+] as const satisfies readonly SemanticThreshold<CompassionLabel>[];
+
+export const prudenceThresholds = [
+  {
+    rank: 0,
+    min: -1,
+    label: "Impulsive",
+    description: "Immediate feeling is outrunning caution."
+  },
+  {
+    rank: 1,
+    min: -0.4,
+    label: "Instinctive",
+    description: "Choices lean toward gut response over planning."
+  },
+  {
+    rank: 2,
+    min: -0.1,
+    label: "Neutral",
+    description: "Prudence and impulse are still in ordinary balance."
+  },
+  {
+    rank: 3,
+    min: 0.25,
+    label: "Careful",
+    description: "Consequences are beginning to weigh on decisions."
+  },
+  {
+    rank: 4,
+    min: 0.65,
+    label: "Prudent",
+    description: "The shopkeeper strongly favours caution and preparation."
+  }
+] as const satisfies readonly SemanticThreshold<PrudenceLabel>[];
+
+export const ambitionThresholds = [
+  {
+    rank: 0,
+    min: -1,
+    label: "Humble",
+    description: "Personal advancement is being set aside."
+  },
+  {
+    rank: 1,
+    min: -0.4,
+    label: "Content",
+    description: "The shopkeeper is leaning away from larger wants."
+  },
+  {
+    rank: 2,
+    min: -0.1,
+    label: "Neutral",
+    description: "Ambition and contentment are still in ordinary balance."
+  },
+  {
+    rank: 3,
+    min: 0.25,
+    label: "Driven",
+    description: "Growth and recognition are beginning to shape decisions."
+  },
+  {
+    rank: 4,
+    min: 0.65,
+    label: "Ambitious",
+    description: "The shopkeeper is strongly pulled toward advancement."
+  }
+] as const satisfies readonly SemanticThreshold<AmbitionLabel>[];
+
+export const confidenceThresholds = [
+  { rank: 0, min: 0, label: "Shaken", description: "Self-belief is fragile and easily knocked." },
+  { rank: 1, min: 0.2, label: "Unsure", description: "There is ability here, but hesitation too." },
+  {
+    rank: 2,
+    min: 0.45,
+    label: "FindingFooting",
+    description: "Confidence is becoming steady enough to act on."
+  },
+  {
+    rank: 3,
+    min: 0.7,
+    label: "Assured",
+    description: "They can trust their own hands under ordinary pressure."
+  },
+  {
+    rank: 4,
+    min: 0.9,
+    label: "Radiant",
+    description: "Confidence is bright enough to steady other people too."
+  }
+] as const satisfies readonly SemanticThreshold<ConfidenceLabel>[];
+
+export const gossipHeatThresholds = [
+  { rank: 0, min: 0, label: "Quiet", description: "Town talk is barely touching the shop." },
+  {
+    rank: 1,
+    min: 0.2,
+    label: "Murmuring",
+    description: "A few people are talking, but the mood is still soft."
+  },
+  {
+    rank: 2,
+    min: 0.45,
+    label: "Buzzing",
+    description: "The shop is becoming a subject of active conversation."
+  },
+  {
+    rank: 3,
+    min: 0.7,
+    label: "Volatile",
+    description: "Rumour is moving quickly enough to distort events."
+  },
+  {
+    rank: 4,
+    min: 0.9,
+    label: "Scandalous",
+    description: "The town is primed to turn one incident into a story."
+  }
+] as const satisfies readonly SemanticThreshold<GossipHeatLabel>[];
+
+export const affectionThresholds = [
+  { rank: 0, min: 0, label: "Cool", description: "There is little personal warmth here." },
+  { rank: 1, min: 0.2, label: "Softening", description: "Warmth is possible, but still tentative." },
+  { rank: 2, min: 0.45, label: "Fond", description: "There is real fondness in the connection." },
+  { rank: 3, min: 0.7, label: "Warm", description: "Affection is strong enough to shape choices." },
+  { rank: 4, min: 0.9, label: "Cherished", description: "The bond carries deep personal care." }
+] as const satisfies readonly SemanticThreshold<AffectionLabel>[];
+
+export const respectThresholds = [
+  { rank: 0, min: 0, label: "Dismissive", description: "Competence or judgement is not yet valued." },
+  { rank: 1, min: 0.2, label: "Noticing", description: "Respect is beginning, but not yet settled." },
+  { rank: 2, min: 0.45, label: "Credible", description: "Words and choices carry some weight." },
+  { rank: 3, min: 0.7, label: "Esteemed", description: "Judgement is trusted under ordinary strain." },
+  { rank: 4, min: 0.9, label: "Admired", description: "Respect has become open admiration." }
+] as const satisfies readonly SemanticThreshold<RespectLabel>[];
+
+export const fearThresholds = [
+  { rank: 0, min: 0, label: "Unafraid", description: "Fear is not shaping the relationship." },
+  { rank: 1, min: 0.2, label: "Uneasy", description: "There is discomfort, but not alarm." },
+  { rank: 2, min: 0.45, label: "Cautious", description: "Fear is making people careful." },
+  { rank: 3, min: 0.7, label: "Frightened", description: "Fear is steering what feels possible." },
+  { rank: 4, min: 0.9, label: "Dreadful", description: "The relationship is dominated by dread." }
+] as const satisfies readonly SemanticThreshold<FearLabel>[];
+
+export const resentmentThresholds = [
+  { rank: 0, min: 0, label: "Clear", description: "No grudge is currently carrying forward." },
+  { rank: 1, min: 0.2, label: "Irritated", description: "A small slight is still being felt." },
+  { rank: 2, min: 0.45, label: "Sore", description: "The hurt is present enough to colour trust." },
+  { rank: 3, min: 0.7, label: "Bitter", description: "Resentment is actively shaping reactions." },
+  { rank: 4, min: 0.9, label: "Grievance", description: "The relationship now carries a serious grievance." }
+] as const satisfies readonly SemanticThreshold<ResentmentLabel>[];
+
+export const obligationThresholds = [
+  { rank: 0, min: 0, label: "Free", description: "No meaningful debt is pressing here." },
+  { rank: 1, min: 0.2, label: "Owing", description: "A small debt or duty is remembered." },
+  { rank: 2, min: 0.45, label: "Indebted", description: "The obligation is hard to ignore." },
+  { rank: 3, min: 0.7, label: "Bound", description: "Duty is strongly constraining the relationship." },
+  { rank: 4, min: 0.9, label: "Beholden", description: "Obligation has become a defining bond." }
+] as const satisfies readonly SemanticThreshold<ObligationLabel>[];
+
+export const goodwillThresholds = [
+  { rank: 0, min: 0, label: "Indifferent", description: "There is little active goodwill to draw on." },
+  { rank: 1, min: 0.2, label: "Open", description: "People are willing to give the shop a chance." },
+  { rank: 2, min: 0.45, label: "Kindly", description: "The relationship leans toward generosity." },
+  { rank: 3, min: 0.7, label: "Generous", description: "Goodwill is strong enough to soften mistakes." },
+  { rank: 4, min: 0.9, label: "Protective", description: "People are inclined to defend the bond." }
+] as const satisfies readonly SemanticThreshold<GoodwillLabel>[];
+
+export const familiarityThresholds = [
+  { rank: 0, min: 0, label: "Unknown", description: "The relationship has little shared history." },
+  { rank: 1, min: 0.2, label: "Recognized", description: "There is enough contact to be remembered." },
+  { rank: 2, min: 0.45, label: "Known", description: "Patterns and habits are becoming legible." },
+  { rank: 3, min: 0.7, label: "Comfortable", description: "Familiarity makes interaction easier." },
+  { rank: 4, min: 0.9, label: "Intimate", description: "The bond carries deep knowledge of the other." }
+] as const satisfies readonly SemanticThreshold<FamiliarityLabel>[];
+
 export type CoinsContext = {
   rentAmount: number;
 };
@@ -167,6 +461,97 @@ export const trustDefinition: BoundedGaugeDefinition<"trust", TrustLabel> = {
   curve: { power: 1.35, minimumFactor: 0.1 }
 };
 
+export const boundedGaugeDefinition = <TKey extends string, TLabel extends string>(
+  key: TKey,
+  thresholds: readonly SemanticThreshold<TLabel>[]
+): BoundedGaugeDefinition<TKey, TLabel> => ({
+  family: "boundedGauge",
+  key,
+  minimumValue: 0,
+  maximumValue: 1,
+  thresholds,
+  curve: { power: 1.35, minimumFactor: 0.1 }
+});
+
+export const signedGaugeDefinition = <TKey extends string, TLabel extends string>(
+  key: TKey,
+  thresholds: readonly SemanticThreshold<TLabel>[]
+): SignedGaugeDefinition<TKey, TLabel> => ({
+  family: "signedGauge",
+  key,
+  minimumValue: -1,
+  maximumValue: 1,
+  thresholds,
+  curve: { power: 1.35, minimumFactor: 0.1 }
+});
+
+export const compassionDefinition = signedGaugeDefinition(
+  "compassion",
+  compassionThresholds
+);
+export const prudenceDefinition = signedGaugeDefinition(
+  "prudence",
+  prudenceThresholds
+);
+export const ambitionDefinition = signedGaugeDefinition(
+  "ambition",
+  ambitionThresholds
+);
+export const confidenceDefinition = boundedGaugeDefinition(
+  "confidence",
+  confidenceThresholds
+);
+export const gossipHeatDefinition = boundedGaugeDefinition(
+  "gossipHeat",
+  gossipHeatThresholds
+);
+
+export const affectionDefinition = boundedGaugeDefinition(
+  "affection",
+  affectionThresholds
+);
+export const respectDefinition = boundedGaugeDefinition("respect", respectThresholds);
+export const fearDefinition = boundedGaugeDefinition("fear", fearThresholds);
+export const resentmentDefinition = boundedGaugeDefinition(
+  "resentment",
+  resentmentThresholds
+);
+export const obligationDefinition = boundedGaugeDefinition(
+  "obligation",
+  obligationThresholds
+);
+export const goodwillDefinition = boundedGaugeDefinition("goodwill", goodwillThresholds);
+export const familiarityDefinition = boundedGaugeDefinition(
+  "familiarity",
+  familiarityThresholds
+);
+
+export const entityGaugeDefinitions = {
+  fatigue: fatigueDefinition,
+  compassion: compassionDefinition,
+  prudence: prudenceDefinition,
+  ambition: ambitionDefinition,
+  confidence: confidenceDefinition,
+  gossipHeat: gossipHeatDefinition
+} satisfies Record<
+  DomainGaugeKey,
+  BoundedGaugeDefinition<string, string> | SignedGaugeDefinition<string, string>
+>;
+
+export const relationshipDimensionDefinitions = {
+  trust: trustDefinition,
+  affection: affectionDefinition,
+  respect: respectDefinition,
+  fear: fearDefinition,
+  resentment: resentmentDefinition,
+  obligation: obligationDefinition,
+  goodwill: goodwillDefinition,
+  familiarity: familiarityDefinition
+} satisfies Record<
+  DomainRelationshipDimensionKey,
+  BoundedGaugeDefinition<string, string>
+>;
+
 export const coinsDefinition: OpenQuantityDefinition<"coins", CoinLabel, CoinsContext> = {
   family: "openQuantity",
   key: "coins",
@@ -186,18 +571,6 @@ export const stockDefinition: OpenQuantityDefinition<"stock", StockLabel, StockC
     referenceValue: expectedDemand
   })
 };
-
-export const signedGaugeDefinition = <TKey extends string, TLabel extends string>(
-  key: TKey,
-  thresholds: readonly SemanticThreshold<TLabel>[]
-): SignedGaugeDefinition<TKey, TLabel> => ({
-  family: "signedGauge",
-  key,
-  minimumValue: -1,
-  maximumValue: 1,
-  thresholds,
-  curve: { power: 1.35, minimumFactor: 0.1 }
-});
 
 export function describeCoinsContext(rentAmount: number): OpenQuantityContext {
   return coinsDefinition.describeContext({ rentAmount });
