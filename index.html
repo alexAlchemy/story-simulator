@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aphebis Potions Shop Prototype</title>
+  </head>
+  <body>
+    <div id="app" x-data="potionsShop()" x-init="init()">
+      <header class="shop-header">
+        <div>
+          <p class="eyebrow">Aphebis prototype</p>
+          <h1>Briarwick Apothecary</h1>
+        </div>
+        <div class="day-card">
+          <span>Day</span>
+          <strong x-text="state.day"></strong>
+          <small x-text="rentText"></small>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="state-column" aria-label="Shop state">
+          <div class="panel">
+            <h2>Shop</h2>
+            <template x-for="item in resourceRows" :key="item.key">
+              <div class="stat-row">
+                <span x-text="item.label"></span>
+                <strong x-text="item.value"></strong>
+              </div>
+            </template>
+          </div>
+
+          <div class="panel">
+            <h2>Values</h2>
+            <template x-for="item in valueRows" :key="item.key">
+              <div class="stat-row">
+                <span x-text="item.label"></span>
+                <strong x-text="item.value"></strong>
+              </div>
+            </template>
+          </div>
+
+          <div class="panel">
+            <h2>Relationships</h2>
+            <template x-for="item in relationshipRows" :key="item.key">
+              <div class="stat-row">
+                <span x-text="item.label"></span>
+                <strong x-text="item.value"></strong>
+              </div>
+            </template>
+          </div>
+
+          <div class="panel actions">
+            <button type="button" class="primary" @click="advance()" :disabled="state.ended">
+              Advance day
+            </button>
+            <button type="button" @click="restart()">Restart run</button>
+          </div>
+        </section>
+
+        <section class="tableau-column" aria-label="Scene tableau">
+          <div class="section-heading">
+            <h2>Scene Tableau</h2>
+            <span x-text="tableauStatus"></span>
+          </div>
+          <div class="scene-list">
+            <template x-for="scene in visibleScenes" :key="scene.id">
+              <button
+                type="button"
+                class="scene-card"
+                :class="{ selected: selectedSceneId === scene.id }"
+                @click="selectScene(scene.id)"
+              >
+                <span class="scene-type" x-text="scene.type"></span>
+                <strong x-text="scene.title"></strong>
+                <small x-text="scene.description"></small>
+              </button>
+            </template>
+          </div>
+        </section>
+
+        <section class="detail-column" aria-label="Selected scene">
+          <template x-if="!state.ended && selectedScene">
+            <article class="scene-detail">
+              <div class="scene-detail-head">
+                <span class="scene-type" x-text="selectedScene.type"></span>
+                <h2 x-text="selectedScene.title"></h2>
+              </div>
+              <p x-text="selectedScene.description"></p>
+              <blockquote x-text="selectedScene.coreQuestion"></blockquote>
+
+              <div class="stakes-grid">
+                <div>
+                  <h3>Boons</h3>
+                  <template x-for="boon in selectedScene.boons ?? []" :key="boon.label">
+                    <p class="stake boon" x-text="boon.label"></p>
+                  </template>
+                </div>
+                <div>
+                  <h3>Banes</h3>
+                  <template x-for="bane in visibleBanes" :key="bane.label">
+                    <p class="stake bane" x-text="bane.label"></p>
+                  </template>
+                </div>
+              </div>
+
+              <div class="choices">
+                <template x-for="choice in selectedScene.choices" :key="choice.id">
+                  <button type="button" @click="choose(choice.id)">
+                    <strong x-text="choice.label"></strong>
+                    <span x-show="choice.description" x-text="choice.description"></span>
+                  </button>
+                </template>
+              </div>
+            </article>
+          </template>
+
+          <template x-if="!state.ended && !selectedScene">
+            <article class="scene-detail empty">
+              <h2>Choose a scene</h2>
+              <p>The counter is open, the rain is steady, and somebody needs something from you.</p>
+            </article>
+          </template>
+
+          <template x-if="state.ended && ending">
+            <article class="scene-detail ending">
+              <span class="scene-type">ending</span>
+              <h2 x-text="ending.title"></h2>
+              <p x-text="ending.shopOutcome"></p>
+              <p x-text="ending.identityOutcome"></p>
+              <p x-text="ending.relationshipOutcome"></p>
+              <p class="hook" x-text="ending.futureHook"></p>
+            </article>
+          </template>
+        </section>
+      </main>
+
+      <aside class="log-panel" aria-label="Recent consequences">
+        <div>
+          <h2>Recent Consequences</h2>
+          <template x-for="entry in recentLog" :key="entry.id">
+            <p><span x-text="'Day ' + entry.day"></span> · <span x-text="entry.text"></span></p>
+          </template>
+        </div>
+        <details>
+          <summary>Debug state</summary>
+          <pre x-text="debugState"></pre>
+        </details>
+      </aside>
+    </div>
+    <script type="module" src="/src/ui/app.ts"></script>
+  </body>
+</html>
