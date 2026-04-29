@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createInitialState } from "../domain/initialState";
+import { createInitialState } from "../content/initialState";
 import { adjustEntityGauge } from "./worldAccess";
 import { getDashboardRows, getEntityCards, getRelationshipCards } from "./selectors";
 

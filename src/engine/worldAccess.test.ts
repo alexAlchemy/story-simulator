@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createInitialState } from "../domain/initialState";
+import { createInitialState } from "../content/initialState";
 import {
   adjustEntityGauge,
   adjustEntityQuantity,
@@ -21,22 +21,32 @@ describe("worldAccess", () => {
     expect(getEntityQuantity(next, "shop", "coins")).toBe(22);
   });
 
-  it("clamps quantities at zero and gauges/dimensions to 0..1", () => {
+  it("clamps quantities at zero and bounded gauges/dimensions to 0..1", () => {
     let state = createInitialState();
 
     state = adjustEntityQuantity(state, "shop", "stock", -99);
-    state = adjustEntityGauge(state, "player", "compassion", 2);
+    state = adjustEntityGauge(state, "player", "fatigue", 2);
     state = adjustRelationshipDimension(state, "town->shop", "trust", 2);
 
     expect(getEntityQuantity(state, "shop", "stock")).toBe(0);
-    expect(getEntityGauge(state, "player", "compassion")).toBe(1);
+    expect(getEntityGauge(state, "player", "fatigue")).toBe(1);
     expect(getRelationshipDimension(state, "town->shop", "trust")).toBe(1);
 
-    state = adjustEntityGauge(state, "player", "compassion", -99);
+    state = adjustEntityGauge(state, "player", "fatigue", -99);
     state = adjustRelationshipDimension(state, "town->shop", "trust", -99);
 
-    expect(getEntityGauge(state, "player", "compassion")).toBe(0);
+    expect(getEntityGauge(state, "player", "fatigue")).toBe(0);
     expect(getRelationshipDimension(state, "town->shop", "trust")).toBe(0);
+  });
+
+  it("preserves negative values for signed entity gauges", () => {
+    let state = createInitialState();
+
+    state = adjustEntityGauge(state, "player", "compassion", -0.75);
+    expect(getEntityGauge(state, "player", "compassion")).toBe(-0.75);
+
+    state = adjustEntityGauge(state, "player", "compassion", -99);
+    expect(getEntityGauge(state, "player", "compassion")).toBe(-1);
   });
 
   it("throws clear errors for missing ids", () => {

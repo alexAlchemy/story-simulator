@@ -1,4 +1,4 @@
-import type { EntityState, GameState, RelationshipState } from "../domain/types";
+import type { EntityState, GameState, RelationshipState } from "../domain";
 import {
   coinsDefinition,
   describeBoundedGauge,

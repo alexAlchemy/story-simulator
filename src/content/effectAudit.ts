@@ -1,4 +1,4 @@
-import type { Effect, GameContent, GameState, SceneCard } from "../domain/types";
+import type { Effect, GameContent, GameState, SceneCard } from "../domain";
 
 export type AuditedEffectKind =
   | "entityGauge"

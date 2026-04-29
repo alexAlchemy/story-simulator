@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createInitialState } from "../domain/initialState";
+import { createInitialState } from "../content/initialState";
 import { applyEffects } from "./applyEffects";
 import {
   getEntityGauge,

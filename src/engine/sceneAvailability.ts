@@ -5,8 +5,8 @@ import type {
   SceneSemanticComparison,
   SceneAvailabilityCondition,
   SceneCard
-} from "../domain/types";
-import { createInitialState } from "../domain/initialState";
+} from "../domain";
+import { createInitialState } from "../content/initialState";
 import {
   describeBoundedGauge,
   describeSignedGauge,

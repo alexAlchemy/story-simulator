@@ -1,4 +1,4 @@
-import type { GameContent, GameState } from "../domain/types";
+import type { GameContent, GameState } from "../domain";
 import { applyEffects } from "./applyEffects";
 import { canSeeScene } from "./sceneAvailability";
 

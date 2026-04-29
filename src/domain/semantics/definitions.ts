@@ -9,7 +9,7 @@ import type {
 import type {
   GaugeKey as DomainGaugeKey,
   RelationshipDimensionKey as DomainRelationshipDimensionKey
-} from "../types";
+} from "../world/keys";
 
 export type FatigueLabel =
   | "Rested"

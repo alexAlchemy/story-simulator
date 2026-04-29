@@ -1,6 +1,10 @@
-import type { GameState } from "./types";
+import type { GameState } from "../domain/game/types";
+import { relationshipId } from "../domain/world/relationshipId";
 
 export function createInitialState(): GameState {
+  const apprenticeToPlayer = relationshipId("apprentice", "player");
+  const townToShop = relationshipId("town", "shop");
+
   return {
     day: 1,
     world: {
@@ -55,8 +59,8 @@ export function createInitialState(): GameState {
         }
       },
       relationships: {
-        "apprentice->player": {
-          id: "apprentice->player",
+        [apprenticeToPlayer]: {
+          id: apprenticeToPlayer,
           from: "apprentice",
           to: "player",
           dimensions: {
@@ -67,8 +71,8 @@ export function createInitialState(): GameState {
           flags: {},
           tokens: []
         },
-        "town->shop": {
-          id: "town->shop",
+        [townToShop]: {
+          id: townToShop,
           from: "town",
           to: "shop",
           dimensions: {
@@ -98,3 +102,4 @@ export function createInitialState(): GameState {
     ended: false
   };
 }
+

@@ -1,8 +1,8 @@
 import Alpine from "alpinejs";
 import "../ui/styles.css";
 import { content } from "../content/scenes";
-import { createInitialState } from "../domain/initialState";
-import type { EndingSummary, GameState, SceneCard } from "../domain/types";
+import { createInitialState } from "../content/initialState";
+import type { EndingSummary, GameState, SceneCard } from "../domain";
 import { advanceDay } from "../engine/advanceDay";
 import { buildEnding } from "../engine/buildEnding";
 import { resolveChoice } from "../engine/resolveChoice";

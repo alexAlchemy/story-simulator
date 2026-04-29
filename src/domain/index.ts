@@ -11,6 +11,7 @@ export type {
   SceneType
 } from "./scenes/types";
 export type { GaugeKey, QuantityKey, RelationshipDimensionKey } from "./world/keys";
+export { relationshipId } from "./world/relationshipId";
 export type {
   EntityKind,
   EntityState,
@@ -18,3 +19,4 @@ export type {
   RelationshipToken,
   WorldState
 } from "./world/types";
+

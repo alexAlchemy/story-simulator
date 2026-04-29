@@ -5,7 +5,7 @@ import type {
   QuantityKey,
   RelationshipDimensionKey,
   RelationshipId
-} from "../domain/types";
+} from "../domain";
 
 export type ShiftAmount = "slightly" | "moderately" | "strongly";
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { content } from "../content/scenes";
-import { createInitialState } from "../domain/initialState";
+import { createInitialState } from "../content/initialState";
 import { resolveChoice } from "./resolveChoice";
 import {
   getEntityGauge,

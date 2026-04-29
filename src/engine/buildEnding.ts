@@ -1,4 +1,4 @@
-import type { EndingSummary, GameContent, GameState, GaugeKey } from "../domain/types";
+import type { EndingSummary, GameContent, GameState, GaugeKey } from "../domain";
 import { getEntityGauge, getEntityQuantity, getRelationshipDimension } from "./worldAccess";
 
 export function buildEnding(state: GameState, content: GameContent): EndingSummary {

@@ -1,4 +1,4 @@
-import type { SceneCard } from "../../domain/types";
+import type { SceneCard } from "../../domain";
 import { decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension } from "../effects";
 
 /**

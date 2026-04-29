@@ -1,4 +1,4 @@
-import type { Effect, EffectContext, GameState } from "../domain/types";
+import type { Effect, EffectContext, GameState } from "../domain";
 import {
   addRelationshipToken,
   adjustEntityGauge,

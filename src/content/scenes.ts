@@ -1,4 +1,4 @@
-import type { GameContent } from "../domain/types";
+import type { GameContent } from "../domain";
 import { dayPlan } from "./dayPlan";
 import { scenes } from "./scenes/index";
 

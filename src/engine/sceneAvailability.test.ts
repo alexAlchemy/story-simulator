@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { content } from "../content/scenes";
-import { createInitialState } from "../domain/initialState";
-import type { GameContent, SceneCard } from "../domain/types";
+import { createInitialState } from "../content/initialState";
+import type { GameContent, SceneCard } from "../domain";
 import { advanceDay } from "./advanceDay";
 import { resolveChoice } from "./resolveChoice";
 import {

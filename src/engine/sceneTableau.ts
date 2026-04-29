@@ -1,4 +1,4 @@
-import type { GameContent, GameState, SceneCard } from "../domain/types";
+import type { GameContent, GameState, SceneCard } from "../domain";
 import { canSeeScene } from "./sceneAvailability";
 
 export function getVisibleScenes(
