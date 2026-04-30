@@ -4,11 +4,11 @@ import type {
   GameState,
   SceneCard,
   SceneChoice
-} from "../domain";
+} from "@aphebis/core";
 import { createInitialState } from "../content/initialState";
-import { advanceDay } from "../engine/advanceDay";
-import { resolveChoice } from "../engine/resolveChoice";
-import { getVisibleScenes } from "../engine/sceneTableau";
+import { advanceDay } from "@aphebis/core";
+import { resolveChoice } from "@aphebis/core";
+import { getVisibleScenes } from "@aphebis/core";
 
 export type FlagEffectDefinition = {
   sceneId: string;

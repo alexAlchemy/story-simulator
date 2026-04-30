@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyBoundedGaugeChange, applySignedGaugeChange } from "./change";
+import { applyBoundedGaugeChange, applySignedGaugeChange } from "@aphebis/core";
 import {
   entityGaugeDefinitions,
   fatigueDefinition,
@@ -9,14 +9,14 @@ import {
   signedGaugeDefinition,
   trustDefinition
 } from "./definitions";
-import type { GaugeKey, RelationshipDimensionKey } from "../types";
+import type { GaugeKey, RelationshipDimensionKey } from "@aphebis/core";
 import {
   describeBoundedGauge,
   describeOpenQuantity,
   describeSignedGauge,
   validateThresholdScale
-} from "./describe";
-import type { SemanticThreshold } from "./types";
+} from "@aphebis/core";
+import type { SemanticThreshold } from "@aphebis/core";
 
 describe("semantic primitives", () => {
   it("maps bounded gauge boundaries deterministically", () => {

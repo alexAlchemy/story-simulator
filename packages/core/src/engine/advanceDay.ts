@@ -1,13 +1,12 @@
 import type { GameContent, GameState } from "../domain";
 import { applyEffects } from "./applyEffects";
-import { buildEnding } from "./buildEnding";
 
 export function advanceDay(state: GameState, content: GameContent): GameState {
   if (state.ended) {
     return state;
   }
 
-  if (state.day >= content.rentDueDay) {
+  if (state.day >= content.endDay) {
     return {
       ...state,
       ended: true
@@ -24,7 +23,7 @@ export function advanceDay(state: GameState, content: GameContent): GameState {
       {
         id: `day-${nextDay}`,
         day: nextDay,
-        text: `Day ${nextDay} begins. The shop remembers what you chose.`
+        text: `Day ${nextDay} begins.`
       }
     ]
   };
@@ -36,14 +35,5 @@ export function advanceDay(state: GameState, content: GameContent): GameState {
       { day: nextDay }
     );
   }
-
-  if (nextDay === content.rentDueDay) {
-    next = applyEffects(
-      next,
-      [{ kind: "log", text: buildEnding(next, content).shopOutcome }],
-      { day: nextDay }
-    );
-  }
-
   return next;
 }

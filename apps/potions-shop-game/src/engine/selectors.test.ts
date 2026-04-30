@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createInitialState } from "../content/initialState";
-import { adjustEntityGauge } from "./worldAccess";
+import { adjustEntityGauge } from "@aphebis/core";
 import { getDashboardRows, getEntityCards, getRelationshipCards } from "./selectors";
 
 describe("selectors", () => {

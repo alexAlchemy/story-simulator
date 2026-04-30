@@ -1,4 +1,4 @@
-import type { Effect, GameContent, GameState, SceneCard } from "../domain";
+import type { Effect, GameContent, GameState, SceneCard } from "@aphebis/core";
 
 export type AuditedEffectKind =
   | "entityGauge"

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { content } from "../content/scenes";
 import { createInitialState } from "../content/initialState";
-import { advanceDay } from "./advanceDay";
+import { advanceDay } from "@aphebis/core";
 import { buildEnding } from "./buildEnding";
 
 describe("advanceDay", () => {

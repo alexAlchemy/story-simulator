@@ -1,4 +1,4 @@
-import type { SceneCard } from "../../domain";
+import type { SceneCard } from "@aphebis/core";
 import apprenticeBreaksRule from "./apprentice-breaks-rule";
 import apprenticeAsksTrust from "./apprentice-asks-trust";
 import apprenticeFirstCure from "./apprentice-first-cure";

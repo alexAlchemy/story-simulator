@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { content } from "../content/scenes";
 import { createInitialState } from "../content/initialState";
-import { resolveChoice } from "./resolveChoice";
+import { resolveChoice } from "@aphebis/core";
 import {
   getEntityGauge,
   getEntityQuantity,
   getRelationshipDimension
-} from "./worldAccess";
+} from "@aphebis/core";
 
 describe("resolveChoice", () => {
   it("rejects unknown scene ids", () => {

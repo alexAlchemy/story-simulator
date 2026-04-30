@@ -3,13 +3,7 @@ import type { Effect } from "../effects/types";
 import type { GaugeKey, QuantityKey, RelationshipDimensionKey } from "../world/keys";
 import type { RelationshipToken } from "../world/types";
 
-export type SceneType =
-  | "customer"
-  | "staff"
-  | "shop"
-  | "town"
-  | "reflection"
-  | "brew";
+export type SceneType = string;
 
 export type SceneChoice = {
   id: string;
@@ -84,4 +78,3 @@ export type SceneCard = {
   choices: SceneChoice[];
   availability?: SceneAvailability;
 };
-

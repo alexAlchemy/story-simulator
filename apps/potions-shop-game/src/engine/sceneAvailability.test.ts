@@ -1,15 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { content } from "../content/scenes";
 import { createInitialState } from "../content/initialState";
-import type { GameContent, SceneCard } from "../domain";
-import { advanceDay } from "./advanceDay";
-import { resolveChoice } from "./resolveChoice";
+import type { GameContent, SceneCard } from "@aphebis/core";
+import { advanceDay } from "@aphebis/core";
+import { resolveChoice } from "@aphebis/core";
 import {
   canSeeScene,
   validateSceneAvailability
-} from "./sceneAvailability";
-import { getVisibleScenes } from "./sceneTableau";
-import { getRelationshipDimension } from "./worldAccess";
+} from "@aphebis/core";
+import { getVisibleScenes } from "@aphebis/core";
+import { getRelationshipDimension } from "@aphebis/core";
+import { entityGaugeDefinitions } from "../system/semantics/definitions";
 
 describe("sceneAvailability", () => {
   it("reveals the apprentice's first cure after emotional investment", () => {
@@ -130,8 +131,10 @@ describe("sceneAvailability", () => {
         }
       },
       dayPlan: {},
-      rentDueDay: 1,
-      rentAmount: 0
+      endDay: 1,
+      semantics: {
+        entityGaugeDefinitions
+      }
     };
 
     const issues = validateSceneAvailability(

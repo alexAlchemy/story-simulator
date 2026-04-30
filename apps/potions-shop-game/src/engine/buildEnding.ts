@@ -1,7 +1,19 @@
-import type { EndingSummary, GameContent, GameState, GaugeKey } from "../domain";
-import { getEntityGauge, getEntityQuantity, getRelationshipDimension } from "./worldAccess";
+import type { GameContent, GameState, GaugeKey } from "@aphebis/core";
+import { getEntityGauge, getEntityQuantity, getRelationshipDimension } from "@aphebis/core";
 
-export function buildEnding(state: GameState, content: GameContent): EndingSummary {
+export type EndingSummary = {
+  title: string;
+  shopOutcome: string;
+  identityOutcome: string;
+  relationshipOutcome: string;
+  futureHook: string;
+};
+
+type EndingContent = GameContent & {
+  rentAmount: number;
+};
+
+export function buildEnding(state: GameState, content: EndingContent): EndingSummary {
   const coins = getEntityQuantity(state, "shop", "coins");
   const paidRent = coins >= content.rentAmount;
   const dominantValue = getDominantValue(state);

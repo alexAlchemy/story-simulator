@@ -1,19 +1,21 @@
-import type { EntityState, GameState, RelationshipState } from "../domain";
+import type { EntityState, GameState, RelationshipState } from "@aphebis/core";
 import {
-  coinsDefinition,
   describeBoundedGauge,
   describeOpenQuantity,
   describeSignedGauge,
+  type SemanticValue
+} from "@aphebis/core";
+import {
+  coinsDefinition,
   entityGaugeDefinitions,
   relationshipDimensionDefinitions,
-  stockDefinition,
-  type SemanticValue
-} from "../domain/semantics";
+  stockDefinition
+} from "../system/semantics/definitions";
 import {
   getEntityGauge,
   getEntityQuantity,
   getRelationshipDimension
-} from "./worldAccess";
+} from "@aphebis/core";
 
 export type DashboardRow = {
   key: string;

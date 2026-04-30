@@ -4,14 +4,13 @@ import type {
   SceneNumericComparison,
   SceneSemanticComparison,
   SceneAvailabilityCondition,
-  SceneCard
+  SceneCard,
+  SemanticGaugeDefinition,
+  WorldState
 } from "../domain";
-import { createInitialState } from "../content/initialState";
 import {
   describeBoundedGauge,
-  describeSignedGauge,
-  entityGaugeDefinitions,
-  relationshipDimensionDefinitions
+  describeSignedGauge
 } from "../domain/semantics";
 import {
   getEntityGauge,
@@ -25,7 +24,7 @@ export function canSeeScene(
   state: GameState,
   content: GameContent
 ): boolean {
-  const issues = validateSceneAvailability(scene, content);
+  const issues = validateSceneAvailability(scene, content, state.world);
   if (issues.length > 0) {
     throw new Error(issues.join("; "));
   }
@@ -49,10 +48,10 @@ export function canSeeScene(
 
 export function validateSceneAvailability(
   scene: SceneCard,
-  content: GameContent
+  content: GameContent,
+  world?: WorldState
 ): string[] {
   const issues: string[] = [];
-  const world = createInitialState().world;
   const conditions = [...(scene.availability?.all ?? []), ...(scene.availability?.any ?? [])];
 
   for (const condition of conditions) {
@@ -65,7 +64,7 @@ export function validateSceneAvailability(
         }
         break;
       case "entityGauge":
-        if (!world.entities[condition.entityId]) {
+        if (world && !world.entities[condition.entityId]) {
           issues.push(
             `${scene.id}: entityGauge availability references unknown entity "${condition.entityId}"`
           );
@@ -76,19 +75,19 @@ export function validateSceneAvailability(
             condition.kind,
             condition.key,
             condition,
-            entityGaugeDefinitions
+            content.semantics?.entityGaugeDefinitions
           )
         );
         break;
       case "entityQuantity":
-        if (!world.entities[condition.entityId]) {
+        if (world && !world.entities[condition.entityId]) {
           issues.push(
             `${scene.id}: entityQuantity availability references unknown entity "${condition.entityId}"`
           );
         }
         break;
       case "relationshipDimension":
-        if (!world.relationships[condition.relationshipId]) {
+        if (world && !world.relationships[condition.relationshipId]) {
           issues.push(
             `${scene.id}: relationshipDimension availability references unknown relationship "${condition.relationshipId}"`
           );
@@ -99,12 +98,12 @@ export function validateSceneAvailability(
             condition.kind,
             condition.key,
             condition,
-            relationshipDimensionDefinitions
+            content.semantics?.relationshipDimensionDefinitions
           )
         );
         break;
       case "relationshipToken":
-        if (!world.relationships[condition.relationshipId]) {
+        if (world && !world.relationships[condition.relationshipId]) {
           issues.push(
             `${scene.id}: relationshipToken availability references unknown relationship "${condition.relationshipId}"`
           );
@@ -143,7 +142,7 @@ function matchesSceneAvailabilityCondition(
       return matchesSemanticState(
         getEntityGauge(state, condition.entityId, condition.key),
         condition,
-        entityGaugeDefinitions[condition.key]
+        content.semantics?.entityGaugeDefinitions?.[condition.key]
       );
     case "entityQuantity":
       return matchesNumericComparison(
@@ -154,7 +153,7 @@ function matchesSceneAvailabilityCondition(
       return matchesSemanticState(
         getRelationshipDimension(state, condition.relationshipId, condition.key),
         condition,
-        relationshipDimensionDefinitions[condition.key]
+        content.semantics?.relationshipDimensionDefinitions?.[condition.key]
       );
     case "relationshipToken":
       return matchesRelationshipToken(state, condition);
@@ -166,10 +165,14 @@ function matchesSceneAvailabilityCondition(
 function matchesSemanticState(
   value: number,
   condition: SceneSemanticComparison & SceneNumericComparison,
-  definition:
-    | (typeof entityGaugeDefinitions)[keyof typeof entityGaugeDefinitions]
-    | (typeof relationshipDimensionDefinitions)[keyof typeof relationshipDimensionDefinitions]
+  definition: SceneDefinitionLike | undefined
 ): boolean {
+  if (!definition) {
+    return !condition.equalsLabel && !condition.minLabel && !condition.maxLabel
+      ? matchesNumericComparison(value, condition)
+      : false;
+  }
+
   const described = definition.family === "signedGauge"
     ? describeSignedGauge(definition, value)
     : describeBoundedGauge(definition, value);
@@ -261,16 +264,24 @@ function validateSemanticComparison<
   kind: SceneAvailabilityCondition["kind"],
   key: string,
   condition: TCondition,
-  definitions: Record<string, SceneDefinitionLike>
+  definitions: Record<string, SceneDefinitionLike> | undefined
 ): string[] {
+  const labels = [condition.minLabel, condition.maxLabel, condition.equalsLabel].filter(
+    (label): label is string => Boolean(label)
+  );
+  if (labels.length === 0) {
+    return [];
+  }
+
+  if (!definitions) {
+    return [`${sceneId}: ${kind} availability has semantic labels but no semantic definitions`];
+  }
+
   const definition = definitions[key];
   if (!definition) {
     return [`${sceneId}: ${kind} availability references unknown semantic key "${key}"`];
   }
 
-  const labels = [condition.minLabel, condition.maxLabel, condition.equalsLabel].filter(
-    (label): label is string => Boolean(label)
-  );
   const issues: string[] = [];
 
   for (const label of labels) {
@@ -301,7 +312,4 @@ function assertNever(value: never): never {
   throw new Error(`Unexpected scene availability condition: ${JSON.stringify(value)}`);
 }
 
-type SceneDefinitionLike = {
-  family: "boundedGauge" | "signedGauge";
-  thresholds: readonly { label: string; rank: number }[];
-};
+type SceneDefinitionLike = SemanticGaugeDefinition;

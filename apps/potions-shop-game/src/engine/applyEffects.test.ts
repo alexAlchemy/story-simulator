@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { createInitialState } from "../content/initialState";
-import { applyEffects } from "./applyEffects";
+import { applyEffects } from "@aphebis/core";
 import {
   getEntityGauge,
   getEntityQuantity,
   getRelationshipDimension
-} from "./worldAccess";
+} from "@aphebis/core";
 
 describe("applyEffects", () => {
   it("applies all supported effect kinds", () => {

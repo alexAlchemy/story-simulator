@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { content } from "./scenes";
 import { dayPlan } from "./dayPlan";
 import { scenes } from "./scenes";
-import { validateSceneAvailability } from "../engine/sceneAvailability";
+import { validateSceneAvailability } from "@aphebis/core";
+import { createInitialState } from "./initialState";
 
 describe("content integrity", () => {
   it("references only existing day-plan scenes", () => {
@@ -72,8 +73,9 @@ describe("content integrity", () => {
   });
 
   it("validates scene availability references and labels", () => {
+    const world = createInitialState().world;
     const issues = Object.values(scenes).flatMap((scene) =>
-      validateSceneAvailability(scene, content)
+      validateSceneAvailability(scene, content, world)
     );
 
     expect(issues).toEqual([]);

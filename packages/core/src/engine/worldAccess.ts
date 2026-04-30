@@ -9,7 +9,6 @@ import type {
   RelationshipState,
   RelationshipToken
 } from "../domain";
-import { entityGaugeDefinitions } from "../domain/semantics/definitions";
 
 export function getEntity(state: GameState, entityId: EntityId): EntityState {
   const entity = state.world.entities[entityId];
@@ -74,7 +73,7 @@ export function setEntityGauge(
           ...entity,
           gauges: {
             ...entity.gauges,
-            [key]: clampEntityGauge(key, value)
+            [key]: clampEntityGauge(entity, key, value)
           }
         }
       }
@@ -186,10 +185,10 @@ function clamp01(value: number): number {
   return Math.max(0, Math.min(1, value));
 }
 
-function clampEntityGauge(key: GaugeKey, value: number): number {
-  const definition = entityGaugeDefinitions[key];
+function clampEntityGauge(entity: EntityState, key: GaugeKey, value: number): number {
+  const range = entity.gaugeRanges?.[key] ?? { minimumValue: 0, maximumValue: 1 };
 
-  return clampRange(value, definition.minimumValue, definition.maximumValue);
+  return clampRange(value, range.minimumValue, range.maximumValue);
 }
 
 function clampRange(value: number, minimum: number, maximum: number): number {

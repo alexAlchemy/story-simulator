@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { content } from "../content/scenes";
 import { createInitialState } from "../content/initialState";
-import type { GameContent, GameState } from "../domain";
+import type { GameContent, GameState } from "@aphebis/core";
 import { simulateFlagMetrics } from "./flagMetrics";
 
 describe("simulateFlagMetrics", () => {
@@ -73,8 +73,7 @@ const fixtureContent: GameContent = {
     }
   },
   dayPlan: {},
-  rentDueDay: 1,
-  rentAmount: 0
+  endDay: 1
 };
 
 const unreachableFlagContent: GameContent = {
@@ -94,8 +93,7 @@ const unreachableFlagContent: GameContent = {
     }
   },
   dayPlan: {},
-  rentDueDay: 1,
-  rentAmount: 0
+  endDay: 1
 };
 
 function createFixtureState(): GameState {

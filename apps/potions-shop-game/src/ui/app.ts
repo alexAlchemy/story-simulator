@@ -2,11 +2,11 @@ import Alpine from "alpinejs";
 import "../ui/styles.css";
 import { content } from "../content/scenes";
 import { createInitialState } from "../content/initialState";
-import type { EndingSummary, GameState, SceneCard } from "../domain";
-import { advanceDay } from "../engine/advanceDay";
-import { buildEnding } from "../engine/buildEnding";
-import { resolveChoice } from "../engine/resolveChoice";
-import { getVisibleScenes } from "../engine/sceneTableau";
+import type { GameState, SceneCard } from "@aphebis/core";
+import { advanceDay } from "@aphebis/core";
+import { buildEnding, type EndingSummary } from "../engine/buildEnding";
+import { resolveChoice } from "@aphebis/core";
+import { getVisibleScenes } from "@aphebis/core";
 import {
   getEntityCards,
   getRelationshipRows,

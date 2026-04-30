@@ -1,11 +1,11 @@
 import type { EntityId, RelationshipId } from "../ids";
 import type { GaugeKey, QuantityKey, RelationshipDimensionKey } from "./keys";
 
-export type EntityKind = "person" | "group" | "shop" | "place";
+export type EntityKind = string;
 
 export type RelationshipToken = {
   id: string;
-  kind: "debt" | "promise" | "wound" | "secret" | "favour" | "obligation";
+  kind: string;
   label: string;
   description?: string;
   sourceSceneId?: string;
@@ -17,6 +17,7 @@ export type EntityState = {
   displayName: string;
   tags: string[];
   gauges: Partial<Record<GaugeKey, number>>;
+  gaugeRanges?: Partial<Record<GaugeKey, { minimumValue: number; maximumValue: number }>>;
   quantities: Partial<Record<QuantityKey, number>>;
   flags: Record<string, boolean>;
 };
@@ -34,4 +35,3 @@ export type WorldState = {
   entities: Record<EntityId, EntityState>;
   relationships: Record<RelationshipId, RelationshipState>;
 };
-

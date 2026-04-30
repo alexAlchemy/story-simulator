@@ -5,7 +5,7 @@ import type {
   QuantityKey,
   RelationshipDimensionKey,
   RelationshipId
-} from "../domain";
+} from "@aphebis/core";
 
 export type ShiftAmount = "slightly" | "moderately" | "strongly";
 

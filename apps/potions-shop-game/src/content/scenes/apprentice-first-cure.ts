@@ -1,4 +1,4 @@
-import type { SceneCard } from "../../domain";
+import type { SceneCard } from "@aphebis/core";
 import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension } from "../effects";
 
 /**

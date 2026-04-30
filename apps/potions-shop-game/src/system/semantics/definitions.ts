@@ -5,11 +5,11 @@ import type {
   SemanticPole,
   SemanticThreshold,
   SignedGaugeDefinition
-} from "./types";
+} from "@aphebis/core";
 import type {
   GaugeKey as DomainGaugeKey,
   RelationshipDimensionKey as DomainRelationshipDimensionKey
-} from "../world/keys";
+} from "@aphebis/core";
 
 export type FatigueLabel =
   | "Rested"

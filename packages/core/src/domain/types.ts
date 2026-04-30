@@ -1,6 +1,6 @@
 export type { EntityId, RelationshipId } from "./ids";
 export type { Effect, EffectContext } from "./effects/types";
-export type { EndingSummary, GameContent, GameLogEntry, GameState } from "./game/types";
+export type { GameContent, GameLogEntry, GameState } from "./game/types";
 export type {
   SceneAvailability,
   SceneAvailabilityCondition,

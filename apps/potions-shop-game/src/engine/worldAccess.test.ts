@@ -7,7 +7,7 @@ import {
   getEntityGauge,
   getEntityQuantity,
   getRelationshipDimension
-} from "./worldAccess";
+} from "@aphebis/core";
 
 describe("worldAccess", () => {
   it("clones state immutably when updating entities and relationships", () => {

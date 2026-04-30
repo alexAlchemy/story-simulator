@@ -1,5 +1,10 @@
 import type { SceneCard } from "../scenes/types";
+import type { BoundedGaugeDefinition, SignedGaugeDefinition } from "../semantics/types";
 import type { WorldState } from "../world/types";
+
+export type SemanticGaugeDefinition =
+  | BoundedGaugeDefinition<string, string>
+  | SignedGaugeDefinition<string, string>;
 
 export type GameLogEntry = {
   id: string;
@@ -21,15 +26,9 @@ export type GameState = {
 export type GameContent = {
   scenes: Record<string, SceneCard>;
   dayPlan: Record<number, string[]>;
-  rentDueDay: number;
-  rentAmount: number;
+  endDay: number;
+  semantics?: {
+    entityGaugeDefinitions?: Record<string, SemanticGaugeDefinition>;
+    relationshipDimensionDefinitions?: Record<string, SemanticGaugeDefinition>;
+  };
 };
-
-export type EndingSummary = {
-  title: string;
-  shopOutcome: string;
-  identityOutcome: string;
-  relationshipOutcome: string;
-  futureHook: string;
-};
-

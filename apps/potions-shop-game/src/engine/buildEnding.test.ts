@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { content } from "../content/scenes";
 import { createInitialState } from "../content/initialState";
 import { buildEnding } from "./buildEnding";
-import { adjustEntityQuantity } from "./worldAccess";
+import { adjustEntityQuantity } from "@aphebis/core";
 
 describe("buildEnding", () => {
   it("reads rent outcome from world state and content rent amount", () => {

@@ -1,5 +1,5 @@
-import type { GameState } from "../domain/game/types";
-import { relationshipId } from "../domain/world/relationshipId";
+import type { GameState } from "@aphebis/core";
+import { relationshipId } from "@aphebis/core";
 
 export function createInitialState(): GameState {
   const apprenticeToPlayer = relationshipId("apprentice", "player");
@@ -19,6 +19,11 @@ export function createInitialState(): GameState {
             compassion: 0,
             prudence: 0,
             ambition: 0
+          },
+          gaugeRanges: {
+            compassion: { minimumValue: -1, maximumValue: 1 },
+            prudence: { minimumValue: -1, maximumValue: 1 },
+            ambition: { minimumValue: -1, maximumValue: 1 }
           },
           quantities: {},
           flags: {}
@@ -102,4 +107,3 @@ export function createInitialState(): GameState {
     ended: false
   };
 }
-
