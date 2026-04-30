@@ -1,5 +1,5 @@
 import type { SceneCard } from "@aphebis/core";
-import { decreaseEntityGauge, decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension } from "../effects";
+import { decreaseEntityGauge, decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: Your apprentice asks to handle the front counter alone while you work the back room.

@@ -1,5 +1,6 @@
-import type { GameContent, GameState, GaugeKey } from "@aphebis/core";
+import type { GameContent, GameState } from "@aphebis/core";
 import { getEntityGauge, getEntityQuantity, getRelationshipDimension } from "@aphebis/core";
+import type { CosyShopGaugeKey } from "@aphebis/system-cosy-shop";
 
 export type EndingSummary = {
   title: string;
@@ -43,7 +44,9 @@ export function buildEnding(state: GameState, content: EndingContent): EndingSum
   };
 }
 
-function getDominantValue(state: GameState): Extract<GaugeKey, "compassion" | "prudence" | "ambition"> {
+type IdentityGaugeKey = Extract<CosyShopGaugeKey, "compassion" | "prudence" | "ambition">;
+
+function getDominantValue(state: GameState): IdentityGaugeKey {
   const values = [
     ["compassion", getEntityGauge(state, "player", "compassion")],
     ["prudence", getEntityGauge(state, "player", "prudence")],
@@ -53,7 +56,7 @@ function getDominantValue(state: GameState): Extract<GaugeKey, "compassion" | "p
   return [...values].sort((a, b) => b[1] - a[1])[0][0];
 }
 
-function identityText(value: Extract<GaugeKey, "compassion" | "prudence" | "ambition">): string {
+function identityText(value: IdentityGaugeKey): string {
   if (value === "compassion") {
     return "Mercy became your strongest habit. It cost you, but people learned your counter was not only a till.";
   }

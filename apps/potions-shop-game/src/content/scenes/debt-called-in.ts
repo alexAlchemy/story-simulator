@@ -1,5 +1,5 @@
 import type { SceneCard } from "@aphebis/core";
-import { decreaseEntityGauge, decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "../effects";
+import { decreaseEntityGauge, decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: Gratitude becomes leverage when a helped family asks for a rule to bend back.

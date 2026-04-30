@@ -1,5 +1,5 @@
 import type { SceneCard } from "@aphebis/core";
-import { decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "../effects";
+import { flags, log, player, relation, shop } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: A soaked stranger arrives at closing with three copper coins and a dying sister.
@@ -17,22 +17,18 @@ const scene: SceneCard = {
       label: "Give him the draught for free",
       description: "Let need matter more than the till.",
       effects: [
-        spendQuantity("shop", "stock", 1),
-        increaseEntityGauge("player", "compassion", "moderately"),
-        increaseRelationshipDimension("town->shop", "trust", "slightly"),
-        {
-          kind: "addRelationshipToken",
-          relationshipId: "town->shop",
-          token: {
-            id: "stablehand-helped",
-            kind: "favour",
-            label: "Helped the stablehand's sister",
-            description: "Word may spread that the shop helps desperate families.",
-            sourceSceneId: "desperate-stablehand"
-          }
-        },
-        { kind: "setFlag", key: "stablehand_grateful", value: true },
-        { kind: "log", text: "The stablehand leaves clutching the draught like a candle in the rain." }
+        shop.spendStock(1),
+        player.gainCompassion("moderately"),
+        relation("town", "shop").gainTrust("slightly"),
+        relation("town", "shop").addToken({
+          id: "stablehand-helped",
+          kind: "favour",
+          label: "Helped the stablehand's sister",
+          description: "Word may spread that the shop helps desperate families.",
+          sourceSceneId: "desperate-stablehand"
+        }),
+        flags.set("stablehand_grateful", true),
+        log("The stablehand leaves clutching the draught like a candle in the rain.")
       ]
     },
     {
@@ -40,12 +36,12 @@ const scene: SceneCard = {
       label: "Take his three coins",
       description: "Help him, but keep the sale recorded.",
       effects: [
-        spendQuantity("shop", "stock", 1),
-        gainQuantity("shop", "coins", 3),
-        increaseEntityGauge("player", "prudence", "slightly"),
-        increaseEntityGauge("player", "compassion", "slightly"),
-        increaseRelationshipDimension("town->shop", "trust", "slightly"),
-        { kind: "log", text: "Three wet coins land in the drawer, lighter than they should feel." }
+        shop.spendStock(1),
+        shop.gainCoins(3),
+        player.gainPrudence("slightly"),
+        player.gainCompassion("slightly"),
+        relation("town", "shop").gainTrust("slightly"),
+        log("Three wet coins land in the drawer, lighter than they should feel.")
       ]
     },
     {
@@ -53,10 +49,10 @@ const scene: SceneCard = {
       label: "Refuse the sale",
       description: "You cannot keep the doors open by giving away what you need.",
       effects: [
-        increaseEntityGauge("player", "prudence", "moderately"),
-        decreaseRelationshipDimension("town->shop", "trust", "slightly"),
-        { kind: "setFlag", key: "stablehand_refused", value: true },
-        { kind: "log", text: "He nods once, too politely, and the bell over the door sounds colder." }
+        player.gainPrudence("moderately"),
+        relation("town", "shop").loseTrust("slightly"),
+        flags.set("stablehand_refused", true),
+        log("He nods once, too politely, and the bell over the door sounds colder.")
       ]
     }
   ]

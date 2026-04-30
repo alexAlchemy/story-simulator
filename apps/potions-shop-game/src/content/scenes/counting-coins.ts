@@ -1,5 +1,5 @@
 import type { SceneCard } from "@aphebis/core";
-import { decreaseEntityGauge, gainQuantity, increaseEntityGauge } from "../effects";
+import { log, player, shop } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: Midnight arrives. The shop is quiet. You count the coins twice and the number stays wrong.
@@ -16,27 +16,27 @@ const scene: SceneCard = {
       id: "raise-prices-tomorrow",
       label: "Plan to raise prices tomorrow",
       effects: [
-        increaseEntityGauge("player", "prudence", "slightly"),
-        { kind: "log", text: "You mark three prices in darker ink and do not sleep immediately after." }
+        player.gainPrudence("slightly"),
+        log("You mark three prices in darker ink and do not sleep immediately after.")
       ]
     },
     {
       id: "work-late",
       label: "Work late bottling simple remedies",
       effects: [
-        gainQuantity("shop", "stock", 1),
-        increaseEntityGauge("player", "fatigue", "moderately"),
-        increaseEntityGauge("player", "ambition", "slightly"),
-        { kind: "log", text: "By candle-end, six labels are straight and your hands ache." }
+        shop.gainStock(1),
+        player.gainFatigue("moderately"),
+        player.gainAmbition("slightly"),
+        log("By candle-end, six labels are straight and your hands ache.")
       ]
     },
     {
       id: "rest",
       label: "Close your eyes and rest",
       effects: [
-        decreaseEntityGauge("player", "fatigue", "moderately"),
-        increaseEntityGauge("player", "compassion", "slightly"),
-        { kind: "log", text: "For one night, you treat yourself like someone worth preserving." }
+        player.recoverFatigue("moderately"),
+        player.gainCompassion("slightly"),
+        log("For one night, you treat yourself like someone worth preserving.")
       ]
     }
   ]

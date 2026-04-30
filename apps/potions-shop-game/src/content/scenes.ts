@@ -4,7 +4,7 @@ import { scenes } from "./scenes/index";
 import {
   entityGaugeDefinitions,
   relationshipDimensionDefinitions
-} from "../system/semantics/definitions";
+} from "@aphebis/system-cosy-shop";
 
 export { scenes };
 

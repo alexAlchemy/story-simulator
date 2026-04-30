@@ -1,5 +1,5 @@
 import type { SceneCard } from "@aphebis/core";
-import { decreaseEntityGauge, gainQuantity, increaseEntityGauge, increaseRelationshipDimension } from "../effects";
+import { decreaseEntityGauge, gainQuantity, increaseEntityGauge, increaseRelationshipDimension } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: The shelves are thin and the marsh path is slick with rain—but mooncap mushrooms bloom.

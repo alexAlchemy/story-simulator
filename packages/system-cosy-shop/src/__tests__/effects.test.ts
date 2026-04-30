@@ -6,7 +6,7 @@ import {
   increaseEntityGauge,
   increaseRelationshipDimension,
   spendQuantity
-} from "./effects";
+} from "../effects";
 
 describe("semantic effect helpers", () => {
   it("turns human-sized entity gauge changes into numeric effects", () => {

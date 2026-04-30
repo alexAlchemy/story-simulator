@@ -10,7 +10,7 @@ import {
 } from "@aphebis/core";
 import { getVisibleScenes } from "@aphebis/core";
 import { getRelationshipDimension } from "@aphebis/core";
-import { entityGaugeDefinitions } from "../system/semantics/definitions";
+import { entityGaugeDefinitions } from "@aphebis/system-cosy-shop";
 
 describe("sceneAvailability", () => {
   it("reveals the apprentice's first cure after emotional investment", () => {

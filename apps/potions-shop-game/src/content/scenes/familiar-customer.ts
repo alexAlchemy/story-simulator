@@ -1,5 +1,5 @@
 import type { SceneCard } from "@aphebis/core";
-import { decreaseEntityGauge, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "../effects";
+import { decreaseEntityGauge, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: A regular customer notices your exhaustion and offers ordinary help.

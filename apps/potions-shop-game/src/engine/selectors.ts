@@ -10,7 +10,7 @@ import {
   entityGaugeDefinitions,
   relationshipDimensionDefinitions,
   stockDefinition
-} from "../system/semantics/definitions";
+} from "@aphebis/system-cosy-shop";
 import {
   getEntityGauge,
   getEntityQuantity,

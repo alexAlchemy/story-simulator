@@ -7,9 +7,9 @@ import type {
   SignedGaugeDefinition
 } from "@aphebis/core";
 import type {
-  GaugeKey as DomainGaugeKey,
-  RelationshipDimensionKey as DomainRelationshipDimensionKey
-} from "@aphebis/core";
+  CosyShopGaugeKey,
+  CosyShopRelationshipDimensionKey
+} from "../keys";
 
 export type FatigueLabel =
   | "Rested"
@@ -581,7 +581,7 @@ export const entityGaugeDefinitions = {
   confidence: confidenceDefinition,
   gossipHeat: gossipHeatDefinition
 } satisfies Record<
-  DomainGaugeKey,
+  CosyShopGaugeKey,
   BoundedGaugeDefinition<string, string> | SignedGaugeDefinition<string, string>
 >;
 
@@ -595,7 +595,7 @@ export const relationshipDimensionDefinitions = {
   goodwill: goodwillDefinition,
   familiarity: familiarityDefinition
 } satisfies Record<
-  DomainRelationshipDimensionKey,
+  CosyShopRelationshipDimensionKey,
   BoundedGaugeDefinition<string, string>
 >;
 

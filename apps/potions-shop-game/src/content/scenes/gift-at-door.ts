@@ -1,5 +1,5 @@
 import type { SceneCard } from "@aphebis/core";
-import { gainQuantity, increaseEntityGauge, increaseRelationshipDimension } from "../effects";
+import { flags, log, player, relation, scenes, shop } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: Rare moonleaf appears at your door, tied with blue thread, no note, no explanation.
@@ -16,32 +16,32 @@ const scene: SceneCard = {
       id: "accept-use",
       label: "Accept and use it",
       effects: [
-        gainQuantity("shop", "stock", 2),
-        increaseEntityGauge("player", "ambition", "slightly"),
-        { kind: "setFlag", key: "mysterious_gift_accepted", value: true },
-        { kind: "addScene", sceneId: "gift-giver-revealed" },
-        { kind: "log", text: "The moonleaf smells of rain, silver, and someone else's expectation." }
+        shop.gainStock(2),
+        player.gainAmbition("slightly"),
+        flags.set("mysterious_gift_accepted", true),
+        scenes.add("gift-giver-revealed"),
+        log("The moonleaf smells of rain, silver, and someone else's expectation.")
       ]
     },
     {
       id: "ask-around",
       label: "Ask around town",
       effects: [
-        increaseRelationshipDimension("town->shop", "trust", "slightly"),
-        increaseEntityGauge("player", "prudence", "slightly"),
-        { kind: "addScene", sceneId: "gift-giver-revealed" },
-        { kind: "log", text: "By noon, three people have theories and nobody has an answer." }
+        relation("town", "shop").gainTrust("slightly"),
+        player.gainPrudence("slightly"),
+        scenes.add("gift-giver-revealed"),
+        log("By noon, three people have theories and nobody has an answer.")
       ]
     },
     {
       id: "leave-thanks",
       label: "Leave a thank-you charm by the door",
       effects: [
-        gainQuantity("shop", "stock", 1),
-        increaseEntityGauge("player", "compassion", "slightly"),
-        increaseRelationshipDimension("town->shop", "trust", "slightly"),
-        { kind: "setFlag", key: "left_thanks_for_gift", value: true },
-        { kind: "log", text: "The charm warms once at dusk, as if someone passed close enough to notice." }
+        shop.gainStock(1),
+        player.gainCompassion("slightly"),
+        relation("town", "shop").gainTrust("slightly"),
+        flags.set("left_thanks_for_gift", true),
+        log("The charm warms once at dusk, as if someone passed close enough to notice.")
       ]
     }
   ]

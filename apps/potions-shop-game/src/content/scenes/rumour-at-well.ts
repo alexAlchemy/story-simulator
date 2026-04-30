@@ -1,5 +1,5 @@
 import type { SceneCard } from "@aphebis/core";
-import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "../effects";
+import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: The town has started explaining your shop to itself.

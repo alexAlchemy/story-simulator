@@ -1,5 +1,5 @@
 import type { SceneCard } from "@aphebis/core";
-import { decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension } from "../effects";
+import { decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: An old hedge-witch admits the moonleaf was hers—a test of what you do with unpriced kindness.

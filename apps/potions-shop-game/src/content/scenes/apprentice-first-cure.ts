@@ -1,5 +1,5 @@
 import type { SceneCard } from "@aphebis/core";
-import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension } from "../effects";
+import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: A parent returns to thank the apprentice for advice that helped, but the remedy was incomplete.

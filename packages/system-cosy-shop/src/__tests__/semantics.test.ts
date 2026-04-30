@@ -8,8 +8,8 @@ import {
   stockDefinition,
   signedGaugeDefinition,
   trustDefinition
-} from "./definitions";
-import type { GaugeKey, RelationshipDimensionKey } from "@aphebis/core";
+} from "../semantics/definitions";
+import type { CosyShopGaugeKey, CosyShopRelationshipDimensionKey } from "../keys";
 import {
   describeBoundedGauge,
   describeOpenQuantity,
@@ -60,7 +60,7 @@ describe("semantic primitives", () => {
       "ambition",
       "confidence",
       "gossipHeat"
-    ] satisfies GaugeKey[];
+    ] satisfies CosyShopGaugeKey[];
     const relationshipDimensionKeys = [
       "trust",
       "affection",
@@ -70,7 +70,7 @@ describe("semantic primitives", () => {
       "obligation",
       "goodwill",
       "familiarity"
-    ] satisfies RelationshipDimensionKey[];
+    ] satisfies CosyShopRelationshipDimensionKey[];
 
     expect(Object.keys(entityGaugeDefinitions).sort()).toEqual([...gaugeKeys].sort());
     expect(Object.keys(relationshipDimensionDefinitions).sort()).toEqual(

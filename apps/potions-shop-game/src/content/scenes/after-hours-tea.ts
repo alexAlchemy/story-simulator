@@ -5,7 +5,7 @@ import {
   increaseEntityGauge,
   increaseRelationshipDimension,
   spendQuantity
-} from "../effects";
+} from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: The apprentice lingers after closing with a cup of tea and too much on their mind.

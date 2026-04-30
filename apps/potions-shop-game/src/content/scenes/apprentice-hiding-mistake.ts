@@ -1,5 +1,5 @@
 import type { SceneCard } from "@aphebis/core";
-import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension } from "../effects";
+import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: You discover your apprentice has hidden a mistake—a cracked vial in the back shelf.
