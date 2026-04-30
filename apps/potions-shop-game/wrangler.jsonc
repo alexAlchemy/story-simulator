@@ -2,6 +2,10 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "story-simulator",
   "compatibility_date": "2026-04-29",
+  "build": {
+    "command": "pnpm --filter @aphebis/potions-shop-game build",
+    "cwd": "../.."
+  },
   "assets": {
     "directory": "./dist",
     "not_found_handling": "single-page-application"
