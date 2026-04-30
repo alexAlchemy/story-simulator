@@ -9,3 +9,8 @@ Dependency direction:
 - `@aphebis/core` must not import app, content, UI, narrative tooling, or system-specific modules.
 
 Runtime code that only accepts and returns core domain objects belongs here.
+
+Semantic helpers in core are descriptive only. They map numeric values to authored
+threshold labels/descriptions and compare labels by rank. Core does not decide how
+much a scene choice should matter, whether a delta should be absorbed, or whether
+an action is emotionally significant.

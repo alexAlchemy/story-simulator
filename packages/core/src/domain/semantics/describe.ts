@@ -86,6 +86,30 @@ export function describeSignedGauge<TKey extends string, TLabel extends string>(
   );
 }
 
+export function describeGauge<TKey extends string, TLabel extends string>(
+  definition: BoundedGaugeDefinition<TKey, TLabel> | SignedGaugeDefinition<TKey, TLabel>,
+  value: number
+): SemanticValue<TKey, TLabel> {
+  return definition.family === "signedGauge"
+    ? describeSignedGauge(definition, value)
+    : describeBoundedGauge(definition, value);
+}
+
+export function compareLabels<TLabel extends string>(
+  thresholds: readonly SemanticThreshold<TLabel>[],
+  left: TLabel,
+  right: TLabel
+): number {
+  const leftThreshold = findThresholdByLabel(thresholds, left);
+  const rightThreshold = findThresholdByLabel(thresholds, right);
+
+  if (!leftThreshold || !rightThreshold) {
+    throw new Error("Cannot compare labels that are not present in the same threshold scale.");
+  }
+
+  return Math.sign(leftThreshold.rank - rightThreshold.rank);
+}
+
 export function describeOpenQuantity<
   TKey extends string,
   TLabel extends string,
@@ -125,4 +149,11 @@ export function describeContextSignal(context: OpenQuantityContext): string {
 
 function clamp(value: number, minimum: number, maximum: number): number {
   return Math.max(minimum, Math.min(maximum, value));
+}
+
+function findThresholdByLabel<TLabel extends string>(
+  thresholds: readonly SemanticThreshold<TLabel>[],
+  label: TLabel
+): SemanticThreshold<TLabel> | undefined {
+  return thresholds.find((threshold) => threshold.label === label);
 }

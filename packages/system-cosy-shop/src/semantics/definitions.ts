@@ -2,9 +2,13 @@ import type {
   BoundedGaugeDefinition,
   OpenQuantityDefinition,
   OpenQuantityContext,
-  SemanticPole,
+  SemanticValue,
   SemanticThreshold,
   SignedGaugeDefinition
+} from "@aphebis/core";
+import {
+  compareLabels as compareThresholdLabels,
+  describeGauge as describeCoreGauge
 } from "@aphebis/core";
 import type {
   CosyShopGaugeKey,
@@ -446,131 +450,69 @@ export type StockContext = {
 
 export const boundedGaugeDefinition = <TKey extends string, TLabel extends string>(
   key: TKey,
-  thresholds: readonly SemanticThreshold<TLabel>[],
-  poles?: BoundedGaugeDefinition<TKey, TLabel>["poles"]
+  thresholds: readonly SemanticThreshold<TLabel>[]
 ): BoundedGaugeDefinition<TKey, TLabel> => ({
   family: "boundedGauge",
   key,
   minimumValue: 0,
   maximumValue: 1,
-  thresholds,
-  curve: { power: 1.35, minimumFactor: 0.1 },
-  poles
+  thresholds
 });
 
 export const signedGaugeDefinition = <TKey extends string, TLabel extends string>(
   key: TKey,
-  thresholds: readonly SemanticThreshold<TLabel>[],
-  poles?: SignedGaugeDefinition<TKey, TLabel>["poles"]
+  thresholds: readonly SemanticThreshold<TLabel>[]
 ): SignedGaugeDefinition<TKey, TLabel> => ({
   family: "signedGauge",
   key,
   minimumValue: -1,
   maximumValue: 1,
-  thresholds,
-  curve: { power: 1.35, minimumFactor: 0.1 },
-  poles
+  thresholds
 });
 
-const pole = (name: string, aliases: string[] = []): SemanticPole => ({
-  name,
-  aliases
-});
+export const fatigueDefinition = boundedGaugeDefinition("fatigue", fatigueThresholds);
 
-export const fatigueDefinition = boundedGaugeDefinition("fatigue", fatigueThresholds, {
-  low: pole("rest", ["rested", "freshness", "recovery"]),
-  high: pole("fatigue", ["tiredness", "strain", "exhaustion"])
-});
-
-export const trustDefinition = boundedGaugeDefinition("trust", trustThresholds, {
-  low: pole("distrust", ["suspicion", "wariness"]),
-  high: pole("trust", ["faith", "reliance"])
-});
+export const trustDefinition = boundedGaugeDefinition("trust", trustThresholds);
 
 export const compassionDefinition = signedGaugeDefinition(
   "compassion",
-  compassionThresholds,
-  {
-    negative: pole("coldness", ["detachment", "reserve"]),
-    positive: pole("compassion", ["care", "mercy", "tenderness"])
-  }
+  compassionThresholds
 );
 export const prudenceDefinition = signedGaugeDefinition(
   "prudence",
-  prudenceThresholds,
-  {
-    negative: pole("impulse", ["instinct", "risk", "spontaneity"]),
-    positive: pole("prudence", ["caution", "carefulness", "preparation"])
-  }
+  prudenceThresholds
 );
 export const ambitionDefinition = signedGaugeDefinition(
   "ambition",
-  ambitionThresholds,
-  {
-    negative: pole("contentment", ["humility", "modesty"]),
-    positive: pole("ambition", ["drive", "advancement", "recognition"])
-  }
+  ambitionThresholds
 );
 export const confidenceDefinition = boundedGaugeDefinition(
   "confidence",
-  confidenceThresholds,
-  {
-    low: pole("doubt", ["uncertainty", "hesitation"]),
-    high: pole("confidence", ["assurance", "self-belief"])
-  }
+  confidenceThresholds
 );
 export const gossipHeatDefinition = boundedGaugeDefinition(
   "gossipHeat",
-  gossipHeatThresholds,
-  {
-    low: pole("quiet", ["discretion", "calm"]),
-    high: pole("gossip", ["rumour", "rumor", "attention", "scandal"])
-  }
+  gossipHeatThresholds
 );
 
 export const affectionDefinition = boundedGaugeDefinition(
   "affection",
-  affectionThresholds,
-  {
-    low: pole("distance", ["coolness"]),
-    high: pole("affection", ["warmth", "fondness", "care"])
-  }
+  affectionThresholds
 );
-export const respectDefinition = boundedGaugeDefinition("respect", respectThresholds, {
-  low: pole("dismissal", ["disrespect"]),
-  high: pole("respect", ["esteem", "admiration", "credibility"])
-});
-export const fearDefinition = boundedGaugeDefinition("fear", fearThresholds, {
-  low: pole("courage", ["safety", "ease", "bravery"]),
-  high: pole("fear", ["dread", "intimidation"])
-});
+export const respectDefinition = boundedGaugeDefinition("respect", respectThresholds);
+export const fearDefinition = boundedGaugeDefinition("fear", fearThresholds);
 export const resentmentDefinition = boundedGaugeDefinition(
   "resentment",
-  resentmentThresholds,
-  {
-    low: pole("forgiveness", ["ease", "clear air"]),
-    high: pole("resentment", ["bitterness", "grudge", "grievance"])
-  }
+  resentmentThresholds
 );
 export const obligationDefinition = boundedGaugeDefinition(
   "obligation",
-  obligationThresholds,
-  {
-    low: pole("freedom", ["release"]),
-    high: pole("obligation", ["debt", "duty", "beholdenness"])
-  }
+  obligationThresholds
 );
-export const goodwillDefinition = boundedGaugeDefinition("goodwill", goodwillThresholds, {
-  low: pole("indifference", ["ill-will", "distance"]),
-  high: pole("goodwill", ["generosity", "kindness", "support"])
-});
+export const goodwillDefinition = boundedGaugeDefinition("goodwill", goodwillThresholds);
 export const familiarityDefinition = boundedGaugeDefinition(
   "familiarity",
-  familiarityThresholds,
-  {
-    low: pole("strangeness", ["distance", "unknownness"]),
-    high: pole("familiarity", ["closeness", "intimacy", "comfort"])
-  }
+  familiarityThresholds
 );
 
 export const entityGaugeDefinitions = {
@@ -625,4 +567,39 @@ export function describeCoinsContext(rentAmount: number): OpenQuantityContext {
 
 export function describeStockContext(expectedDemand: number): OpenQuantityContext {
   return stockDefinition.describeContext({ expectedDemand });
+}
+
+export type CosyShopSemanticGaugeKey =
+  | CosyShopGaugeKey
+  | CosyShopRelationshipDimensionKey;
+
+export type CosyShopSemanticGaugeDefinition =
+  | BoundedGaugeDefinition<string, string>
+  | SignedGaugeDefinition<string, string>;
+
+export function describeGauge(
+  key: CosyShopSemanticGaugeKey,
+  value: number
+): SemanticValue<string, string> {
+  return describeCoreGauge(getGaugeDefinition(key), value);
+}
+
+export function compareLabels(
+  key: CosyShopSemanticGaugeKey,
+  left: string,
+  right: string
+): number {
+  return compareThresholdLabels(getGaugeDefinition(key).thresholds, left, right);
+}
+
+function getGaugeDefinition(key: CosyShopSemanticGaugeKey): CosyShopSemanticGaugeDefinition {
+  const definition =
+    entityGaugeDefinitions[key as CosyShopGaugeKey] ??
+    relationshipDimensionDefinitions[key as CosyShopRelationshipDimensionKey];
+
+  if (!definition) {
+    throw new Error(`Unknown cosy shop semantic gauge "${key}".`);
+  }
+
+  return definition;
 }

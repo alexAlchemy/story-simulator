@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { applyBoundedGaugeChange, applySignedGaugeChange } from "@aphebis/core";
 import {
+  compareLabels,
+  describeGauge,
   entityGaugeDefinitions,
   fatigueDefinition,
   coinsDefinition,
@@ -91,18 +92,7 @@ describe("semantic primitives", () => {
     }
   });
 
-  it("names the poles authors can write scene effects toward or away from", () => {
-    expect(entityGaugeDefinitions.prudence.poles).toMatchObject({
-      negative: { name: "impulse" },
-      positive: { name: "prudence" }
-    });
-    expect(relationshipDimensionDefinitions.fear.poles).toMatchObject({
-      low: { name: "courage" },
-      high: { name: "fear" }
-    });
-  });
-
-  it("treats dramatic values as signed axes with neutral at zero", () => {
+  it("treats signed descriptors as axes with neutral at zero", () => {
     expect(describeSignedGauge(entityGaugeDefinitions.compassion, 0)).toMatchObject({
       label: "Neutral",
       description: "Compassion and detachment are still in ordinary balance."
@@ -174,20 +164,6 @@ describe("semantic primitives", () => {
     });
   });
 
-  it("applies saturating changes with diminishing returns near extremes", () => {
-    const midGain = applyBoundedGaugeChange(fatigueDefinition, 0.5, 0.2);
-    const edgeGain = applyBoundedGaugeChange(fatigueDefinition, 0.95, 0.2);
-    const midLoss = applyBoundedGaugeChange(fatigueDefinition, 0.5, -0.2);
-    const edgeLoss = applyBoundedGaugeChange(fatigueDefinition, 0.05, -0.2);
-
-    expect(Math.abs(edgeGain.actualDelta)).toBeLessThan(Math.abs(midGain.actualDelta));
-    expect(Math.abs(edgeLoss.actualDelta)).toBeLessThan(Math.abs(midLoss.actualDelta));
-    expect(midGain.changedLabel).toBe(false);
-    expect(edgeGain.absorbed).toBe(true);
-    expect(midGain.previous.value).toBe(0.5);
-    expect(midGain.next.value).toBeGreaterThan(0.5);
-  });
-
   it("supports signed gauges in the primitive layer", () => {
     const stanceDefinition = signedGaugeDefinition("stance", [
       { rank: 0, min: -1, label: "Hostile", description: "Actively against the other side." },
@@ -198,10 +174,29 @@ describe("semantic primitives", () => {
     ] as const satisfies readonly SemanticThreshold<string>[]);
 
     const described = describeSignedGauge(stanceDefinition, -0.1);
-    const changed = applySignedGaugeChange(stanceDefinition, -0.1, 0.6);
 
     expect(described.label).toBe("Cold");
-    expect(changed.previous.label).toBe("Cold");
-    expect(changed.next.value).toBeGreaterThan(changed.previous.value);
+  });
+
+  it("describes known system gauges by key without deciding effects", () => {
+    expect(describeGauge("fatigue", 0.7)).toMatchObject({
+      key: "fatigue",
+      label: "Exhausted",
+      rank: 3
+    });
+    expect(describeGauge("trust", 0.5)).toMatchObject({
+      key: "trust",
+      label: "Tentative",
+      rank: 2
+    });
+  });
+
+  it("compares labels by threshold rank", () => {
+    expect(compareLabels("trust", "Tentative", "Wary")).toBe(1);
+    expect(compareLabels("trust", "Wary", "Tentative")).toBe(-1);
+    expect(compareLabels("trust", "Tentative", "Tentative")).toBe(0);
+    expect(() => compareLabels("trust", "Tentative", "Missing")).toThrow(
+      "Cannot compare labels that are not present in the same threshold scale."
+    );
   });
 });
