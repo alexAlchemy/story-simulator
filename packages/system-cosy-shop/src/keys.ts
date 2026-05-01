@@ -25,6 +25,3 @@ export type CosyShopPropertyKey =
   | CosyShopSpectrumPropertyKey
   | CosyShopQuantityPropertyKey
   | CosyShopFlagPropertyKey;
-
-export type CosyShopGaugeKey = CosyShopScalePropertyKey | CosyShopSpectrumPropertyKey;
-export type CosyShopQuantityKey = CosyShopQuantityPropertyKey;

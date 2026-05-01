@@ -22,8 +22,7 @@ export type {
 export type {
   GameContent,
   GameLogEntry,
-  GameState,
-  SemanticGaugeDefinition
+  GameState
 } from "./game/types";
 export type {
   SceneAvailability,
@@ -34,7 +33,6 @@ export type {
   SceneSemanticComparison,
   SceneType
 } from "./scenes/types";
-export type { GaugeKey, QuantityKey } from "./world/keys";
 export type {
   EntityKind,
   EntityState,

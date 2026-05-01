@@ -8,10 +8,7 @@ import { createInitialState } from "../content/initialState";
 import { advanceDay } from "@aphebis/core";
 import { resolveChoice } from "@aphebis/core";
 import { getVisibleScenes } from "@aphebis/core";
-import {
-  getEntityGauge,
-  getEntityQuantity
-} from "@aphebis/core";
+import { getNumericProperty } from "@aphebis/core";
 
 export type StateMetricSnapshot = {
   resources: {
@@ -136,18 +133,18 @@ function snapshotState(
     sceneId: scene?.id,
     choiceId: choice?.id,
     resources: {
-      coins: getEntityQuantity(state, "shop", "coins"),
-      stock: getEntityQuantity(state, "shop", "stock"),
-      fatigue: getEntityGauge(state, "player", "fatigue")
+      coins: getNumericProperty(state, "shop", "coins"),
+      stock: getNumericProperty(state, "shop", "stock"),
+      fatigue: getNumericProperty(state, "player", "fatigue")
     },
     standing: {
-      apprenticeTrust: getEntityGauge(state, "apprentice", "trust"),
-      shopStanding: getEntityGauge(state, "shop", "shopStanding")
+      apprenticeTrust: getNumericProperty(state, "apprentice", "trust"),
+      shopStanding: getNumericProperty(state, "shop", "shopStanding")
     },
     values: {
-      compassion: getEntityGauge(state, "player", "compassion"),
-      prudence: getEntityGauge(state, "player", "prudence"),
-      ambition: getEntityGauge(state, "player", "ambition")
+      compassion: getNumericProperty(state, "player", "compassion"),
+      prudence: getNumericProperty(state, "player", "prudence"),
+      ambition: getNumericProperty(state, "player", "ambition")
     }
   };
 }

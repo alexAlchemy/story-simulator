@@ -9,7 +9,7 @@ import {
   validateSceneAvailability
 } from "@aphebis/core";
 import { getVisibleScenes } from "@aphebis/core";
-import { getEntityGauge } from "@aphebis/core";
+import { getNumericProperty } from "@aphebis/core";
 import { propertyDefinitions } from "@aphebis/system-cosy-shop";
 
 describe("sceneAvailability", () => {
@@ -29,7 +29,7 @@ describe("sceneAvailability", () => {
     expect(visibleSceneIds).toContain("apprentice-first-cure");
 
     state = resolveChoice(state, "apprentice-first-cure", "praise-in-public", content);
-    expect(getEntityGauge(state, "apprentice", "affection")).toBeGreaterThan(0.7);
+    expect(getNumericProperty(state, "apprentice", "affection")).toBeGreaterThan(0.7);
   });
 
   it("reveals the forage scene when stock pressure becomes high enough", () => {
@@ -80,7 +80,7 @@ describe("sceneAvailability", () => {
     );
   });
 
-  it("requires the stablehand-helped flag before debt-called-in can appear", () => {
+  it("requires the stablehand-helped story fact before debt-called-in can appear", () => {
     let state = createInitialState();
 
     state = resolveChoice(state, "desperate-stablehand", "free-draught", content);

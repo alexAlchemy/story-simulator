@@ -11,20 +11,20 @@ import { resolveChoice } from "@aphebis/core";
 import { getVisibleScenes } from "@aphebis/core";
 import { getBooleanProperty } from "@aphebis/core";
 
-export type FlagEffectDefinition = {
+export type StoryFactEffectDefinition = {
   sceneId: string;
   choiceId: string;
-  flag: string;
+  fact: string;
   value: boolean;
 };
 
-export type FlagEffectEvent = FlagEffectDefinition & {
+export type StoryFactEffectEvent = StoryFactEffectDefinition & {
   runId: string;
   day: number;
 };
 
-export type FlagMetric = {
-  flag: string;
+export type StoryFactMetric = {
+  fact: string;
   setTrueCount: number;
   setFalseCount: number;
   finalTrueCount: number;
@@ -41,15 +41,15 @@ export type SimulationRun = {
   id: string;
   finalState: GameState;
   selectedChoices: SimulatedChoice[];
-  flagEvents: FlagEffectEvent[];
+  factEvents: StoryFactEffectEvent[];
 };
 
-export type FlagSimulationReport = {
+export type StoryFactSimulationReport = {
   runs: SimulationRun[];
-  flagMetrics: FlagMetric[];
-  flagsDefinedInContent: string[];
-  flagsNeverObserved: string[];
-  flagChoiceEffectsNeverObserved: FlagEffectDefinition[];
+  factMetrics: StoryFactMetric[];
+  factsDefinedInContent: string[];
+  factsNeverObserved: string[];
+  factChoiceEffectsNeverObserved: StoryFactEffectDefinition[];
 };
 
 type ChoiceTarget = {
@@ -59,39 +59,32 @@ type ChoiceTarget = {
 
 const MAX_SIMULATION_STEPS = 200;
 
-export function simulateFlagMetrics(
+export function simulateStoryFactMetrics(
   content: GameContent,
   createState: () => GameState = createInitialState
-): FlagSimulationReport {
-  const flagDefinitions = collectFlagEffectDefinitions(content);
-  const targets = uniqueChoiceTargets(flagDefinitions);
+): StoryFactSimulationReport {
+  const factDefinitions = collectStoryFactEffectDefinitions(content);
+  const targets = uniqueChoiceTargets(factDefinitions);
   const runs = targets.map((target, index) =>
-    simulateRun(`flag-choice-${index + 1}`, content, createState(), target)
+    simulateRun(`fact-choice-${index + 1}`, content, createState(), target)
   );
 
-  return buildFlagSimulationReport(runs, flagDefinitions);
+  return buildStoryFactSimulationReport(runs, factDefinitions);
 }
 
-export function collectFlagEffectDefinitions(
+export function collectStoryFactEffectDefinitions(
   content: GameContent
-): FlagEffectDefinition[] {
-  const definitions: FlagEffectDefinition[] = [];
+): StoryFactEffectDefinition[] {
+  const definitions: StoryFactEffectDefinition[] = [];
 
   for (const scene of Object.values(content.scenes)) {
     for (const choice of scene.choices) {
       for (const effect of choice.effects) {
-        if (effect.kind === "setFlag") {
+        if (effect.kind === "setProperty" && effect.entityId === "story") {
           definitions.push({
             sceneId: scene.id,
             choiceId: choice.id,
-            flag: effect.key,
-            value: effect.value
-          });
-        } else if (effect.kind === "setProperty" && effect.entityId === "story") {
-          definitions.push({
-            sceneId: scene.id,
-            choiceId: choice.id,
-            flag: effect.property,
+            fact: effect.property,
             value: effect.value === true
           });
         }
@@ -110,7 +103,7 @@ function simulateRun(
 ): SimulationRun {
   let state = initialState;
   const selectedChoices: SimulatedChoice[] = [];
-  const flagEvents: FlagEffectEvent[] = [];
+  const factEvents: StoryFactEffectEvent[] = [];
   let steps = 0;
 
   while (!state.ended && steps < MAX_SIMULATION_STEPS) {
@@ -131,13 +124,13 @@ function simulateRun(
       day: state.day
     });
 
-    flagEvents.push(
-      ...getSetFlagEffects(choice.effects).map((effect) => ({
+    factEvents.push(
+      ...getSetStoryFactEffects(choice.effects).map((effect) => ({
         runId,
         day: state.day,
         sceneId: scene.id,
         choiceId: choice.id,
-        flag: effect.key,
+        fact: effect.key,
         value: effect.value
       }))
     );
@@ -154,43 +147,43 @@ function simulateRun(
     id: runId,
     finalState: state,
     selectedChoices,
-    flagEvents
+    factEvents
   };
 }
 
-function buildFlagSimulationReport(
+function buildStoryFactSimulationReport(
   runs: SimulationRun[],
-  flagDefinitions: FlagEffectDefinition[]
-): FlagSimulationReport {
-  const flagsDefinedInContent = uniqueSorted(
-    flagDefinitions.map((definition) => definition.flag)
+  factDefinitions: StoryFactEffectDefinition[]
+): StoryFactSimulationReport {
+  const factsDefinedInContent = uniqueSorted(
+    factDefinitions.map((definition) => definition.fact)
   );
-  const events = runs.flatMap((run) => run.flagEvents);
-  const observedEventKeys = new Set(events.map(flagEffectKey));
+  const events = runs.flatMap((run) => run.factEvents);
+  const observedEventKeys = new Set(events.map(factEffectKey));
 
-  const flagMetrics = flagsDefinedInContent.map((flag) => {
-    const flagEvents = events.filter((event) => event.flag === flag);
+  const factMetrics = factsDefinedInContent.map((fact) => {
+    const factEvents = events.filter((event) => event.fact === fact);
 
     return {
-      flag,
-      setTrueCount: flagEvents.filter((event) => event.value).length,
-      setFalseCount: flagEvents.filter((event) => !event.value).length,
-      finalTrueCount: runs.filter((run) => getBooleanProperty(run.finalState, "story", flag))
+      fact,
+      setTrueCount: factEvents.filter((event) => event.value).length,
+      setFalseCount: factEvents.filter((event) => !event.value).length,
+      finalTrueCount: runs.filter((run) => getBooleanProperty(run.finalState, "story", fact))
         .length,
-      finalFalseCount: runs.filter((run) => !getBooleanProperty(run.finalState, "story", flag))
+      finalFalseCount: runs.filter((run) => !getBooleanProperty(run.finalState, "story", fact))
         .length
     };
   });
 
   return {
     runs,
-    flagMetrics,
-    flagsDefinedInContent,
-    flagsNeverObserved: flagsDefinedInContent.filter(
-      (flag) => !events.some((event) => event.flag === flag)
+    factMetrics,
+    factsDefinedInContent,
+    factsNeverObserved: factsDefinedInContent.filter(
+      (fact) => !events.some((event) => event.fact === fact)
     ),
-    flagChoiceEffectsNeverObserved: flagDefinitions.filter(
-      (definition) => !observedEventKeys.has(flagEffectKey(definition))
+    factChoiceEffectsNeverObserved: factDefinitions.filter(
+      (definition) => !observedEventKeys.has(factEffectKey(definition))
     )
   };
 }
@@ -215,13 +208,10 @@ function chooseChoice(scene: Scene, target: ChoiceTarget): SceneChoice {
   return scene.choices[0];
 }
 
-function getSetFlagEffects(
+function getSetStoryFactEffects(
   effects: Effect[]
 ): { key: string; value: boolean }[] {
   return effects.flatMap((effect) => {
-    if (effect.kind === "setFlag") {
-      return [{ key: effect.key, value: effect.value }];
-    }
     if (effect.kind === "setProperty" && effect.entityId === "story") {
       return [{ key: effect.property, value: effect.value === true }];
     }
@@ -230,7 +220,7 @@ function getSetFlagEffects(
 }
 
 function uniqueChoiceTargets(
-  definitions: FlagEffectDefinition[]
+  definitions: StoryFactEffectDefinition[]
 ): ChoiceTarget[] {
   const targets = new Map<string, ChoiceTarget>();
 
@@ -245,8 +235,8 @@ function uniqueChoiceTargets(
   return [...targets.values()];
 }
 
-function flagEffectKey(definition: FlagEffectDefinition): string {
-  return `${definition.sceneId}:${definition.choiceId}:${definition.flag}:${definition.value}`;
+function factEffectKey(definition: StoryFactEffectDefinition): string {
+  return `${definition.sceneId}:${definition.choiceId}:${definition.fact}:${definition.value}`;
 }
 
 function uniqueSorted(values: string[]): string[] {

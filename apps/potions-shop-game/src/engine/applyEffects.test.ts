@@ -67,7 +67,7 @@ describe("applyEffects", () => {
     expect(next.sceneTableau.filter((id) => id === "counting-coins")).toHaveLength(1);
   });
 
-  it("clamps quantities at zero", () => {
+  it("clamps quantity properties at zero", () => {
     const next = applyEffects(
       createInitialState(),
       [

@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, gainQuantity, increaseEntityGauge, spendQuantity } from "@aphebis/system-cosy-shop";
+import { decreaseProperty, gainPropertyAmount, increaseProperty, spendPropertyAmount } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: A rival seller offers a cheaper cure outside your door.
@@ -34,10 +34,10 @@ const scene: Scene = {
       label: "Warn customers honestly",
       description: "Name the risk without making it a duel.",
       effects: [
-        increaseEntityGauge("shop", "shopStanding", "slightly"),
-        increaseEntityGauge("shop", "goodwill", "slightly"),
-        increaseEntityGauge("town", "gossipHeat", "slightly"),
-        spendQuantity("shop", "coins", 2),
+        increaseProperty("shop", "shopStanding", "slightly"),
+        increaseProperty("shop", "goodwill", "slightly"),
+        increaseProperty("town", "gossipHeat", "slightly"),
+        spendPropertyAmount("shop", "coins", 2),
         { kind: "log", text: "Some listen. Some resent listening. No one can say you lied." }
       ]
     },
@@ -46,11 +46,11 @@ const scene: Scene = {
       label: "Undercut the rival for one afternoon",
       description: "Win the crowd before the crowd decides what is true.",
       effects: [
-        gainQuantity("shop", "coins", 4),
-        spendQuantity("shop", "stock", 2),
-        increaseEntityGauge("player", "ambition", "moderately"),
-        decreaseEntityGauge("player", "compassion", "slightly"),
-        increaseEntityGauge("town", "gossipHeat", "moderately"),
+        gainPropertyAmount("shop", "coins", 4),
+        spendPropertyAmount("shop", "stock", 2),
+        increaseProperty("player", "ambition", "moderately"),
+        decreaseProperty("player", "compassion", "slightly"),
+        increaseProperty("town", "gossipHeat", "moderately"),
         { kind: "log", text: "By dusk, the rival is gone and the town is full of comparisons." }
       ]
     },
@@ -59,9 +59,9 @@ const scene: Scene = {
       label: "Let the town choose",
       description: "Refuse to turn the street into a trial.",
       effects: [
-        decreaseEntityGauge("player", "prudence", "slightly"),
-        decreaseEntityGauge("shop", "goodwill", "slightly"),
-        increaseEntityGauge("town", "gossipHeat", "slightly"),
+        decreaseProperty("player", "prudence", "slightly"),
+        decreaseProperty("shop", "goodwill", "slightly"),
+        increaseProperty("town", "gossipHeat", "slightly"),
         { kind: "log", text: "The street makes its own judgement, as streets always do." }
       ]
     }

@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, gainQuantity, increaseEntityGauge } from "@aphebis/system-cosy-shop";
+import { decreaseProperty, gainPropertyAmount, increaseProperty } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: The shelves are thin and the marsh path is slick with rain—but mooncap mushrooms bloom.
@@ -26,9 +26,9 @@ const scene: Scene = {
       id: "go-yourself",
       label: "Go yourself",
       effects: [
-        gainQuantity("shop", "stock", 2),
-        increaseEntityGauge("player", "fatigue", "moderately"),
-        increaseEntityGauge("player", "ambition", "slightly"),
+        gainPropertyAmount("shop", "stock", 2),
+        increaseProperty("player", "fatigue", "moderately"),
+        increaseProperty("player", "ambition", "slightly"),
         { kind: "log", text: "You return mud-streaked, triumphant, and more tired than you admit." }
       ]
     },
@@ -36,9 +36,9 @@ const scene: Scene = {
       id: "send-apprentice",
       label: "Send the apprentice with instructions",
       effects: [
-        gainQuantity("shop", "stock", 1),
-        increaseEntityGauge("apprentice", "trust", "slightly"),
-        increaseEntityGauge("player", "prudence", "slightly"),
+        gainPropertyAmount("shop", "stock", 1),
+        increaseProperty("apprentice", "trust", "slightly"),
+        increaseProperty("player", "prudence", "slightly"),
         { kind: "log", text: "They return soaked, proud, and carrying almost the right mushrooms." }
       ]
     },
@@ -46,8 +46,8 @@ const scene: Scene = {
       id: "stay-in",
       label: "Stay in and preserve your strength",
       effects: [
-        decreaseEntityGauge("player", "fatigue", "slightly"),
-        increaseEntityGauge("player", "prudence", "slightly"),
+        decreaseProperty("player", "fatigue", "slightly"),
+        increaseProperty("player", "prudence", "slightly"),
         { kind: "log", text: "The shelves stay thin, but your hands stop shaking." }
       ]
     }

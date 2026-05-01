@@ -2,23 +2,13 @@ import type {
   GameContent,
   GameState,
   SceneNumericComparison,
-  SceneSemanticComparison,
   SceneAvailabilityCondition,
   Scene,
   PropertyDefinition,
   PropertyThreshold,
-  SemanticGaugeDefinition,
   WorldState
 } from "../domain";
-import {
-  describeBoundedGauge,
-  describeSignedGauge
-} from "../domain/semantics";
-import {
-  getEntityGauge,
-  getEntityProperty,
-  getEntityQuantity
-} from "./worldAccess";
+import { getEntityProperty } from "./worldAccess";
 
 export function canSeeScene(
   scene: Scene,
@@ -79,31 +69,7 @@ export function validateSceneAvailability(
           );
         }
         break;
-      case "entityGauge":
-        if (world && !world.entities[condition.entityId]) {
-          issues.push(
-            `${scene.id}: entityGauge availability references unknown entity "${condition.entityId}"`
-          );
-        }
-        issues.push(
-          ...validateSemanticComparison(
-            scene.id,
-            condition.kind,
-            condition.key,
-            condition,
-            content.semantics?.entityGaugeDefinitions
-          )
-        );
-        break;
-      case "entityQuantity":
-        if (world && !world.entities[condition.entityId]) {
-          issues.push(
-            `${scene.id}: entityQuantity availability references unknown entity "${condition.entityId}"`
-          );
-        }
-        break;
       case "day":
-      case "flag":
         break;
       default:
         assertNever(condition);
@@ -129,24 +95,11 @@ function matchesSceneAvailabilityCondition(
       return (condition.present ?? true)
         ? state.resolvedScenes.includes(condition.sceneId)
         : !state.resolvedScenes.includes(condition.sceneId);
-    case "flag":
-      return state.flags[condition.key] === (condition.value ?? true);
     case "property":
       return matchesPropertyState(
         getEntityProperty(state, condition.entityId, condition.property),
         condition,
         content.semantics?.propertyDefinitions?.[condition.property]
-      );
-    case "entityGauge":
-      return matchesSemanticState(
-        getEntityGauge(state, condition.entityId, condition.key),
-        condition,
-        content.semantics?.entityGaugeDefinitions?.[condition.key]
-      );
-    case "entityQuantity":
-      return matchesNumericComparison(
-        getEntityQuantity(state, condition.entityId, condition.key),
-        condition
       );
     default:
       assertNever(condition);
@@ -205,54 +158,6 @@ function matchesPropertyState(
   return true;
 }
 
-function matchesSemanticState(
-  value: number,
-  condition: SceneSemanticComparison & SceneNumericComparison,
-  definition: SceneDefinitionLike | undefined
-): boolean {
-  if (!definition) {
-    return !condition.equalsLabel && !condition.minLabel && !condition.maxLabel
-      ? matchesNumericComparison(value, condition)
-      : false;
-  }
-
-  const described = definition.family === "signedGauge"
-    ? describeSignedGauge(definition, value)
-    : describeBoundedGauge(definition, value);
-
-  if (condition.equals !== undefined && described.value !== condition.equals) {
-    return false;
-  }
-
-  if (condition.min !== undefined && described.value < condition.min) {
-    return false;
-  }
-
-  if (condition.max !== undefined && described.value > condition.max) {
-    return false;
-  }
-
-  if (condition.equalsLabel !== undefined && !labelsMatch(described.label, condition.equalsLabel)) {
-    return false;
-  }
-
-  if (condition.minLabel !== undefined) {
-    const threshold = findThresholdByLabel(definition, condition.minLabel);
-    if (!threshold || described.rank < threshold.rank) {
-      return false;
-    }
-  }
-
-  if (condition.maxLabel !== undefined) {
-    const threshold = findThresholdByLabel(definition, condition.maxLabel);
-    if (!threshold || described.rank > threshold.rank) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
 function matchesNumericComparison(
   value: number,
   condition: SceneNumericComparison
@@ -270,42 +175,6 @@ function matchesNumericComparison(
   }
 
   return true;
-}
-
-function validateSemanticComparison<
-  TCondition extends SceneSemanticComparison
->(
-  sceneId: string,
-  kind: SceneAvailabilityCondition["kind"],
-  key: string,
-  condition: TCondition,
-  definitions: Record<string, SceneDefinitionLike> | undefined
-): string[] {
-  const labels = [condition.minLabel, condition.maxLabel, condition.equalsLabel].filter(
-    (label): label is string => Boolean(label)
-  );
-  if (labels.length === 0) {
-    return [];
-  }
-
-  if (!definitions) {
-    return [`${sceneId}: ${kind} availability has semantic labels but no semantic definitions`];
-  }
-
-  const definition = definitions[key];
-  if (!definition) {
-    return [`${sceneId}: ${kind} availability references unknown semantic key "${key}"`];
-  }
-
-  const issues: string[] = [];
-
-  for (const label of labels) {
-    if (!findThresholdByLabel(definition, label)) {
-      issues.push(`${sceneId}: ${kind} availability references unknown label "${label}"`);
-    }
-  }
-
-  return issues;
 }
 
 function validatePropertyComparison(
@@ -342,13 +211,6 @@ function validatePropertyComparison(
   }
 
   return issues;
-}
-
-function findThresholdByLabel(
-  definition: SceneDefinitionLike,
-  label: string
-): { rank: number; label: string } | undefined {
-  return definition.thresholds.find((threshold) => labelsMatch(threshold.label, label));
 }
 
 function findPropertyThresholdByLabel(
@@ -396,5 +258,3 @@ function normalizeLabel(value: string): string {
 function assertNever(value: never): never {
   throw new Error(`Unexpected scene availability condition: ${JSON.stringify(value)}`);
 }
-
-type SceneDefinitionLike = SemanticGaugeDefinition;

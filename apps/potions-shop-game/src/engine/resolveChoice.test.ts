@@ -3,9 +3,8 @@ import { content } from "../content/scenes";
 import { createInitialState } from "../content/initialState";
 import { resolveChoice } from "@aphebis/core";
 import {
-  getEntityGauge,
-  getEntityQuantity,
-  getBooleanProperty
+  getBooleanProperty,
+  getNumericProperty
 } from "@aphebis/core";
 
 describe("resolveChoice", () => {
@@ -34,9 +33,9 @@ describe("resolveChoice", () => {
       content
     );
 
-    expect(getEntityQuantity(next, "shop", "stock")).toBe(2);
-    expect(getEntityGauge(next, "player", "compassion")).toBe(0.2);
-    expect(getEntityGauge(next, "shop", "shopStanding")).toBe(0.1);
+    expect(getNumericProperty(next, "shop", "stock")).toBe(2);
+    expect(getNumericProperty(next, "player", "compassion")).toBe(0.2);
+    expect(getNumericProperty(next, "shop", "shopStanding")).toBe(0.1);
     expect(getBooleanProperty(next, "story", "stablehand_helped")).toBe(true);
     expect(getBooleanProperty(next, "story", "stablehand_grateful")).toBe(true);
     expect(next.sceneTableau).not.toContain("desperate-stablehand");

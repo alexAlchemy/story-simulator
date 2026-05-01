@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   apprentice,
   createCosyShopWorld,
-  flags,
+  story,
   log,
   player,
   scenes,
@@ -21,7 +21,7 @@ describe("cosy shop system helpers", () => {
     });
   });
 
-  it("turns shop grammar into core quantity effects", () => {
+  it("turns shop grammar into property effects", () => {
     expect(shop.spendStock(2)).toEqual({
       kind: "changeProperty",
       entityId: "shop",
@@ -38,7 +38,7 @@ describe("cosy shop system helpers", () => {
     });
   });
 
-  it("turns character and town grammar into core gauge effects", () => {
+  it("turns character and town grammar into property effects", () => {
     expect(player.gainCompassion("moderately")).toEqual({
       kind: "changeProperty",
       entityId: "player",
@@ -92,7 +92,7 @@ describe("cosy shop system helpers", () => {
     });
   });
 
-  it("exports scene, flag, and log constructors", () => {
+  it("exports scene, story fact, and log constructors", () => {
     expect(scenes.add("gift-giver-revealed")).toEqual({
       kind: "addScene",
       sceneId: "gift-giver-revealed"
@@ -101,7 +101,7 @@ describe("cosy shop system helpers", () => {
       kind: "removeScene",
       sceneId: "gift-at-door"
     });
-    expect(flags.set("stablehand_grateful", true)).toEqual({
+    expect(story.setFact("stablehand_grateful", true)).toEqual({
       kind: "setProperty",
       entityId: "story",
       property: "stablehand_grateful",

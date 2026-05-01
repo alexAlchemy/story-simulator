@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, gainQuantity, increaseEntityGauge } from "@aphebis/system-cosy-shop";
+import { decreaseProperty, gainPropertyAmount, increaseProperty } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: An old hedge-witch admits the moonleaf was hers—a test of what you do with unpriced kindness.
@@ -16,9 +16,9 @@ const scene: Scene = {
       id: "accept-mentor",
       label: "Accept her strange mentorship",
       effects: [
-        gainQuantity("shop", "stock", 2),
-        increaseEntityGauge("shop", "shopStanding", "slightly"),
-        increaseEntityGauge("player", "prudence", "slightly"),
+        gainPropertyAmount("shop", "stock", 2),
+        increaseProperty("shop", "shopStanding", "slightly"),
+        increaseProperty("player", "prudence", "slightly"),
         { kind: "log", text: "She laughs when you ask for clearer terms, which is almost an answer." }
       ]
     },
@@ -26,8 +26,8 @@ const scene: Scene = {
       id: "decline-test",
       label: "Decline the connection",
       effects: [
-        increaseEntityGauge("player", "ambition", "slightly"),
-        decreaseEntityGauge("shop", "shopStanding", "slightly"),
+        increaseProperty("player", "ambition", "slightly"),
+        decreaseProperty("shop", "shopStanding", "slightly"),
         {
           kind: "log",
           text: "She respects the refusal, perhaps more than she would have respected obedience."

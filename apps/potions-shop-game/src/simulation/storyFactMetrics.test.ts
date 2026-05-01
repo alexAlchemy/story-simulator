@@ -2,13 +2,13 @@ import { describe, expect, it } from "vitest";
 import { content } from "../content/scenes";
 import { createInitialState } from "../content/initialState";
 import type { GameContent, GameState } from "@aphebis/core";
-import { simulateFlagMetrics } from "./flagMetrics";
+import { simulateStoryFactMetrics } from "./storyFactMetrics";
 
-describe("simulateFlagMetrics", () => {
-  it("tracks content flag set coverage without changing engine behavior", () => {
-    const report = simulateFlagMetrics(content);
+describe("simulateStoryFactMetrics", () => {
+  it("tracks content story fact coverage without changing engine behavior", () => {
+    const report = simulateStoryFactMetrics(content);
 
-    expect(report.flagsDefinedInContent).toEqual([
+    expect(report.factsDefinedInContent).toEqual([
       "left_thanks_for_gift",
       "mistake_handled_gently",
       "mysterious_gift_accepted",
@@ -16,21 +16,21 @@ describe("simulateFlagMetrics", () => {
       "stablehand_helped",
       "stablehand_refused"
     ]);
-    expect(report.flagsNeverObserved).toEqual([]);
-    expect(report.flagChoiceEffectsNeverObserved).toEqual([]);
+    expect(report.factsNeverObserved).toEqual([]);
+    expect(report.factChoiceEffectsNeverObserved).toEqual([]);
     expect(
-      report.flagMetrics.find((metric) => metric.flag === "stablehand_refused")
+      report.factMetrics.find((metric) => metric.fact === "stablehand_refused")
     ).toMatchObject({
       setTrueCount: 1,
       setFalseCount: 0
     });
   });
 
-  it("counts unset effects and final absent flags as false", () => {
-    const report = simulateFlagMetrics(fixtureContent, createFixtureState);
+  it("counts unset effects and final absent story as false", () => {
+    const report = simulateStoryFactMetrics(fixtureContent, createFixtureState);
 
-    expect(report.flagMetrics).toContainEqual({
-      flag: "sample_flag",
+    expect(report.factMetrics).toContainEqual({
+      fact: "sample_flag",
       setTrueCount: 1,
       setFalseCount: 1,
       finalTrueCount: 1,
@@ -38,15 +38,15 @@ describe("simulateFlagMetrics", () => {
     });
   });
 
-  it("reports flag effects that never fire", () => {
-    const report = simulateFlagMetrics(unreachableFlagContent, createFixtureState);
+  it("reports story fact effects that never fire", () => {
+    const report = simulateStoryFactMetrics(unreachableFactContent, createFixtureState);
 
-    expect(report.flagsNeverObserved).toEqual(["hidden_flag"]);
-    expect(report.flagChoiceEffectsNeverObserved).toEqual([
+    expect(report.factsNeverObserved).toEqual(["hidden_flag"]);
+    expect(report.factChoiceEffectsNeverObserved).toEqual([
       {
         sceneId: "hidden-scene",
         choiceId: "hidden-choice",
-        flag: "hidden_flag",
+        fact: "hidden_flag",
         value: true
       }
     ]);
@@ -55,9 +55,9 @@ describe("simulateFlagMetrics", () => {
 
 const fixtureContent: GameContent = {
   scenes: {
-    "flag-scene": {
-      id: "flag-scene",
-      title: "Flag Scene",
+    "fact-scene": {
+      id: "fact-scene",
+      title: "Fact Scene",
       type: "shop",
       description: "A small fixture scene.",
       choices: [
@@ -78,7 +78,7 @@ const fixtureContent: GameContent = {
   endDay: 1
 };
 
-const unreachableFlagContent: GameContent = {
+const unreachableFactContent: GameContent = {
   scenes: {
     "hidden-scene": {
       id: "hidden-scene",
@@ -127,8 +127,7 @@ function createFixtureState(): GameState {
         }
       }
     },
-    flags: {},
-    sceneTableau: ["flag-scene"],
+    sceneTableau: ["fact-scene"],
     resolvedScenes: [],
     log: [],
     ended: false

@@ -91,24 +91,6 @@ export function auditSceneChoiceEffects(
 
 function getAuditedEffectTarget(effect: Effect): AuditedEffectTargetSeed | undefined {
   switch (effect.kind) {
-    case "entityGauge":
-      return {
-        id: `entity:${effect.entityId}.property:${effect.key}`,
-        kind: "property",
-        ownerId: effect.entityId,
-        key: effect.key,
-        label: `${effect.entityId}.${effect.key}`,
-        delta: effect.delta
-      };
-    case "entityQuantity":
-      return {
-        id: `entity:${effect.entityId}.property:${effect.key}`,
-        kind: "property",
-        ownerId: effect.entityId,
-        key: effect.key,
-        label: `${effect.entityId}.${effect.key}`,
-        delta: effect.delta
-      };
     case "changeProperty":
       return {
         id: `entity:${effect.entityId}.property:${effect.property}`,

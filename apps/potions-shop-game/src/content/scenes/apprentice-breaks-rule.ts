@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, increaseEntityGauge, spendQuantity } from "@aphebis/system-cosy-shop";
+import { decreaseProperty, increaseProperty, spendPropertyAmount } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: The apprentice gives away a minor potion without asking.
@@ -17,11 +17,11 @@ const scene: Scene = {
       label: "Defend the act",
       description: "Let them know the impulse was not wrong.",
       effects: [
-        spendQuantity("shop", "stock", 1),
-        increaseEntityGauge("player", "compassion", "moderately"),
-        decreaseEntityGauge("player", "prudence", "slightly"),
-        increaseEntityGauge("apprentice", "affection", "moderately"),
-        decreaseEntityGauge("apprentice", "fear", "slightly"),
+        spendPropertyAmount("shop", "stock", 1),
+        increaseProperty("player", "compassion", "moderately"),
+        decreaseProperty("player", "prudence", "slightly"),
+        increaseProperty("apprentice", "affection", "moderately"),
+        decreaseProperty("apprentice", "fear", "slightly"),
         { kind: "log", text: "Their relief is too bright to look at directly." }
       ]
     },
@@ -30,11 +30,11 @@ const scene: Scene = {
       label: "Discipline them clearly",
       description: "A shop cannot run on surprise mercy.",
       effects: [
-        decreaseEntityGauge("apprentice", "confidence", "slightly"),
-        increaseEntityGauge("apprentice", "fear", "moderately"),
-        decreaseEntityGauge("apprentice", "affection", "slightly"),
-        increaseEntityGauge("player", "prudence", "moderately"),
-        decreaseEntityGauge("player", "compassion", "slightly"),
+        decreaseProperty("apprentice", "confidence", "slightly"),
+        increaseProperty("apprentice", "fear", "moderately"),
+        decreaseProperty("apprentice", "affection", "slightly"),
+        increaseProperty("player", "prudence", "moderately"),
+        decreaseProperty("player", "compassion", "slightly"),
         { kind: "log", text: "They nod at every rule and touch nothing without asking all morning." }
       ]
     },
@@ -43,10 +43,10 @@ const scene: Scene = {
       label: "Write a mercy rule for small remedies",
       description: "Turn a mistake into a boundary both of you can stand inside.",
       effects: [
-        spendQuantity("shop", "coins", 1),
-        increaseEntityGauge("apprentice", "confidence", "moderately"),
-        increaseEntityGauge("apprentice", "trust", "slightly"),
-        increaseEntityGauge("shop", "goodwill", "slightly"),
+        spendPropertyAmount("shop", "coins", 1),
+        increaseProperty("apprentice", "confidence", "moderately"),
+        increaseProperty("apprentice", "trust", "slightly"),
+        increaseProperty("shop", "goodwill", "slightly"),
         { kind: "log", text: "The new chalk rule is short, strict, and somehow gentle." }
       ]
     }

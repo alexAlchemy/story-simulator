@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { flags, log, player, scenes, shop } from "@aphebis/system-cosy-shop";
+import { story, log, player, scenes, shop } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: Rare moonleaf appears at your door, tied with blue thread, no note, no explanation.
@@ -18,7 +18,7 @@ const scene: Scene = {
       effects: [
         shop.gainStock(2),
         player.gainAmbition("slightly"),
-        flags.set("mysterious_gift_accepted", true),
+        story.setFact("mysterious_gift_accepted", true),
         scenes.add("gift-giver-revealed"),
         log("The moonleaf smells of rain, silver, and someone else's expectation.")
       ]
@@ -40,7 +40,7 @@ const scene: Scene = {
         shop.gainStock(1),
         player.gainCompassion("slightly"),
         shop.gainStanding("slightly"),
-        flags.set("left_thanks_for_gift", true),
+        story.setFact("left_thanks_for_gift", true),
         log("The charm warms once at dusk, as if someone passed close enough to notice.")
       ]
     }

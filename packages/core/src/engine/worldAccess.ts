@@ -3,12 +3,10 @@ import type {
   EntityId,
   EntityState,
   GameState,
-  GaugeKey,
   PropertyDefinition,
   PropertyKey,
   PropertyThreshold,
-  PropertyValue,
-  QuantityKey
+  PropertyValue
 } from "../domain";
 
 export function getEntity(state: GameState, entityId: EntityId): EntityState {
@@ -20,41 +18,13 @@ export function getEntity(state: GameState, entityId: EntityId): EntityState {
   return entity;
 }
 
-export function getEntityGauge(
-  state: GameState,
-  entityId: EntityId,
-  key: GaugeKey
-): number {
-  const entity = getEntity(state, entityId);
-  const propertyValue = entity.properties[key];
-  if (typeof propertyValue === "number") {
-    return propertyValue;
-  }
-
-  return entity.gauges?.[key] ?? 0;
-}
-
-export function getEntityQuantity(
-  state: GameState,
-  entityId: EntityId,
-  key: QuantityKey
-): number {
-  const entity = getEntity(state, entityId);
-  const propertyValue = entity.properties[key];
-  if (typeof propertyValue === "number") {
-    return propertyValue;
-  }
-
-  return entity.quantities?.[key] ?? 0;
-}
-
 export function getEntityProperty(
   state: GameState,
   entityId: EntityId,
   key: PropertyKey
 ): PropertyValue | undefined {
   const entity = getEntity(state, entityId);
-  return entity.properties[key] ?? entity.gauges?.[key] ?? entity.quantities?.[key] ?? entity.flags?.[key];
+  return entity.properties[key];
 }
 
 export function getNumericProperty(
@@ -135,99 +105,6 @@ export function changeEntityProperty(
   }
 
   return setEntityProperty(state, entityId, key, nextValue);
-}
-
-export function setEntityGauge(
-  state: GameState,
-  entityId: EntityId,
-  key: GaugeKey,
-  value: number
-): GameState {
-  const entity = getEntity(state, entityId);
-
-  return {
-    ...state,
-    world: {
-      ...state.world,
-      entities: {
-        ...state.world.entities,
-        [entityId]: {
-          ...entity,
-          properties: {
-            ...entity.properties,
-            [key]: clampEntityGauge(entity, key, value)
-          },
-          gauges: {
-            ...entity.gauges,
-            [key]: clampEntityGauge(entity, key, value)
-          }
-        }
-      }
-    }
-  };
-}
-
-export function adjustEntityGauge(
-  state: GameState,
-  entityId: EntityId,
-  key: GaugeKey,
-  delta: number
-): GameState {
-  return setEntityGauge(state, entityId, key, getEntityGauge(state, entityId, key) + delta);
-}
-
-export function setEntityQuantity(
-  state: GameState,
-  entityId: EntityId,
-  key: QuantityKey,
-  value: number
-): GameState {
-  const entity = getEntity(state, entityId);
-
-  return {
-    ...state,
-    world: {
-      ...state.world,
-      entities: {
-        ...state.world.entities,
-        [entityId]: {
-          ...entity,
-          properties: {
-            ...entity.properties,
-            [key]: Math.max(0, value)
-          },
-          quantities: {
-            ...entity.quantities,
-            [key]: Math.max(0, value)
-          }
-        }
-      }
-    }
-  };
-}
-
-export function adjustEntityQuantity(
-  state: GameState,
-  entityId: EntityId,
-  key: QuantityKey,
-  delta: number
-): GameState {
-  return setEntityQuantity(
-    state,
-    entityId,
-    key,
-    getEntityQuantity(state, entityId, key) + delta
-  );
-}
-
-function clamp01(value: number): number {
-  return Math.max(0, Math.min(1, value));
-}
-
-function clampEntityGauge(entity: EntityState, key: GaugeKey, value: number): number {
-  const range = entity.gaugeRanges?.[key] ?? { minimumValue: 0, maximumValue: 1 };
-
-  return clampRange(value, range.minimumValue, range.maximumValue);
 }
 
 function clampRange(value: number, minimum: number, maximum: number): number {

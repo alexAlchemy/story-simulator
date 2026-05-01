@@ -1,11 +1,4 @@
-import type {
-  OpenQuantityDefinition,
-  OpenQuantityContext,
-  SemanticThreshold,
-  SemanticValue,
-  SignedGaugeDefinition,
-  BoundedGaugeDefinition
-} from "./types";
+import type { SemanticThreshold, SemanticValue } from "./types";
 
 export function validateThresholdScale<TLabel extends string>(
   thresholds: readonly SemanticThreshold<TLabel>[],
@@ -60,41 +53,6 @@ export function describeByThresholds<TKey extends string, TLabel extends string>
   };
 }
 
-export function describeBoundedGauge<TKey extends string, TLabel extends string>(
-  definition: BoundedGaugeDefinition<TKey, TLabel>,
-  value: number
-): SemanticValue<TKey, TLabel> {
-  return describeByThresholds(
-    definition.key,
-    value,
-    definition.thresholds,
-    definition.minimumValue,
-    definition.maximumValue
-  );
-}
-
-export function describeSignedGauge<TKey extends string, TLabel extends string>(
-  definition: SignedGaugeDefinition<TKey, TLabel>,
-  value: number
-): SemanticValue<TKey, TLabel> {
-  return describeByThresholds(
-    definition.key,
-    value,
-    definition.thresholds,
-    definition.minimumValue,
-    definition.maximumValue
-  );
-}
-
-export function describeGauge<TKey extends string, TLabel extends string>(
-  definition: BoundedGaugeDefinition<TKey, TLabel> | SignedGaugeDefinition<TKey, TLabel>,
-  value: number
-): SemanticValue<TKey, TLabel> {
-  return definition.family === "signedGauge"
-    ? describeSignedGauge(definition, value)
-    : describeBoundedGauge(definition, value);
-}
-
 export function compareLabels<TLabel extends string>(
   thresholds: readonly SemanticThreshold<TLabel>[],
   left: TLabel,
@@ -108,43 +66,6 @@ export function compareLabels<TLabel extends string>(
   }
 
   return Math.sign(leftThreshold.rank - rightThreshold.rank);
-}
-
-export function describeOpenQuantity<
-  TKey extends string,
-  TLabel extends string,
-  TContext
->(
-  definition: OpenQuantityDefinition<TKey, TLabel, TContext>,
-  quantity: number,
-  context: TContext
-): SemanticValue<TKey, TLabel> {
-  const semanticContext = definition.describeContext(context);
-  validateThresholdScale(definition.thresholds, 0);
-
-  const normalizedQuantity =
-    semanticContext.referenceValue <= 0
-      ? Math.max(0, quantity)
-      : Math.max(0, quantity / semanticContext.referenceValue);
-  const selected = [...definition.thresholds]
-    .reverse()
-    .find((threshold) => normalizedQuantity >= threshold.min);
-
-  if (!selected) {
-    throw new Error(`No semantic threshold matched value ${quantity}.`);
-  }
-
-  return {
-    key: definition.key,
-    value: quantity,
-    label: selected.label,
-    rank: selected.rank,
-    description: selected.description
-  };
-}
-
-export function describeContextSignal(context: OpenQuantityContext): string {
-  return `${context.contextLabel}:${context.referenceValue}`;
 }
 
 function clamp(value: number, minimum: number, maximum: number): number {

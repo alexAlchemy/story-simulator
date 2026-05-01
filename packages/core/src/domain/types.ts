@@ -29,7 +29,6 @@ export type {
   SceneSemanticComparison,
   SceneType
 } from "./scenes/types";
-export type { GaugeKey, QuantityKey } from "./world/keys";
 export type {
   EntityKind,
   EntityState,

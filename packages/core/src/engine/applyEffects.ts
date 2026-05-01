@@ -1,7 +1,5 @@
 import type { Effect, EffectContext, GameState } from "../domain";
 import {
-  adjustEntityGauge,
-  adjustEntityQuantity,
   changeEntityProperty,
   setEntityProperty
 } from "./worldAccess";
@@ -26,18 +24,6 @@ export function applyEffects(
         break;
       case "setProperty":
         next = setEntityProperty(next, effect.entityId, effect.property, effect.value);
-        break;
-      case "entityGauge":
-        next = adjustEntityGauge(next, effect.entityId, effect.key, effect.delta);
-        break;
-      case "entityQuantity":
-        next = adjustEntityQuantity(next, effect.entityId, effect.key, effect.delta);
-        break;
-      case "setFlag":
-        next.flags[effect.key] = effect.value;
-        if (next.world.entities.story) {
-          next = setEntityProperty(next, "story", effect.key, effect.value);
-        }
         break;
       case "addScene":
         if (
@@ -79,15 +65,11 @@ function cloneState(state: GameState): GameState {
           {
             ...entity,
             tags: [...entity.tags],
-            properties: { ...entity.properties },
-            gauges: entity.gauges ? { ...entity.gauges } : undefined,
-            quantities: entity.quantities ? { ...entity.quantities } : undefined,
-            flags: entity.flags ? { ...entity.flags } : undefined
+            properties: { ...entity.properties }
           }
         ])
       )
     },
-    flags: { ...state.flags },
     sceneTableau: [...state.sceneTableau],
     resolvedScenes: [...state.resolvedScenes],
     log: [...state.log]

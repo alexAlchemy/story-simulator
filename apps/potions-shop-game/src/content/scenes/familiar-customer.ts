@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, increaseEntityGauge, spendQuantity } from "@aphebis/system-cosy-shop";
+import { decreaseProperty, increaseProperty, spendPropertyAmount } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: A regular customer notices your exhaustion and offers ordinary help.
@@ -17,9 +17,9 @@ const scene: Scene = {
       label: "Accept the help",
       description: "Let the exchange be warmer than the receipt.",
       effects: [
-        decreaseEntityGauge("player", "fatigue", "moderately"),
-        increaseEntityGauge("shop", "goodwill", "slightly"),
-        decreaseEntityGauge("player", "ambition", "slightly"),
+        decreaseProperty("player", "fatigue", "moderately"),
+        increaseProperty("shop", "goodwill", "slightly"),
+        decreaseProperty("player", "ambition", "slightly"),
         { kind: "log", text: "They sweep badly, but they hum while doing it, and the room softens." }
       ]
     },
@@ -28,8 +28,8 @@ const scene: Scene = {
       label: "Keep the boundary",
       description: "Thank them, but close the shop yourself.",
       effects: [
-        increaseEntityGauge("player", "fatigue", "slightly"),
-        increaseEntityGauge("shop", "shopStanding", "slightly"),
+        increaseProperty("player", "fatigue", "slightly"),
+        increaseProperty("shop", "shopStanding", "slightly"),
         { kind: "log", text: "They leave with respect intact and a little unanswered kindness." }
       ]
     },
@@ -38,9 +38,9 @@ const scene: Scene = {
       label: "Trade the help for a discount",
       description: "Make the kindness clean by giving it a price.",
       effects: [
-        spendQuantity("shop", "coins", 2),
-        decreaseEntityGauge("player", "fatigue", "slightly"),
-        increaseEntityGauge("shop", "goodwill", "slightly"),
+        spendPropertyAmount("shop", "coins", 2),
+        decreaseProperty("player", "fatigue", "slightly"),
+        increaseProperty("shop", "goodwill", "slightly"),
         { kind: "log", text: "The bargain is fair, though something tender goes unnamed." }
       ]
     }

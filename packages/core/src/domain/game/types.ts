@@ -1,11 +1,6 @@
 import type { Scene } from "../scenes/types";
-import type { BoundedGaugeDefinition, SignedGaugeDefinition } from "../semantics/types";
 import type { WorldState } from "../world/types";
 import type { PropertyDefinition } from "../properties";
-
-export type SemanticGaugeDefinition =
-  | BoundedGaugeDefinition<string, string>
-  | SignedGaugeDefinition<string, string>;
 
 export type GameLogEntry = {
   id: string;
@@ -17,7 +12,6 @@ export type GameLogEntry = {
 export type GameState = {
   day: number;
   world: WorldState;
-  flags: Record<string, boolean>;
   sceneTableau: string[];
   resolvedScenes: string[];
   log: GameLogEntry[];
@@ -30,6 +24,5 @@ export type GameContent = {
   endDay: number;
   semantics?: {
     propertyDefinitions?: Record<string, PropertyDefinition>;
-    entityGaugeDefinitions?: Record<string, SemanticGaugeDefinition>;
   };
 };

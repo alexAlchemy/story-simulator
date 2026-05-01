@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { flags, log, player, shop } from "@aphebis/system-cosy-shop";
+import { story, log, player, shop } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: A soaked stranger arrives at closing with three copper coins and a dying sister.
@@ -20,8 +20,8 @@ const scene: Scene = {
         shop.spendStock(1),
         player.gainCompassion("moderately"),
         shop.gainStanding("slightly"),
-        flags.set("stablehand_helped", true),
-        flags.set("stablehand_grateful", true),
+        story.setFact("stablehand_helped", true),
+        story.setFact("stablehand_grateful", true),
         log("The stablehand leaves clutching the draught like a candle in the rain.")
       ]
     },
@@ -45,7 +45,7 @@ const scene: Scene = {
       effects: [
         player.gainPrudence("moderately"),
         shop.loseStanding("slightly"),
-        flags.set("stablehand_refused", true),
+        story.setFact("stablehand_refused", true),
         log("He nods once, too politely, and the bell over the door sounds colder.")
       ]
     }

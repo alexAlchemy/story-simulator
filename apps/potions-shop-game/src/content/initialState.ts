@@ -5,7 +5,6 @@ export function createInitialState(): GameState {
   return {
     day: 1,
     world: createCosyShopWorld(),
-    flags: {},
     sceneTableau: [
       "desperate-stablehand",
       "apprentice-hiding-mistake",

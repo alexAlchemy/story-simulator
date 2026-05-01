@@ -1,10 +1,5 @@
 import type {
-  BoundedGaugeDefinition,
-  OpenQuantityDefinition,
-  OpenQuantityContext,
-  SemanticValue,
   SemanticThreshold,
-  SignedGaugeDefinition,
   ChangeStrength,
   FlagPropertyDefinition,
   PropertyDefinition,
@@ -13,13 +8,8 @@ import type {
   ScalePropertyDefinition,
   SpectrumPropertyDefinition
 } from "@aphebis/core";
-import {
-  compareLabels as compareThresholdLabels,
-  describeGauge as describeCoreGauge
-} from "@aphebis/core";
 import type {
   CosyShopFlagPropertyKey,
-  CosyShopGaugeKey,
   CosyShopPropertyKey,
   CosyShopQuantityPropertyKey,
   CosyShopScalePropertyKey,
@@ -451,112 +441,6 @@ export const familiarityThresholds = [
   { rank: 4, min: 0.9, label: "Intimate", description: "The bond carries deep knowledge of the other." }
 ] as const satisfies readonly SemanticThreshold<FamiliarityLabel>[];
 
-export type CoinsContext = {
-  rentAmount: number;
-};
-
-export type StockContext = {
-  expectedDemand: number;
-};
-
-export const boundedGaugeDefinition = <TKey extends string, TLabel extends string>(
-  key: TKey,
-  thresholds: readonly SemanticThreshold<TLabel>[]
-): BoundedGaugeDefinition<TKey, TLabel> => ({
-  family: "boundedGauge",
-  key,
-  minimumValue: 0,
-  maximumValue: 1,
-  thresholds
-});
-
-export const signedGaugeDefinition = <TKey extends string, TLabel extends string>(
-  key: TKey,
-  thresholds: readonly SemanticThreshold<TLabel>[]
-): SignedGaugeDefinition<TKey, TLabel> => ({
-  family: "signedGauge",
-  key,
-  minimumValue: -1,
-  maximumValue: 1,
-  thresholds
-});
-
-export const fatigueDefinition = boundedGaugeDefinition("fatigue", fatigueThresholds);
-
-export const trustDefinition = boundedGaugeDefinition("trust", trustThresholds);
-export const shopStandingDefinition = boundedGaugeDefinition(
-  "shopStanding",
-  trustThresholds
-);
-
-export const compassionDefinition = signedGaugeDefinition(
-  "compassion",
-  compassionThresholds
-);
-export const prudenceDefinition = signedGaugeDefinition(
-  "prudence",
-  prudenceThresholds
-);
-export const ambitionDefinition = signedGaugeDefinition(
-  "ambition",
-  ambitionThresholds
-);
-export const confidenceDefinition = boundedGaugeDefinition(
-  "confidence",
-  confidenceThresholds
-);
-export const gossipHeatDefinition = boundedGaugeDefinition(
-  "gossipHeat",
-  gossipHeatThresholds
-);
-
-export const affectionDefinition = boundedGaugeDefinition(
-  "affection",
-  affectionThresholds
-);
-export const respectDefinition = boundedGaugeDefinition("respect", respectThresholds);
-export const fearDefinition = boundedGaugeDefinition("fear", fearThresholds);
-export const resentmentDefinition = boundedGaugeDefinition(
-  "resentment",
-  resentmentThresholds
-);
-export const obligationDefinition = boundedGaugeDefinition(
-  "obligation",
-  obligationThresholds
-);
-export const goodwillDefinition = boundedGaugeDefinition("goodwill", goodwillThresholds);
-export const familiarityDefinition = boundedGaugeDefinition(
-  "familiarity",
-  familiarityThresholds
-);
-
-export const entityGaugeDefinitions = {
-  fatigue: fatigueDefinition,
-  compassion: compassionDefinition,
-  prudence: prudenceDefinition,
-  ambition: ambitionDefinition,
-  confidence: confidenceDefinition,
-  gossipHeat: gossipHeatDefinition,
-  trust: trustDefinition,
-  affection: affectionDefinition,
-  fear: fearDefinition,
-  shopStanding: shopStandingDefinition,
-  goodwill: goodwillDefinition
-} satisfies Record<
-  CosyShopGaugeKey,
-  BoundedGaugeDefinition<string, string> | SignedGaugeDefinition<string, string>
->;
-
-export const coinsDefinition: OpenQuantityDefinition<"coins", CoinLabel, CoinsContext> = {
-  family: "openQuantity",
-  key: "coins",
-  thresholds: coinsThresholds,
-  describeContext: ({ rentAmount }) => ({
-    contextLabel: "rent",
-    referenceValue: rentAmount
-  })
-};
-
 const defaultStrengthAmounts = {
   trace: 0.025,
   minor: 0.05,
@@ -653,55 +537,6 @@ export const propertyDefinitions = {
   mysterious_gift_accepted: flagProperty("mysterious_gift_accepted", "The mysterious gift was accepted."),
   left_thanks_for_gift: flagProperty("left_thanks_for_gift", "Thanks were left for the gift giver.")
 } satisfies Record<CosyShopPropertyKey, PropertyDefinition>;
-
-export const stockDefinition: OpenQuantityDefinition<"stock", StockLabel, StockContext> = {
-  family: "openQuantity",
-  key: "stock",
-  thresholds: stockThresholds,
-  describeContext: ({ expectedDemand }) => ({
-    contextLabel: "demand",
-    referenceValue: expectedDemand
-  })
-};
-
-export function describeCoinsContext(rentAmount: number): OpenQuantityContext {
-  return coinsDefinition.describeContext({ rentAmount });
-}
-
-export function describeStockContext(expectedDemand: number): OpenQuantityContext {
-  return stockDefinition.describeContext({ expectedDemand });
-}
-
-export type CosyShopSemanticGaugeKey = CosyShopGaugeKey;
-
-export type CosyShopSemanticGaugeDefinition =
-  | BoundedGaugeDefinition<string, string>
-  | SignedGaugeDefinition<string, string>;
-
-export function describeGauge(
-  key: CosyShopSemanticGaugeKey,
-  value: number
-): SemanticValue<string, string> {
-  return describeCoreGauge(getGaugeDefinition(key), value);
-}
-
-export function compareLabels(
-  key: CosyShopSemanticGaugeKey,
-  left: string,
-  right: string
-): number {
-  return compareThresholdLabels(getGaugeDefinition(key).thresholds, left, right);
-}
-
-function getGaugeDefinition(key: CosyShopSemanticGaugeKey): CosyShopSemanticGaugeDefinition {
-  const definition = entityGaugeDefinitions[key as CosyShopGaugeKey];
-
-  if (!definition) {
-    throw new Error(`Unknown cosy shop semantic gauge "${key}".`);
-  }
-
-  return definition;
-}
 
 function formatPropertyLabel(key: string): string {
   return key

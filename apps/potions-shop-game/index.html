@@ -320,9 +320,9 @@
                     </template>
                   </div>
 
-                  <div class="state-section" x-show="currentEntity(entityCards).quantities.length">
+                  <div class="state-section" x-show="currentEntity(entityCards).resources.length">
                     <h4>Resources</h4>
-                    <template x-for="item in currentEntity(entityCards).quantities" :key="item.key">
+                    <template x-for="item in currentEntity(entityCards).resources" :key="item.key">
                       <div class="stat-row compact">
                         <span x-text="item.label"></span>
                         <span class="stat-value">
@@ -359,9 +359,9 @@
                     </template>
                   </div>
 
-                  <div class="state-section" x-show="currentEntity(entityCards).flags.length">
+                  <div class="state-section" x-show="currentEntity(entityCards).facts.length">
                     <h4>Facts</h4>
-                    <template x-for="item in currentEntity(entityCards).flags" :key="item.key">
+                    <template x-for="item in currentEntity(entityCards).facts" :key="item.key">
                       <div class="stat-row compact">
                         <span x-text="item.label"></span>
                         <span class="stat-value">

@@ -193,7 +193,6 @@ function createState(): GameState {
         }
       }
     },
-    flags: {},
     sceneTableau: [],
     resolvedScenes: [],
     log: [],
@@ -225,4 +224,3 @@ function setProperty(
     }
   };
 }
-

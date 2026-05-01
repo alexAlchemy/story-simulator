@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, increaseEntityGauge } from "@aphebis/system-cosy-shop";
+import { decreaseProperty, increaseProperty } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: A parent returns to thank the apprentice for advice that helped, but the remedy was incomplete.
@@ -34,10 +34,10 @@ const scene: Scene = {
       label: "Praise them where the parent can hear",
       description: "Let the apprentice feel the warmth of a win.",
       effects: [
-        increaseEntityGauge("apprentice", "confidence", "moderately"),
-        increaseEntityGauge("apprentice", "affection", "moderately"),
-        decreaseEntityGauge("apprentice", "fear", "slightly"),
-        decreaseEntityGauge("player", "prudence", "slightly"),
+        increaseProperty("apprentice", "confidence", "moderately"),
+        increaseProperty("apprentice", "affection", "moderately"),
+        decreaseProperty("apprentice", "fear", "slightly"),
+        decreaseProperty("player", "prudence", "slightly"),
         { kind: "log", text: "The apprentice stands a little taller for the rest of the afternoon." }
       ]
     },
@@ -46,8 +46,8 @@ const scene: Scene = {
       label: "Thank the parent, then correct the method privately",
       description: "Protect the truth without turning the praise sour.",
       effects: [
-        increaseEntityGauge("apprentice", "confidence", "slightly"),
-        increaseEntityGauge("apprentice", "trust", "slightly"),
+        increaseProperty("apprentice", "confidence", "slightly"),
+        increaseProperty("apprentice", "trust", "slightly"),
         { kind: "log", text: "They copy the dosage note twice and keep the thank-you like a secret." }
       ]
     },
@@ -56,9 +56,9 @@ const scene: Scene = {
       label: "Ask them to explain the mistake aloud",
       description: "Make competence public, including the rough edge.",
       effects: [
-        decreaseEntityGauge("apprentice", "confidence", "slightly"),
-        increaseEntityGauge("apprentice", "fear", "slightly"),
-        decreaseEntityGauge("apprentice", "affection", "slightly"),
+        decreaseProperty("apprentice", "confidence", "slightly"),
+        increaseProperty("apprentice", "fear", "slightly"),
+        decreaseProperty("apprentice", "affection", "slightly"),
         { kind: "log", text: "The explanation is accurate, quiet, and hard for both of you." }
       ]
     }

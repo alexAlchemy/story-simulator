@@ -1,12 +1,15 @@
 import type {
   Effect,
   EntityId,
-  GaugeKey,
-  PropertyKey,
-  QuantityKey
+  PropertyKey
 } from "@aphebis/core";
 
-import type { CosyShopGaugeKey, CosyShopQuantityKey } from "./keys";
+import type {
+  CosyShopPropertyKey,
+  CosyShopQuantityPropertyKey,
+  CosyShopScalePropertyKey,
+  CosyShopSpectrumPropertyKey
+} from "./keys";
 
 export type ShiftAmount = "slightly" | "moderately" | "strongly";
 
@@ -16,96 +19,108 @@ export const shiftAmountDeltas = {
   strongly: 0.3
 } satisfies Record<ShiftAmount, number>;
 
-export function increaseEntityGauge(
+export function increaseProperty(
   entityId: EntityId,
-  key: GaugeKey,
+  property: CosyShopScalePropertyKey | CosyShopSpectrumPropertyKey,
   amount: ShiftAmount
 ): Effect {
-  return entityGauge(entityId, key, shiftAmountDeltas[amount]);
+  return changePropertyAmount(entityId, property, "increase", shiftAmountDeltas[amount]);
 }
 
-export function decreaseEntityGauge(
+export function decreaseProperty(
   entityId: EntityId,
-  key: GaugeKey,
+  property: CosyShopScalePropertyKey | CosyShopSpectrumPropertyKey,
   amount: ShiftAmount
 ): Effect {
-  return entityGauge(entityId, key, -shiftAmountDeltas[amount]);
+  return changePropertyAmount(entityId, property, "decrease", shiftAmountDeltas[amount]);
 }
 
-export function gainQuantity(
+export function gainPropertyAmount(
   entityId: EntityId,
-  key: QuantityKey,
+  property: CosyShopQuantityPropertyKey,
   amount: number
 ): Effect {
-  return entityQuantity(entityId, key, amount);
+  return {
+    kind: "changeProperty",
+    entityId,
+    property,
+    direction: "increase",
+    amount
+  };
 }
 
-export function spendQuantity(
+export function spendPropertyAmount(
   entityId: EntityId,
-  key: QuantityKey,
+  property: CosyShopQuantityPropertyKey,
   amount: number
 ): Effect {
-  return entityQuantity(entityId, key, -amount);
+  return {
+    kind: "changeProperty",
+    entityId,
+    property,
+    direction: "decrease",
+    amount
+  };
 }
 
 export const shop = {
-  gainStock: (amount: number): Effect => gainCosyQuantity("shop", "stock", amount),
-  spendStock: (amount: number): Effect => spendCosyQuantity("shop", "stock", amount),
-  gainCoins: (amount: number): Effect => gainCosyQuantity("shop", "coins", amount),
-  spendCoins: (amount: number): Effect => spendCosyQuantity("shop", "coins", amount),
+  gainStock: (amount: number): Effect => gainCosyPropertyAmount("shop", "stock", amount),
+  spendStock: (amount: number): Effect => spendCosyPropertyAmount("shop", "stock", amount),
+  gainCoins: (amount: number): Effect => gainCosyPropertyAmount("shop", "coins", amount),
+  spendCoins: (amount: number): Effect => spendCosyPropertyAmount("shop", "coins", amount),
   gainStanding: (amount: ShiftAmount): Effect =>
-    increaseCosyEntityGauge("shop", "shopStanding", amount),
+    increaseCosyProperty("shop", "shopStanding", amount),
   loseStanding: (amount: ShiftAmount): Effect =>
-    decreaseCosyEntityGauge("shop", "shopStanding", amount),
+    decreaseCosyProperty("shop", "shopStanding", amount),
   gainGoodwill: (amount: ShiftAmount): Effect =>
-    increaseCosyEntityGauge("shop", "goodwill", amount),
+    increaseCosyProperty("shop", "goodwill", amount),
   loseGoodwill: (amount: ShiftAmount): Effect =>
-    decreaseCosyEntityGauge("shop", "goodwill", amount)
+    decreaseCosyProperty("shop", "goodwill", amount)
 };
 
 export const player = {
   gainCompassion: (amount: ShiftAmount): Effect =>
-    increaseCosyEntityGauge("player", "compassion", amount),
+    increaseCosyProperty("player", "compassion", amount),
   loseCompassion: (amount: ShiftAmount): Effect =>
-    decreaseCosyEntityGauge("player", "compassion", amount),
+    decreaseCosyProperty("player", "compassion", amount),
   gainPrudence: (amount: ShiftAmount): Effect =>
-    increaseCosyEntityGauge("player", "prudence", amount),
+    increaseCosyProperty("player", "prudence", amount),
   losePrudence: (amount: ShiftAmount): Effect =>
-    decreaseCosyEntityGauge("player", "prudence", amount),
+    decreaseCosyProperty("player", "prudence", amount),
   gainFatigue: (amount: ShiftAmount): Effect =>
-    increaseCosyEntityGauge("player", "fatigue", amount),
+    increaseCosyProperty("player", "fatigue", amount),
   recoverFatigue: (amount: ShiftAmount): Effect =>
-    decreaseCosyEntityGauge("player", "fatigue", amount),
+    decreaseCosyProperty("player", "fatigue", amount),
   gainAmbition: (amount: ShiftAmount): Effect =>
-    increaseCosyEntityGauge("player", "ambition", amount),
+    increaseCosyProperty("player", "ambition", amount),
   loseAmbition: (amount: ShiftAmount): Effect =>
-    decreaseCosyEntityGauge("player", "ambition", amount)
+    decreaseCosyProperty("player", "ambition", amount)
 };
 
 export const apprentice = {
   gainConfidence: (amount: ShiftAmount): Effect =>
-    increaseCosyEntityGauge("apprentice", "confidence", amount),
+    increaseCosyProperty("apprentice", "confidence", amount),
   loseConfidence: (amount: ShiftAmount): Effect =>
-    decreaseCosyEntityGauge("apprentice", "confidence", amount),
+    decreaseCosyProperty("apprentice", "confidence", amount),
   gainTrust: (amount: ShiftAmount): Effect =>
-    increaseCosyEntityGauge("apprentice", "trust", amount),
+    increaseCosyProperty("apprentice", "trust", amount),
   loseTrust: (amount: ShiftAmount): Effect =>
-    decreaseCosyEntityGauge("apprentice", "trust", amount),
+    decreaseCosyProperty("apprentice", "trust", amount),
   gainAffection: (amount: ShiftAmount): Effect =>
-    increaseCosyEntityGauge("apprentice", "affection", amount),
+    increaseCosyProperty("apprentice", "affection", amount),
   loseAffection: (amount: ShiftAmount): Effect =>
-    decreaseCosyEntityGauge("apprentice", "affection", amount),
+    decreaseCosyProperty("apprentice", "affection", amount),
   gainFear: (amount: ShiftAmount): Effect =>
-    increaseCosyEntityGauge("apprentice", "fear", amount),
+    increaseCosyProperty("apprentice", "fear", amount),
   loseFear: (amount: ShiftAmount): Effect =>
-    decreaseCosyEntityGauge("apprentice", "fear", amount)
+    decreaseCosyProperty("apprentice", "fear", amount)
 };
 
 export const town = {
   gainGossipHeat: (amount: ShiftAmount): Effect =>
-    increaseCosyEntityGauge("town", "gossipHeat", amount),
+    increaseCosyProperty("town", "gossipHeat", amount),
   loseGossipHeat: (amount: ShiftAmount): Effect =>
-    decreaseCosyEntityGauge("town", "gossipHeat", amount)
+    decreaseCosyProperty("town", "gossipHeat", amount)
 };
 
 export const scenes = {
@@ -113,11 +128,11 @@ export const scenes = {
   remove: (sceneId: string): Effect => ({ kind: "removeScene", sceneId })
 };
 
-export const flags = {
-  set: (key: string, value: boolean): Effect => ({
+export const story = {
+  setFact: (property: PropertyKey, value: boolean): Effect => ({
     kind: "setProperty",
     entityId: "story",
-    property: key,
+    property,
     value
   })
 };
@@ -126,56 +141,51 @@ export function log(text: string): Effect {
   return { kind: "log", text };
 }
 
-function gainCosyQuantity(
+function gainCosyPropertyAmount(
   entityId: EntityId,
-  key: CosyShopQuantityKey,
+  key: CosyShopQuantityPropertyKey,
   amount: number
 ): Effect {
-  return gainQuantity(entityId, key, amount);
+  return gainPropertyAmount(entityId, key, amount);
 }
 
-function spendCosyQuantity(
+function spendCosyPropertyAmount(
   entityId: EntityId,
-  key: CosyShopQuantityKey,
+  key: CosyShopQuantityPropertyKey,
   amount: number
 ): Effect {
-  return spendQuantity(entityId, key, amount);
+  return spendPropertyAmount(entityId, key, amount);
 }
 
-function increaseCosyEntityGauge(
+function increaseCosyProperty(
   entityId: EntityId,
-  key: CosyShopGaugeKey,
+  key: CosyShopScalePropertyKey | CosyShopSpectrumPropertyKey,
   amount: ShiftAmount
 ): Effect {
-  return increaseEntityGauge(entityId, key, amount);
+  return increaseProperty(entityId, key, amount);
 }
 
-function decreaseCosyEntityGauge(
+function decreaseCosyProperty(
   entityId: EntityId,
-  key: CosyShopGaugeKey,
+  key: CosyShopScalePropertyKey | CosyShopSpectrumPropertyKey,
   amount: ShiftAmount
 ): Effect {
-  return decreaseEntityGauge(entityId, key, amount);
+  return decreaseProperty(entityId, key, amount);
 }
 
-function entityGauge(entityId: EntityId, key: GaugeKey, delta: number): Effect {
+function changePropertyAmount(
+  entityId: EntityId,
+  property: CosyShopPropertyKey,
+  direction: "increase" | "decrease",
+  amount: number
+): Effect {
   return {
     kind: "changeProperty",
     entityId,
-    property: key,
-    direction: delta >= 0 ? "increase" : "decrease",
-    amount: Math.abs(delta),
-    strength: shiftAmountFromDelta(Math.abs(delta))
-  };
-}
-
-function entityQuantity(entityId: EntityId, key: QuantityKey, delta: number): Effect {
-  return {
-    kind: "changeProperty",
-    entityId,
-    property: key,
-    direction: delta >= 0 ? "increase" : "decrease",
-    amount: Math.abs(delta)
+    property,
+    direction,
+    amount,
+    strength: shiftAmountFromDelta(amount)
   };
 }
 

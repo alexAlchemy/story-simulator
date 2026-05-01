@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, increaseEntityGauge, spendQuantity } from "@aphebis/system-cosy-shop";
+import { decreaseProperty, increaseProperty, spendPropertyAmount } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: The town has started explaining your shop to itself.
@@ -17,9 +17,9 @@ const scene: Scene = {
       label: "Answer the rumours plainly",
       description: "Give the town fewer shadows to embroider.",
       effects: [
-        decreaseEntityGauge("town", "gossipHeat", "moderately"),
-        increaseEntityGauge("shop", "shopStanding", "slightly"),
-        increaseEntityGauge("player", "fatigue", "slightly"),
+        decreaseProperty("town", "gossipHeat", "moderately"),
+        increaseProperty("shop", "shopStanding", "slightly"),
+        increaseProperty("player", "fatigue", "slightly"),
         { kind: "log", text: "By noon, the story is smaller, duller, and more nearly true." }
       ]
     },
@@ -28,9 +28,9 @@ const scene: Scene = {
       label: "Let the mystery do its work",
       description: "A little wonder can bring customers through the door.",
       effects: [
-        increaseEntityGauge("town", "gossipHeat", "moderately"),
-        increaseEntityGauge("player", "ambition", "slightly"),
-        decreaseEntityGauge("shop", "goodwill", "slightly"),
+        increaseProperty("town", "gossipHeat", "moderately"),
+        increaseProperty("player", "ambition", "slightly"),
+        decreaseProperty("shop", "goodwill", "slightly"),
         { kind: "log", text: "The next customer asks whether your bottles glow when no one watches." }
       ]
     },
@@ -39,10 +39,10 @@ const scene: Scene = {
       label: "Ask a regular to speak for you",
       description: "Let someone else's faith become part of the shop's voice.",
       effects: [
-        increaseEntityGauge("shop", "goodwill", "moderately"),
-        decreaseEntityGauge("town", "gossipHeat", "slightly"),
-        spendQuantity("shop", "coins", 2),
-        decreaseEntityGauge("player", "ambition", "slightly"),
+        increaseProperty("shop", "goodwill", "moderately"),
+        decreaseProperty("town", "gossipHeat", "slightly"),
+        spendPropertyAmount("shop", "coins", 2),
+        decreaseProperty("player", "ambition", "slightly"),
         { kind: "log", text: "Old Mara takes the discount and spends it loudly on your good name." }
       ]
     }

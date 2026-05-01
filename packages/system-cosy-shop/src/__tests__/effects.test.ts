@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
-  decreaseEntityGauge,
-  gainQuantity,
-  increaseEntityGauge,
-  spendQuantity
+  decreaseProperty,
+  gainPropertyAmount,
+  increaseProperty,
+  spendPropertyAmount
 } from "../effects";
 
 describe("semantic effect helpers", () => {
-  it("turns human-sized entity gauge changes into numeric effects", () => {
-    expect(increaseEntityGauge("player", "compassion", "strongly")).toEqual({
+  it("turns human-sized property changes into property effects", () => {
+    expect(increaseProperty("player", "compassion", "strongly")).toEqual({
       kind: "changeProperty",
       entityId: "player",
       property: "compassion",
@@ -17,7 +17,7 @@ describe("semantic effect helpers", () => {
       strength: "major"
     });
 
-    expect(decreaseEntityGauge("player", "prudence", "moderately")).toEqual({
+    expect(decreaseProperty("player", "prudence", "moderately")).toEqual({
       kind: "changeProperty",
       entityId: "player",
       property: "prudence",
@@ -27,8 +27,8 @@ describe("semantic effect helpers", () => {
     });
   });
 
-  it("keeps material quantities explicit", () => {
-    expect(gainQuantity("shop", "coins", 4)).toEqual({
+  it("keeps material property amounts explicit", () => {
+    expect(gainPropertyAmount("shop", "coins", 4)).toEqual({
       kind: "changeProperty",
       entityId: "shop",
       property: "coins",
@@ -36,7 +36,7 @@ describe("semantic effect helpers", () => {
       amount: 4
     });
 
-    expect(spendQuantity("shop", "stock", 2)).toEqual({
+    expect(spendPropertyAmount("shop", "stock", 2)).toEqual({
       kind: "changeProperty",
       entityId: "shop",
       property: "stock",

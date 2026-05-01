@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { createInitialState } from "../content/initialState";
-import { adjustEntityGauge, getNumericProperty } from "@aphebis/core";
+import { changeEntityProperty, getNumericProperty } from "@aphebis/core";
 import { getDashboardRows, getEntityCards } from "./selectors";
+import { propertyDefinitions } from "@aphebis/system-cosy-shop";
 
 describe("selectors", () => {
   const semanticContext = {
@@ -25,11 +26,18 @@ describe("selectors", () => {
   });
 
   it("formats floating point display values without changing world state", () => {
-    const state = adjustEntityGauge(
-      adjustEntityGauge(createInitialState(), "player", "compassion", 0.1),
+    const state = changeEntityProperty(
+      changeEntityProperty(
+        createInitialState(),
+        "player",
+        "compassion",
+        { direction: "increase", amount: 0.1 },
+        propertyDefinitions.compassion
+      ),
       "player",
       "compassion",
-      0.2
+      { direction: "increase", amount: 0.2 },
+      propertyDefinitions.compassion
     );
 
     expect(getNumericProperty(state, "player", "compassion")).toBe(0.30000000000000004);
@@ -58,7 +66,7 @@ describe("selectors", () => {
     expect(cards.find((card) => card.id === "shop")).toMatchObject({
       displayName: "The Potion Shop",
       kind: "shop",
-      quantities: [
+      resources: [
         {
           key: "coins",
           label: "Coins",

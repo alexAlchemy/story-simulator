@@ -1,13 +1,10 @@
 import type { EntityState, GameState, PropertyDefinition, PropertyThreshold } from "@aphebis/core";
 import {
-  describeOpenQuantity,
   getNumericProperty,
   type SemanticValue
 } from "@aphebis/core";
 import {
-  coinsDefinition,
-  propertyDefinitions as cosyShopPropertyDefinitions,
-  stockDefinition
+  propertyDefinitions as cosyShopPropertyDefinitions
 } from "@aphebis/system-cosy-shop";
 
 const propertyDefinitions: Record<string, PropertyDefinition> = cosyShopPropertyDefinitions;
@@ -38,10 +35,10 @@ export type EntityCardViewModel = {
   displayName: string;
   kind: EntityState["kind"];
   tags: string[];
-  quantities: StateRow[];
+  resources: StateRow[];
   scales: StateRow[];
   spectra: StateRow[];
-  flags: StateRow[];
+  facts: StateRow[];
 };
 
 export function getResourceRows(state: GameState): DashboardRow[] {
@@ -116,10 +113,10 @@ export function getEntityCards(
     displayName: entity.displayName,
     kind: entity.kind,
     tags: [...entity.tags],
-    quantities: toStateRows(entity.properties, semanticContext, "quantity"),
+    resources: toStateRows(entity.properties, semanticContext, "quantity"),
     scales: toStateRows(entity.properties, semanticContext, "scale"),
     spectra: toStateRows(entity.properties, semanticContext, "spectrum"),
-    flags: toStateRows(entity.properties, semanticContext, "flag")
+    facts: toStateRows(entity.properties, semanticContext, "flag")
   }));
 }
 
@@ -170,13 +167,9 @@ function getSemanticValue(
 
   switch (key) {
     case "coins":
-      return describeOpenQuantity(coinsDefinition, value, {
-        rentAmount: semanticContext.rentAmount
-      });
+      return describeQuantityByReference(key, value, semanticContext.rentAmount);
     case "stock":
-      return describeOpenQuantity(stockDefinition, value, {
-        expectedDemand: semanticContext.expectedDemand
-      });
+      return describeQuantityByReference(key, value, semanticContext.expectedDemand);
     default:
       break;
   }
@@ -195,6 +188,30 @@ function getSemanticValue(
   }
 
   return undefined;
+}
+
+function describeQuantityByReference(
+  key: string,
+  value: number,
+  referenceValue: number
+): SemanticValue | undefined {
+  const definition = propertyDefinitions[key];
+  if (!hasThresholds(definition)) {
+    return undefined;
+  }
+
+  const normalizedValue = referenceValue <= 0 ? Math.max(0, value) : Math.max(0, value / referenceValue);
+  const selected = [...definition.thresholds]
+    .reverse()
+    .find((threshold) => normalizedValue >= threshold.min) ?? definition.thresholds[0];
+
+  return {
+    key,
+    value,
+    label: selected.label,
+    rank: selected.rank,
+    description: selected.description
+  };
 }
 
 function hasThresholds(

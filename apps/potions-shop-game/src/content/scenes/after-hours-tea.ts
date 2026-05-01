@@ -1,8 +1,8 @@
 import type { Scene } from "@aphebis/core";
 import {
-  decreaseEntityGauge,
-  increaseEntityGauge,
-  spendQuantity
+  decreaseProperty,
+  increaseProperty,
+  spendPropertyAmount
 } from "@aphebis/system-cosy-shop";
 
 /**
@@ -21,10 +21,10 @@ const scene: Scene = {
       label: "Listen to the whole story",
       description: "Give the moment its full attention.",
       effects: [
-        increaseEntityGauge("apprentice", "affection", "strongly"),
-        increaseEntityGauge("apprentice", "affection", "moderately"),
-        increaseEntityGauge("apprentice", "trust", "moderately"),
-        decreaseEntityGauge("player", "fatigue", "slightly"),
+        increaseProperty("apprentice", "affection", "strongly"),
+        increaseProperty("apprentice", "affection", "moderately"),
+        increaseProperty("apprentice", "trust", "moderately"),
+        decreaseProperty("player", "fatigue", "slightly"),
         { kind: "log", text: "The story is ordinary, except for the part where it makes the room feel safer." }
       ]
     },
@@ -33,9 +33,9 @@ const scene: Scene = {
       label: "Deflect back to the work",
       description: "Keep the evening practical and a little distant.",
       effects: [
-        increaseEntityGauge("player", "prudence", "slightly"),
-        increaseEntityGauge("apprentice", "trust", "slightly"),
-        decreaseEntityGauge("apprentice", "affection", "slightly"),
+        increaseProperty("player", "prudence", "slightly"),
+        increaseProperty("apprentice", "trust", "slightly"),
+        decreaseProperty("apprentice", "affection", "slightly"),
         { kind: "log", text: "You talk shelf order until the story loses some of its heat." }
       ]
     },
@@ -44,9 +44,9 @@ const scene: Scene = {
       label: "Buy them a pastry and ask for silence",
       description: "Pay a small cost to avoid the moment without quite refusing it.",
       effects: [
-        spendQuantity("shop", "coins", 2),
-        increaseEntityGauge("apprentice", "affection", "slightly"),
-        increaseEntityGauge("player", "compassion", "slightly"),
+        spendPropertyAmount("shop", "coins", 2),
+        increaseProperty("apprentice", "affection", "slightly"),
+        increaseProperty("player", "compassion", "slightly"),
         { kind: "log", text: "The pastry works. So does the silence, though only for tonight." }
       ]
     }

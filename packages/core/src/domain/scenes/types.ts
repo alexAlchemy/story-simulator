@@ -1,6 +1,5 @@
 import type { EntityId } from "../ids";
 import type { Effect } from "../effects/types";
-import type { GaugeKey, QuantityKey } from "../world/keys";
 import type { PropertyCondition } from "../properties";
 
 export type SceneType = string;
@@ -39,23 +38,7 @@ export type SceneAvailabilityCondition =
       kind: "resolvedScene";
       sceneId: string;
       present?: boolean;
-    }
-  | {
-      kind: "flag";
-      key: string;
-      value?: boolean;
-    }
-  | ({
-      kind: "entityGauge";
-      entityId: EntityId;
-      key: GaugeKey;
-    } & SceneNumericComparison &
-    SceneSemanticComparison)
-  | ({
-      kind: "entityQuantity";
-      entityId: EntityId;
-      key: QuantityKey;
-    } & SceneNumericComparison);
+    };
 
 export type Scene = {
   id: string;
