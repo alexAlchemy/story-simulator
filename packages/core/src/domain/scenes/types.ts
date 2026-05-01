@@ -1,6 +1,7 @@
 import type { EntityId } from "../ids";
 import type { Effect } from "../effects/types";
 import type { GaugeKey, QuantityKey } from "../world/keys";
+import type { PropertyCondition } from "../properties";
 
 export type SceneType = string;
 
@@ -30,6 +31,7 @@ export type SceneAvailability = {
 };
 
 export type SceneAvailabilityCondition =
+  | PropertyCondition
   | ({
       kind: "day";
     } & SceneNumericComparison)

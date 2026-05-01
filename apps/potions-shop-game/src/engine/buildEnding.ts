@@ -1,6 +1,6 @@
 import type { GameContent, GameState } from "@aphebis/core";
-import { getEntityGauge, getEntityQuantity } from "@aphebis/core";
-import type { CosyShopGaugeKey } from "@aphebis/system-cosy-shop";
+import { getNumericProperty } from "@aphebis/core";
+import type { CosyShopSpectrumPropertyKey } from "@aphebis/system-cosy-shop";
 
 export type EndingSummary = {
   title: string;
@@ -15,11 +15,11 @@ type EndingContent = GameContent & {
 };
 
 export function buildEnding(state: GameState, content: EndingContent): EndingSummary {
-  const coins = getEntityQuantity(state, "shop", "coins");
+  const coins = getNumericProperty(state, "shop", "coins");
   const paidRent = coins >= content.rentAmount;
   const dominantValue = getDominantValue(state);
-  const apprenticeTrust = getEntityGauge(state, "apprentice", "trust");
-  const shopStanding = getEntityGauge(state, "shop", "shopStanding");
+  const apprenticeTrust = getNumericProperty(state, "apprentice", "trust");
+  const shopStanding = getNumericProperty(state, "shop", "shopStanding");
 
   return {
     title: paidRent ? "The Door Opens Again" : "The Rent Bell Rings",
@@ -40,19 +40,19 @@ export function buildEnding(state: GameState, content: EndingContent): EndingSum
   };
 }
 
-type IdentityGaugeKey = Extract<CosyShopGaugeKey, "compassion" | "prudence" | "ambition">;
+type IdentityPropertyKey = CosyShopSpectrumPropertyKey;
 
-function getDominantValue(state: GameState): IdentityGaugeKey {
+function getDominantValue(state: GameState): IdentityPropertyKey {
   const values = [
-    ["compassion", getEntityGauge(state, "player", "compassion")],
-    ["prudence", getEntityGauge(state, "player", "prudence")],
-    ["ambition", getEntityGauge(state, "player", "ambition")]
+    ["compassion", getNumericProperty(state, "player", "compassion")],
+    ["prudence", getNumericProperty(state, "player", "prudence")],
+    ["ambition", getNumericProperty(state, "player", "ambition")]
   ] as const;
 
   return [...values].sort((a, b) => b[1] - a[1])[0][0];
 }
 
-function identityText(value: IdentityGaugeKey): string {
+function identityText(value: IdentityPropertyKey): string {
   if (value === "compassion") {
     return "Mercy became your strongest habit. It cost you, but people learned your counter was not only a till.";
   }

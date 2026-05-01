@@ -14,10 +14,7 @@ const scene: Scene = {
   availability: {
     all: [
       { kind: "day", min: 4 },
-      {
-        kind: "flag",
-        key: "stablehand_helped"
-      }
+      { kind: "property", entityId: "story", property: "stablehand_helped", value: true }
     ]
   },
   choices: [

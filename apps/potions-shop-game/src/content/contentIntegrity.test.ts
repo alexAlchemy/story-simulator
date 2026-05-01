@@ -46,9 +46,8 @@ describe("content integrity", () => {
         choice.effects.filter(
           (effect) =>
             ![
-              "entityGauge",
-              "entityQuantity",
-              "setFlag",
+              "changeProperty",
+              "setProperty",
               "addScene",
               "removeScene",
               "log"

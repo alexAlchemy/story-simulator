@@ -10,7 +10,7 @@ import {
 } from "@aphebis/core";
 import { getVisibleScenes } from "@aphebis/core";
 import { getEntityGauge } from "@aphebis/core";
-import { entityGaugeDefinitions } from "@aphebis/system-cosy-shop";
+import { propertyDefinitions } from "@aphebis/system-cosy-shop";
 
 describe("sceneAvailability", () => {
   it("reveals the apprentice's first cure after emotional investment", () => {
@@ -54,15 +54,15 @@ describe("sceneAvailability", () => {
           ...base.world.entities,
           player: {
             ...base.world.entities.player,
-            gauges: {
-              ...base.world.entities.player.gauges,
+            properties: {
+              ...base.world.entities.player.properties,
               ambition: 0.3
             }
           },
           town: {
             ...base.world.entities.town,
-            gauges: {
-              ...base.world.entities.town.gauges,
+            properties: {
+              ...base.world.entities.town.properties,
               gossipHeat: 0.5
             }
           }
@@ -118,9 +118,9 @@ describe("sceneAvailability", () => {
             all: [
               { kind: "resolvedScene", sceneId: "missing-scene" },
               {
-                kind: "entityGauge",
+                kind: "property",
                 entityId: "player",
-                key: "compassion",
+                property: "compassion",
                 minLabel: "NotARealLabel"
               }
             ]
@@ -131,7 +131,7 @@ describe("sceneAvailability", () => {
       dayPlan: {},
       endDay: 1,
       semantics: {
-        entityGaugeDefinitions
+        propertyDefinitions
       }
     };
 
@@ -142,7 +142,7 @@ describe("sceneAvailability", () => {
 
     expect(issues).toEqual([
       'broken: availability references unknown scene "missing-scene"',
-      'broken: entityGauge availability references unknown label "NotARealLabel"'
+      'broken: property availability references unknown label "NotARealLabel"'
     ]);
   });
 });

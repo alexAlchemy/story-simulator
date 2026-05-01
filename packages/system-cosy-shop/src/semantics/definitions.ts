@@ -4,13 +4,27 @@ import type {
   OpenQuantityContext,
   SemanticValue,
   SemanticThreshold,
-  SignedGaugeDefinition
+  SignedGaugeDefinition,
+  ChangeStrength,
+  FlagPropertyDefinition,
+  PropertyDefinition,
+  PropertyThreshold,
+  QuantityPropertyDefinition,
+  ScalePropertyDefinition,
+  SpectrumPropertyDefinition
 } from "@aphebis/core";
 import {
   compareLabels as compareThresholdLabels,
   describeGauge as describeCoreGauge
 } from "@aphebis/core";
-import type { CosyShopGaugeKey } from "../keys";
+import type {
+  CosyShopFlagPropertyKey,
+  CosyShopGaugeKey,
+  CosyShopPropertyKey,
+  CosyShopQuantityPropertyKey,
+  CosyShopScalePropertyKey,
+  CosyShopSpectrumPropertyKey
+} from "../keys";
 
 export type FatigueLabel =
   | "Rested"
@@ -543,6 +557,103 @@ export const coinsDefinition: OpenQuantityDefinition<"coins", CoinLabel, CoinsCo
   })
 };
 
+const defaultStrengthAmounts = {
+  trace: 0.025,
+  minor: 0.05,
+  small: 0.1,
+  meaningful: 0.2,
+  major: 0.3,
+  defining: 0.5
+} satisfies Record<ChangeStrength, number>;
+
+function toPropertyThresholds(
+  thresholds: readonly SemanticThreshold<string>[]
+): readonly PropertyThreshold[] {
+  return thresholds.map((threshold) => ({ ...threshold }));
+}
+
+export const quantityProperty = <TKey extends CosyShopQuantityPropertyKey>(
+  key: TKey,
+  thresholds: readonly SemanticThreshold<string>[],
+  description: string
+): QuantityPropertyDefinition<TKey> => ({
+  key,
+  kind: "quantity",
+  label: formatPropertyLabel(key),
+  description,
+  minimumValue: 0,
+  thresholds: toPropertyThresholds(thresholds),
+  changePolicy: { kind: "direct" }
+});
+
+export const scaleProperty = <TKey extends CosyShopScalePropertyKey>(
+  key: TKey,
+  thresholds: readonly SemanticThreshold<string>[],
+  description: string
+): ScalePropertyDefinition<TKey> => ({
+  key,
+  kind: "scale",
+  label: formatPropertyLabel(key),
+  description,
+  minimumValue: 0,
+  maximumValue: 1,
+  thresholds: toPropertyThresholds(thresholds),
+  changePolicy: { kind: "bounded", amounts: defaultStrengthAmounts }
+});
+
+export const spectrumProperty = <TKey extends CosyShopSpectrumPropertyKey>(
+  key: TKey,
+  thresholds: readonly SemanticThreshold<string>[],
+  negativePole: string,
+  positivePole: string,
+  description: string
+): SpectrumPropertyDefinition<TKey> => ({
+  key,
+  kind: "spectrum",
+  label: formatPropertyLabel(key),
+  description,
+  minimumValue: -1,
+  maximumValue: 1,
+  negativePole: { label: negativePole, value: -1 },
+  positivePole: { label: positivePole, value: 1 },
+  thresholds: toPropertyThresholds(thresholds),
+  changePolicy: { kind: "bounded", amounts: defaultStrengthAmounts }
+});
+
+export const flagProperty = <TKey extends CosyShopFlagPropertyKey>(
+  key: TKey,
+  description: string
+): FlagPropertyDefinition<TKey> => ({
+  key,
+  kind: "flag",
+  label: formatPropertyLabel(key),
+  description,
+  trueLabel: "Yes",
+  falseLabel: "No"
+});
+
+export const propertyDefinitions = {
+  fatigue: scaleProperty("fatigue", fatigueThresholds, "The shopkeeper's tiredness and strain."),
+  confidence: scaleProperty("confidence", confidenceThresholds, "The apprentice's belief in their own ability."),
+  gossipHeat: scaleProperty("gossipHeat", gossipHeatThresholds, "How intensely Briarwick is talking about the shop."),
+  trust: scaleProperty("trust", trustThresholds, "How much the apprentice trusts the shopkeeper."),
+  affection: scaleProperty("affection", affectionThresholds, "The apprentice's warmth toward the shopkeeper."),
+  fear: scaleProperty("fear", fearThresholds, "The apprentice's fear around the shop and its consequences."),
+  shopStanding: scaleProperty("shopStanding", trustThresholds, "The shop's local credibility and standing."),
+  goodwill: scaleProperty("goodwill", goodwillThresholds, "The town's practical goodwill toward the shop."),
+  compassion: spectrumProperty("compassion", compassionThresholds, "Cold", "Compassionate", "The shopkeeper's pull between emotional distance and care."),
+  prudence: spectrumProperty("prudence", prudenceThresholds, "Impulsive", "Prudent", "The shopkeeper's pull between impulse and caution."),
+  ambition: spectrumProperty("ambition", ambitionThresholds, "Humble", "Ambitious", "The shopkeeper's pull between contentment and advancement."),
+  coins: quantityProperty("coins", coinsThresholds, "Coins available to the shop."),
+  stock: quantityProperty("stock", stockThresholds, "Potion stock available to sell or give away."),
+  stablehand_helped: flagProperty("stablehand_helped", "The stablehand received help."),
+  stablehand_grateful: flagProperty("stablehand_grateful", "The stablehand left grateful."),
+  stablehand_refused: flagProperty("stablehand_refused", "The stablehand was refused help."),
+  mistake_handled_gently: flagProperty("mistake_handled_gently", "The apprentice's mistake was handled gently."),
+  mysterious_gift_accepted: flagProperty("mysterious_gift_accepted", "The mysterious gift was accepted."),
+  left_thanks_for_gift: flagProperty("left_thanks_for_gift", "Thanks were left for the gift giver.")
+} satisfies Record<CosyShopPropertyKey, PropertyDefinition>;
+
 export const stockDefinition: OpenQuantityDefinition<"stock", StockLabel, StockContext> = {
   family: "openQuantity",
   key: "stock",
@@ -590,4 +701,11 @@ function getGaugeDefinition(key: CosyShopSemanticGaugeKey): CosyShopSemanticGaug
   }
 
   return definition;
+}
+
+function formatPropertyLabel(key: string): string {
+  return key
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/[-_]/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }

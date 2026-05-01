@@ -9,33 +9,39 @@ import {
 describe("semantic effect helpers", () => {
   it("turns human-sized entity gauge changes into numeric effects", () => {
     expect(increaseEntityGauge("player", "compassion", "strongly")).toEqual({
-      kind: "entityGauge",
+      kind: "changeProperty",
       entityId: "player",
-      key: "compassion",
-      delta: 0.3
+      property: "compassion",
+      direction: "increase",
+      amount: 0.3,
+      strength: "major"
     });
 
     expect(decreaseEntityGauge("player", "prudence", "moderately")).toEqual({
-      kind: "entityGauge",
+      kind: "changeProperty",
       entityId: "player",
-      key: "prudence",
-      delta: -0.2
+      property: "prudence",
+      direction: "decrease",
+      amount: 0.2,
+      strength: "meaningful"
     });
   });
 
   it("keeps material quantities explicit", () => {
     expect(gainQuantity("shop", "coins", 4)).toEqual({
-      kind: "entityQuantity",
+      kind: "changeProperty",
       entityId: "shop",
-      key: "coins",
-      delta: 4
+      property: "coins",
+      direction: "increase",
+      amount: 4
     });
 
     expect(spendQuantity("shop", "stock", 2)).toEqual({
-      kind: "entityQuantity",
+      kind: "changeProperty",
       entityId: "shop",
-      key: "stock",
-      delta: -2
+      property: "stock",
+      direction: "decrease",
+      amount: 2
     });
   });
 

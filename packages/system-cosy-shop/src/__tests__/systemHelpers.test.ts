@@ -23,58 +23,72 @@ describe("cosy shop system helpers", () => {
 
   it("turns shop grammar into core quantity effects", () => {
     expect(shop.spendStock(2)).toEqual({
-      kind: "entityQuantity",
+      kind: "changeProperty",
       entityId: "shop",
-      key: "stock",
-      delta: -2
+      property: "stock",
+      direction: "decrease",
+      amount: 2
     });
     expect(shop.gainCoins(3)).toEqual({
-      kind: "entityQuantity",
+      kind: "changeProperty",
       entityId: "shop",
-      key: "coins",
-      delta: 3
+      property: "coins",
+      direction: "increase",
+      amount: 3
     });
   });
 
   it("turns character and town grammar into core gauge effects", () => {
     expect(player.gainCompassion("moderately")).toEqual({
-      kind: "entityGauge",
+      kind: "changeProperty",
       entityId: "player",
-      key: "compassion",
-      delta: 0.2
+      property: "compassion",
+      direction: "increase",
+      amount: 0.2,
+      strength: "meaningful"
     });
     expect(player.recoverFatigue("slightly")).toEqual({
-      kind: "entityGauge",
+      kind: "changeProperty",
       entityId: "player",
-      key: "fatigue",
-      delta: -0.1
+      property: "fatigue",
+      direction: "decrease",
+      amount: 0.1,
+      strength: "small"
     });
     expect(apprentice.loseConfidence("strongly")).toEqual({
-      kind: "entityGauge",
+      kind: "changeProperty",
       entityId: "apprentice",
-      key: "confidence",
-      delta: -0.3
+      property: "confidence",
+      direction: "decrease",
+      amount: 0.3,
+      strength: "major"
     });
     expect(town.gainGossipHeat("moderately")).toEqual({
-      kind: "entityGauge",
+      kind: "changeProperty",
       entityId: "town",
-      key: "gossipHeat",
-      delta: 0.2
+      property: "gossipHeat",
+      direction: "increase",
+      amount: 0.2,
+      strength: "meaningful"
     });
   });
 
   it("turns standing grammar into core entity effects", () => {
     expect(shop.gainStanding("slightly")).toEqual({
-      kind: "entityGauge",
+      kind: "changeProperty",
       entityId: "shop",
-      key: "shopStanding",
-      delta: 0.1
+      property: "shopStanding",
+      direction: "increase",
+      amount: 0.1,
+      strength: "small"
     });
     expect(apprentice.gainTrust("moderately")).toEqual({
-      kind: "entityGauge",
+      kind: "changeProperty",
       entityId: "apprentice",
-      key: "trust",
-      delta: 0.2
+      property: "trust",
+      direction: "increase",
+      amount: 0.2,
+      strength: "meaningful"
     });
   });
 
@@ -88,8 +102,9 @@ describe("cosy shop system helpers", () => {
       sceneId: "gift-at-door"
     });
     expect(flags.set("stablehand_grateful", true)).toEqual({
-      kind: "setFlag",
-      key: "stablehand_grateful",
+      kind: "setProperty",
+      entityId: "story",
+      property: "stablehand_grateful",
       value: true
     });
     expect(log("A thing happened.")).toEqual({ kind: "log", text: "A thing happened." });
@@ -98,18 +113,21 @@ describe("cosy shop system helpers", () => {
   it("creates the reusable cosy shop world template", () => {
     const world = createCosyShopWorld();
 
-    expect(world.entities.shop.quantities).toMatchObject({ coins: 18, stock: 3 });
-    expect(world.entities.player.gaugeRanges).toMatchObject({
-      compassion: { minimumValue: -1, maximumValue: 1 }
+    expect(world.entities.shop.properties).toMatchObject({ coins: 18, stock: 3 });
+    expect(world.entities.player.properties).toMatchObject({
+      compassion: 0,
+      prudence: 0,
+      ambition: 0
     });
-    expect(world.entities.apprentice.gauges).toMatchObject({
+    expect(world.entities.apprentice.properties).toMatchObject({
       trust: 0,
       affection: 0,
       fear: 0
     });
-    expect(world.entities.shop.gauges).toMatchObject({
+    expect(world.entities.shop.properties).toMatchObject({
       shopStanding: 0,
       goodwill: 0
     });
+    expect(world.entities.story.properties).toEqual({});
   });
 });

@@ -32,14 +32,15 @@ export function resolveChoice(
 
   const withEffects = applyEffects(state, choice.effects, {
     day: state.day,
-    sceneId
+    sceneId,
+    propertyDefinitions: content.semantics?.propertyDefinitions
   });
 
   const followUpLog = choice.followUpText
     ? applyEffects(
         withEffects,
         [{ kind: "log", text: choice.followUpText }],
-        { day: state.day, sceneId }
+        { day: state.day, sceneId, propertyDefinitions: content.semantics?.propertyDefinitions }
       )
     : withEffects;
 

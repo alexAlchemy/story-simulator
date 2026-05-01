@@ -2,6 +2,7 @@ import type {
   Effect,
   EntityId,
   GaugeKey,
+  PropertyKey,
   QuantityKey
 } from "@aphebis/core";
 
@@ -113,7 +114,12 @@ export const scenes = {
 };
 
 export const flags = {
-  set: (key: string, value: boolean): Effect => ({ kind: "setFlag", key, value })
+  set: (key: string, value: boolean): Effect => ({
+    kind: "setProperty",
+    entityId: "story",
+    property: key,
+    value
+  })
 };
 
 export function log(text: string): Effect {
@@ -153,9 +159,61 @@ function decreaseCosyEntityGauge(
 }
 
 function entityGauge(entityId: EntityId, key: GaugeKey, delta: number): Effect {
-  return { kind: "entityGauge", entityId, key, delta };
+  return {
+    kind: "changeProperty",
+    entityId,
+    property: key,
+    direction: delta >= 0 ? "increase" : "decrease",
+    amount: Math.abs(delta),
+    strength: shiftAmountFromDelta(Math.abs(delta))
+  };
 }
 
 function entityQuantity(entityId: EntityId, key: QuantityKey, delta: number): Effect {
-  return { kind: "entityQuantity", entityId, key, delta };
+  return {
+    kind: "changeProperty",
+    entityId,
+    property: key,
+    direction: delta >= 0 ? "increase" : "decrease",
+    amount: Math.abs(delta)
+  };
+}
+
+export function changeProperty(
+  entityId: EntityId,
+  property: PropertyKey,
+  direction: "increase" | "decrease" | "toward",
+  amount: ShiftAmount,
+  pole?: string
+): Effect {
+  return {
+    kind: "changeProperty",
+    entityId,
+    property,
+    direction,
+    strength: shiftAmountToStrength(amount),
+    magnitude: shiftAmountToStrength(amount),
+    pole
+  };
+}
+
+function shiftAmountFromDelta(delta: number): "small" | "meaningful" | "major" {
+  if (delta >= shiftAmountDeltas.strongly) {
+    return "major";
+  }
+  if (delta >= shiftAmountDeltas.moderately) {
+    return "meaningful";
+  }
+  return "small";
+}
+
+function shiftAmountToStrength(amount: ShiftAmount): "small" | "meaningful" | "major" {
+  switch (amount) {
+    case "slightly":
+      return "small";
+    case "moderately":
+      return "meaningful";
+    case "strongly":
+      return "major";
+  }
 }

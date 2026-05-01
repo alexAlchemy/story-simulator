@@ -5,6 +5,8 @@ import type {
   SceneSemanticComparison,
   SceneAvailabilityCondition,
   Scene,
+  PropertyDefinition,
+  PropertyThreshold,
   SemanticGaugeDefinition,
   WorldState
 } from "../domain";
@@ -14,6 +16,7 @@ import {
 } from "../domain/semantics";
 import {
   getEntityGauge,
+  getEntityProperty,
   getEntityQuantity
 } from "./worldAccess";
 
@@ -54,6 +57,21 @@ export function validateSceneAvailability(
 
   for (const condition of conditions) {
     switch (condition.kind) {
+      case "property":
+        if (world && !world.entities[condition.entityId]) {
+          issues.push(
+            `${scene.id}: property availability references unknown entity "${condition.entityId}"`
+          );
+        }
+        issues.push(
+          ...validatePropertyComparison(
+            scene.id,
+            condition.property,
+            condition,
+            content.semantics?.propertyDefinitions
+          )
+        );
+        break;
       case "resolvedScene":
         if (!content.scenes[condition.sceneId]) {
           issues.push(
@@ -113,6 +131,12 @@ function matchesSceneAvailabilityCondition(
         : !state.resolvedScenes.includes(condition.sceneId);
     case "flag":
       return state.flags[condition.key] === (condition.value ?? true);
+    case "property":
+      return matchesPropertyState(
+        getEntityProperty(state, condition.entityId, condition.property),
+        condition,
+        content.semantics?.propertyDefinitions?.[condition.property]
+      );
     case "entityGauge":
       return matchesSemanticState(
         getEntityGauge(state, condition.entityId, condition.key),
@@ -127,6 +151,58 @@ function matchesSceneAvailabilityCondition(
     default:
       assertNever(condition);
   }
+}
+
+function matchesPropertyState(
+  value: string | number | boolean | undefined,
+  condition: Extract<SceneAvailabilityCondition, { kind: "property" }>,
+  definition: PropertyDefinition | undefined
+): boolean {
+  if (condition.value !== undefined) {
+    return value === condition.value;
+  }
+
+  if (typeof value === "boolean") {
+    return value === true;
+  }
+
+  if (typeof value !== "number") {
+    return false;
+  }
+
+  if (!matchesNumericComparison(value, condition)) {
+    return false;
+  }
+
+  if (!condition.equalsLabel && !condition.minLabel && !condition.maxLabel) {
+    return true;
+  }
+
+  if (!hasThresholds(definition)) {
+    return false;
+  }
+
+  const described = describePropertyByThreshold(definition, value);
+
+  if (condition.equalsLabel !== undefined && !labelsMatch(described.label, condition.equalsLabel)) {
+    return false;
+  }
+
+  if (condition.minLabel !== undefined) {
+    const threshold = findPropertyThresholdByLabel(definition, condition.minLabel);
+    if (!threshold || described.rank < threshold.rank) {
+      return false;
+    }
+  }
+
+  if (condition.maxLabel !== undefined) {
+    const threshold = findPropertyThresholdByLabel(definition, condition.maxLabel);
+    if (!threshold || described.rank > threshold.rank) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 function matchesSemanticState(
@@ -232,11 +308,81 @@ function validateSemanticComparison<
   return issues;
 }
 
+function validatePropertyComparison(
+  sceneId: string,
+  key: string,
+  condition: Extract<SceneAvailabilityCondition, { kind: "property" }>,
+  definitions: Record<string, PropertyDefinition> | undefined
+): string[] {
+  const labels = [condition.minLabel, condition.maxLabel, condition.equalsLabel].filter(
+    (label): label is string => Boolean(label)
+  );
+  if (labels.length === 0) {
+    return [];
+  }
+
+  if (!definitions) {
+    return [`${sceneId}: property availability has semantic labels but no property definitions`];
+  }
+
+  const definition = definitions[key];
+  if (!definition) {
+    return [`${sceneId}: property availability references unknown property "${key}"`];
+  }
+
+  if (!hasThresholds(definition)) {
+    return [`${sceneId}: property availability references labels on non-threshold property "${key}"`];
+  }
+
+  const issues: string[] = [];
+  for (const label of labels) {
+    if (!findPropertyThresholdByLabel(definition, label)) {
+      issues.push(`${sceneId}: property availability references unknown label "${label}"`);
+    }
+  }
+
+  return issues;
+}
+
 function findThresholdByLabel(
   definition: SceneDefinitionLike,
   label: string
 ): { rank: number; label: string } | undefined {
   return definition.thresholds.find((threshold) => labelsMatch(threshold.label, label));
+}
+
+function findPropertyThresholdByLabel(
+  definition: PropertyDefinition & { thresholds: readonly PropertyThreshold[] },
+  label: string
+): { rank: number; min: number; label: string } | undefined {
+  return definition.thresholds.find((threshold) => labelsMatch(threshold.label, label));
+}
+
+function describePropertyByThreshold(
+  definition: PropertyDefinition & { thresholds: readonly PropertyThreshold[] },
+  value: number
+): { label: string; rank: number } {
+  const selected = [...definition.thresholds]
+    .reverse()
+    .find((threshold) => value >= threshold.min);
+
+  if (!selected) {
+    const first = definition.thresholds[0];
+    return { label: first.label, rank: first.rank };
+  }
+
+  return { label: selected.label, rank: selected.rank };
+}
+
+function hasThresholds(
+  definition: PropertyDefinition | undefined
+): definition is PropertyDefinition & { thresholds: readonly PropertyThreshold[] } {
+  return Boolean(
+    definition &&
+      "thresholds" in definition &&
+      Array.isArray(definition.thresholds) &&
+      definition.thresholds.length > 0
+  );
 }
 
 function labelsMatch(left: string, right: string): boolean {

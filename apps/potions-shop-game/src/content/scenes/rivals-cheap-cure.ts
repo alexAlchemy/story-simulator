@@ -15,15 +15,15 @@ const scene: Scene = {
     all: [{ kind: "day", min: 4 }],
     any: [
       {
-        kind: "entityGauge",
+        kind: "property",
         entityId: "player",
-        key: "ambition",
+        property: "ambition",
         minLabel: "Driven"
       },
       {
-        kind: "entityGauge",
+        kind: "property",
         entityId: "town",
-        key: "gossipHeat",
+        property: "gossipHeat",
         minLabel: "Buzzing"
       }
     ]

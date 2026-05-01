@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createInitialState } from "../content/initialState";
-import { adjustEntityGauge } from "@aphebis/core";
+import { adjustEntityGauge, getNumericProperty } from "@aphebis/core";
 import { getDashboardRows, getEntityCards } from "./selectors";
 
 describe("selectors", () => {
@@ -32,14 +32,14 @@ describe("selectors", () => {
       0.2
     );
 
-    expect(state.world.entities.player.gauges.compassion).toBe(0.30000000000000004);
+    expect(getNumericProperty(state, "player", "compassion")).toBe(0.30000000000000004);
     expect(getDashboardRows(state).find((row) => row.key === "compassion")).toMatchObject({
       value: 0.3
     });
     expect(
       getEntityCards(state, semanticContext)
         .find((card) => card.id === "player")
-        ?.gauges.find((row) => row.key === "compassion")
+        ?.spectra.find((row) => row.key === "compassion")
     ).toMatchObject({
       value: 0.3
     });
@@ -52,7 +52,8 @@ describe("selectors", () => {
       "player",
       "shop",
       "apprentice",
-      "town"
+      "town",
+      "story"
     ]);
     expect(cards.find((card) => card.id === "shop")).toMatchObject({
       displayName: "The Potion Shop",
@@ -78,7 +79,7 @@ describe("selectors", () => {
         }
       ]
     });
-    expect(cards.find((card) => card.id === "player")?.gauges).toEqual([
+    expect(cards.find((card) => card.id === "player")?.scales).toEqual([
       {
         key: "fatigue",
         label: "Fatigue",
@@ -87,7 +88,9 @@ describe("selectors", () => {
           label: "Rested",
           description: "Clear-headed and physically steady."
         }
-      },
+      }
+    ]);
+    expect(cards.find((card) => card.id === "player")?.spectra).toEqual([
       {
         key: "compassion",
         label: "Compassion",
@@ -119,14 +122,14 @@ describe("selectors", () => {
     expect(
       cards
         .find((card) => card.id === "apprentice")
-        ?.gauges.find((row) => row.key === "confidence")
+        ?.scales.find((row) => row.key === "confidence")
     ).toMatchObject({
       semantic: {
         label: "Unsure",
         description: "There is ability here, but hesitation too."
       }
     });
-    expect(cards.find((card) => card.id === "town")?.gauges[0]).toMatchObject({
+    expect(cards.find((card) => card.id === "town")?.scales[0]).toMatchObject({
       key: "gossipHeat",
       semantic: {
         label: "Murmuring",

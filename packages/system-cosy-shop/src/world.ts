@@ -8,59 +8,52 @@ export function createCosyShopWorld(): WorldState {
         kind: "person",
         displayName: "The Shopkeeper",
         tags: ["protagonist", "shopkeeper"],
-        gauges: {
+        properties: {
           fatigue: 0,
           compassion: 0,
           prudence: 0,
           ambition: 0
         },
-        gaugeRanges: {
-          compassion: { minimumValue: -1, maximumValue: 1 },
-          prudence: { minimumValue: -1, maximumValue: 1 },
-          ambition: { minimumValue: -1, maximumValue: 1 }
-        },
-        quantities: {},
-        flags: {}
       },
       shop: {
         id: "shop",
         kind: "shop",
         displayName: "The Potion Shop",
         tags: ["business", "apothecary"],
-        gauges: {
+        properties: {
           shopStanding: 0,
-          goodwill: 0
-        },
-        quantities: {
+          goodwill: 0,
           coins: 18,
           stock: 3
-        },
-        flags: {}
+        }
       },
       apprentice: {
         id: "apprentice",
         kind: "person",
         displayName: "The Apprentice",
         tags: ["staff", "apprentice"],
-        gauges: {
+        properties: {
           confidence: 0.35,
           trust: 0,
           affection: 0,
           fear: 0
-        },
-        quantities: {},
-        flags: {}
+        }
       },
       town: {
         id: "town",
         kind: "group",
         displayName: "Briarwick",
         tags: ["community", "market"],
-        gauges: {
+        properties: {
           gossipHeat: 0.2
-        },
-        quantities: {},
-        flags: {}
+        }
+      },
+      story: {
+        id: "story",
+        kind: "story",
+        displayName: "Story Facts",
+        tags: ["system"],
+        properties: {}
       }
     }
   };

@@ -321,7 +321,7 @@
                   </div>
 
                   <div class="state-section" x-show="currentEntity(entityCards).quantities.length">
-                    <h4>Quantities</h4>
+                    <h4>Resources</h4>
                     <template x-for="item in currentEntity(entityCards).quantities" :key="item.key">
                       <div class="stat-row compact">
                         <span x-text="item.label"></span>
@@ -333,9 +333,22 @@
                     </template>
                   </div>
 
-                  <div class="state-section" x-show="currentEntity(entityCards).gauges.length">
-                    <h4>Gauges</h4>
-                    <template x-for="item in currentEntity(entityCards).gauges" :key="item.key">
+                  <div class="state-section" x-show="currentEntity(entityCards).scales.length">
+                    <h4>Scales</h4>
+                    <template x-for="item in currentEntity(entityCards).scales" :key="item.key">
+                      <div class="stat-row compact">
+                        <span x-text="item.label"></span>
+                        <span class="stat-value">
+                          <strong x-text="item.value"></strong>
+                          <small x-show="item.semantic" x-text="item.semantic ? item.semantic.label + ': ' + item.semantic.description : ''"></small>
+                        </span>
+                      </div>
+                    </template>
+                  </div>
+
+                  <div class="state-section" x-show="currentEntity(entityCards).spectra.length">
+                    <h4>Spectra</h4>
+                    <template x-for="item in currentEntity(entityCards).spectra" :key="item.key">
                       <div class="stat-row compact">
                         <span x-text="item.label"></span>
                         <span class="stat-value">
@@ -347,7 +360,7 @@
                   </div>
 
                   <div class="state-section" x-show="currentEntity(entityCards).flags.length">
-                    <h4>Flags</h4>
+                    <h4>Facts</h4>
                     <template x-for="item in currentEntity(entityCards).flags" :key="item.key">
                       <div class="stat-row compact">
                         <span x-text="item.label"></span>

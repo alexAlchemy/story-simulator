@@ -3,9 +3,12 @@ import { createInitialState } from "../content/initialState";
 import {
   adjustEntityGauge,
   adjustEntityQuantity,
+  changeEntityProperty,
   getEntityGauge,
-  getEntityQuantity
+  getEntityQuantity,
+  getNumericProperty
 } from "@aphebis/core";
+import { propertyDefinitions } from "@aphebis/system-cosy-shop";
 
 describe("worldAccess", () => {
   it("clones state immutably when updating entities", () => {
@@ -37,14 +40,26 @@ describe("worldAccess", () => {
     expect(getEntityGauge(state, "shop", "shopStanding")).toBe(0);
   });
 
-  it("preserves negative values for signed entity gauges", () => {
+  it("preserves negative values for spectrum properties", () => {
     let state = createInitialState();
 
-    state = adjustEntityGauge(state, "player", "compassion", -0.75);
-    expect(getEntityGauge(state, "player", "compassion")).toBe(-0.75);
+    state = changeEntityProperty(
+      state,
+      "player",
+      "compassion",
+      { direction: "decrease", amount: 0.75 },
+      propertyDefinitions.compassion
+    );
+    expect(getNumericProperty(state, "player", "compassion")).toBe(-0.75);
 
-    state = adjustEntityGauge(state, "player", "compassion", -99);
-    expect(getEntityGauge(state, "player", "compassion")).toBe(-1);
+    state = changeEntityProperty(
+      state,
+      "player",
+      "compassion",
+      { direction: "decrease", amount: 99 },
+      propertyDefinitions.compassion
+    );
+    expect(getNumericProperty(state, "player", "compassion")).toBe(-1);
   });
 
   it("throws clear errors for missing ids", () => {

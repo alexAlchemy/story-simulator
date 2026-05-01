@@ -1,8 +1,5 @@
-export type CosyShopGaugeKey =
+export type CosyShopScalePropertyKey =
   | "fatigue"
-  | "compassion"
-  | "prudence"
-  | "ambition"
   | "confidence"
   | "gossipHeat"
   | "trust"
@@ -11,4 +8,23 @@ export type CosyShopGaugeKey =
   | "shopStanding"
   | "goodwill";
 
-export type CosyShopQuantityKey = "coins" | "stock";
+export type CosyShopSpectrumPropertyKey = "compassion" | "prudence" | "ambition";
+
+export type CosyShopQuantityPropertyKey = "coins" | "stock";
+
+export type CosyShopFlagPropertyKey =
+  | "stablehand_helped"
+  | "stablehand_grateful"
+  | "stablehand_refused"
+  | "mistake_handled_gently"
+  | "mysterious_gift_accepted"
+  | "left_thanks_for_gift";
+
+export type CosyShopPropertyKey =
+  | CosyShopScalePropertyKey
+  | CosyShopSpectrumPropertyKey
+  | CosyShopQuantityPropertyKey
+  | CosyShopFlagPropertyKey;
+
+export type CosyShopGaugeKey = CosyShopScalePropertyKey | CosyShopSpectrumPropertyKey;
+export type CosyShopQuantityKey = CosyShopQuantityPropertyKey;

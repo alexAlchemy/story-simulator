@@ -64,12 +64,12 @@ const fixtureContent: GameContent = {
         {
           id: "set-true",
           label: "Set true",
-          effects: [{ kind: "setFlag", key: "sample_flag", value: true }]
+          effects: [{ kind: "setProperty", entityId: "story", property: "sample_flag", value: true }]
         },
         {
           id: "set-false",
           label: "Set false",
-          effects: [{ kind: "setFlag", key: "sample_flag", value: false }]
+          effects: [{ kind: "setProperty", entityId: "story", property: "sample_flag", value: false }]
         }
       ]
     }
@@ -89,7 +89,7 @@ const unreachableFlagContent: GameContent = {
         {
           id: "hidden-choice",
           label: "Set hidden",
-          effects: [{ kind: "setFlag", key: "hidden_flag", value: true }]
+          effects: [{ kind: "setProperty", entityId: "story", property: "hidden_flag", value: true }]
         }
       ]
     }
@@ -109,14 +109,16 @@ function createFixtureState(): GameState {
         ...state.world.entities,
         shop: {
           ...state.world.entities.shop,
-          quantities: {
+          properties: {
+            ...state.world.entities.shop.properties,
             coins: 0,
             stock: 0
           }
         },
         player: {
           ...state.world.entities.player,
-          gauges: {
+          properties: {
+            ...state.world.entities.player.properties,
             fatigue: 0,
             compassion: 0,
             prudence: 0,

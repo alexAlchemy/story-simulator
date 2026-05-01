@@ -1,19 +1,16 @@
-import type { EntityState, GameState } from "@aphebis/core";
+import type { EntityState, GameState, PropertyDefinition, PropertyThreshold } from "@aphebis/core";
 import {
-  describeBoundedGauge,
   describeOpenQuantity,
-  describeSignedGauge,
+  getNumericProperty,
   type SemanticValue
 } from "@aphebis/core";
 import {
   coinsDefinition,
-  entityGaugeDefinitions,
+  propertyDefinitions as cosyShopPropertyDefinitions,
   stockDefinition
 } from "@aphebis/system-cosy-shop";
-import {
-  getEntityGauge,
-  getEntityQuantity
-} from "@aphebis/core";
+
+const propertyDefinitions: Record<string, PropertyDefinition> = cosyShopPropertyDefinitions;
 
 export type DashboardRow = {
   key: string;
@@ -41,8 +38,9 @@ export type EntityCardViewModel = {
   displayName: string;
   kind: EntityState["kind"];
   tags: string[];
-  gauges: StateRow[];
   quantities: StateRow[];
+  scales: StateRow[];
+  spectra: StateRow[];
   flags: StateRow[];
 };
 
@@ -51,17 +49,17 @@ export function getResourceRows(state: GameState): DashboardRow[] {
     {
       key: "coins",
       label: "Coins",
-      value: formatNumericValue(getEntityQuantity(state, "shop", "coins"))
+      value: formatNumericValue(getNumericProperty(state, "shop", "coins"))
     },
     {
       key: "stock",
       label: "Stock",
-      value: formatNumericValue(getEntityQuantity(state, "shop", "stock"))
+      value: formatNumericValue(getNumericProperty(state, "shop", "stock"))
     },
     {
       key: "fatigue",
       label: "Fatigue",
-      value: formatNumericValue(getEntityGauge(state, "player", "fatigue"))
+      value: formatNumericValue(getNumericProperty(state, "player", "fatigue"))
     }
   ];
 }
@@ -71,17 +69,17 @@ export function getValueRows(state: GameState): DashboardRow[] {
     {
       key: "compassion",
       label: "Compassion",
-      value: formatNumericValue(getEntityGauge(state, "player", "compassion"))
+      value: formatNumericValue(getNumericProperty(state, "player", "compassion"))
     },
     {
       key: "prudence",
       label: "Prudence",
-      value: formatNumericValue(getEntityGauge(state, "player", "prudence"))
+      value: formatNumericValue(getNumericProperty(state, "player", "prudence"))
     },
     {
       key: "ambition",
       label: "Ambition",
-      value: formatNumericValue(getEntityGauge(state, "player", "ambition"))
+      value: formatNumericValue(getNumericProperty(state, "player", "ambition"))
     }
   ];
 }
@@ -91,12 +89,12 @@ export function getStandingRows(state: GameState): DashboardRow[] {
     {
       key: "apprenticeTrust",
       label: "Apprentice Trust",
-      value: formatNumericValue(getEntityGauge(state, "apprentice", "trust"))
+      value: formatNumericValue(getNumericProperty(state, "apprentice", "trust"))
     },
     {
       key: "shopStanding",
       label: "Shop Standing",
-      value: formatNumericValue(getEntityGauge(state, "shop", "shopStanding"))
+      value: formatNumericValue(getNumericProperty(state, "shop", "shopStanding"))
     }
   ];
 }
@@ -118,24 +116,29 @@ export function getEntityCards(
     displayName: entity.displayName,
     kind: entity.kind,
     tags: [...entity.tags],
-    gauges: toStateRows(entity.gauges, semanticContext),
-    quantities: toStateRows(entity.quantities, semanticContext),
-    flags: toStateRows(entity.flags)
+    quantities: toStateRows(entity.properties, semanticContext, "quantity"),
+    scales: toStateRows(entity.properties, semanticContext, "scale"),
+    spectra: toStateRows(entity.properties, semanticContext, "spectrum"),
+    flags: toStateRows(entity.properties, semanticContext, "flag")
   }));
 }
 
 function toStateRows(
   values: Record<string, string | number | boolean | undefined>,
-  semanticContext?: WorldStateSemanticContext
+  semanticContext: WorldStateSemanticContext,
+  kind: PropertyDefinition["kind"]
 ): StateRow[] {
   return Object.entries(values)
-    .filter((entry): entry is [string, string | number | boolean] => entry[1] !== undefined)
+    .filter((entry): entry is [string, string | number | boolean] => {
+      const [key, value] = entry;
+      return value !== undefined && propertyDefinitions[key]?.kind === kind;
+    })
     .map(([key, value]) => ({
       key,
-      label: formatStateLabel(key),
+      label: propertyDefinitions[key]?.label ?? formatStateLabel(key),
       value: typeof value === "number" ? formatNumericValue(value) : value,
       semantic:
-        typeof value === "number" && semanticContext
+        typeof value === "number"
           ? describeSemanticStateValue(key, value, semanticContext)
           : undefined
     }));
@@ -163,15 +166,7 @@ function getSemanticValue(
   value: number,
   semanticContext: WorldStateSemanticContext
 ): SemanticValue | undefined {
-  const boundedDefinition = entityGaugeDefinitions[key as keyof typeof entityGaugeDefinitions];
-
-  if (boundedDefinition?.family === "boundedGauge") {
-    return describeBoundedGauge(boundedDefinition, value);
-  }
-
-  if (boundedDefinition?.family === "signedGauge") {
-    return describeSignedGauge(boundedDefinition, value);
-  }
+  const definition = propertyDefinitions[key as keyof typeof propertyDefinitions];
 
   switch (key) {
     case "coins":
@@ -183,8 +178,34 @@ function getSemanticValue(
         expectedDemand: semanticContext.expectedDemand
       });
     default:
-      return undefined;
+      break;
   }
+
+  if (hasThresholds(definition)) {
+    const selected = [...definition.thresholds]
+      .reverse()
+      .find((threshold) => value >= threshold.min) ?? definition.thresholds[0];
+    return {
+      key,
+      value,
+      label: selected.label,
+      rank: selected.rank,
+      description: selected.description
+    };
+  }
+
+  return undefined;
+}
+
+function hasThresholds(
+  definition: PropertyDefinition | undefined
+): definition is PropertyDefinition & { thresholds: readonly PropertyThreshold[] } {
+  return Boolean(
+    definition &&
+      "thresholds" in definition &&
+      Array.isArray(definition.thresholds) &&
+      definition.thresholds.length > 0
+  );
 }
 
 function formatStateLabel(key: string): string {

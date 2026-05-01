@@ -9,6 +9,7 @@ import { createInitialState } from "../content/initialState";
 import { advanceDay } from "@aphebis/core";
 import { resolveChoice } from "@aphebis/core";
 import { getVisibleScenes } from "@aphebis/core";
+import { getBooleanProperty } from "@aphebis/core";
 
 export type FlagEffectDefinition = {
   sceneId: string;
@@ -85,6 +86,13 @@ export function collectFlagEffectDefinitions(
             choiceId: choice.id,
             flag: effect.key,
             value: effect.value
+          });
+        } else if (effect.kind === "setProperty" && effect.entityId === "story") {
+          definitions.push({
+            sceneId: scene.id,
+            choiceId: choice.id,
+            flag: effect.property,
+            value: effect.value === true
           });
         }
       }
@@ -167,9 +175,9 @@ function buildFlagSimulationReport(
       flag,
       setTrueCount: flagEvents.filter((event) => event.value).length,
       setFalseCount: flagEvents.filter((event) => !event.value).length,
-      finalTrueCount: runs.filter((run) => run.finalState.flags[flag] === true)
+      finalTrueCount: runs.filter((run) => getBooleanProperty(run.finalState, "story", flag))
         .length,
-      finalFalseCount: runs.filter((run) => run.finalState.flags[flag] !== true)
+      finalFalseCount: runs.filter((run) => !getBooleanProperty(run.finalState, "story", flag))
         .length
     };
   });
@@ -209,11 +217,16 @@ function chooseChoice(scene: Scene, target: ChoiceTarget): SceneChoice {
 
 function getSetFlagEffects(
   effects: Effect[]
-): Extract<Effect, { kind: "setFlag" }>[] {
-  return effects.filter(
-    (effect): effect is Extract<Effect, { kind: "setFlag" }> =>
-      effect.kind === "setFlag"
-  );
+): { key: string; value: boolean }[] {
+  return effects.flatMap((effect) => {
+    if (effect.kind === "setFlag") {
+      return [{ key: effect.key, value: effect.value }];
+    }
+    if (effect.kind === "setProperty" && effect.entityId === "story") {
+      return [{ key: effect.property, value: effect.value === true }];
+    }
+    return [];
+  });
 }
 
 function uniqueChoiceTargets(

@@ -1,7 +1,9 @@
 import type { Effect, EffectContext, GameState } from "../domain";
 import {
   adjustEntityGauge,
-  adjustEntityQuantity
+  adjustEntityQuantity,
+  changeEntityProperty,
+  setEntityProperty
 } from "./worldAccess";
 
 export function applyEffects(
@@ -13,6 +15,18 @@ export function applyEffects(
 
   for (const effect of effects) {
     switch (effect.kind) {
+      case "changeProperty":
+        next = changeEntityProperty(
+          next,
+          effect.entityId,
+          effect.property,
+          effect,
+          context.propertyDefinitions?.[effect.property]
+        );
+        break;
+      case "setProperty":
+        next = setEntityProperty(next, effect.entityId, effect.property, effect.value);
+        break;
       case "entityGauge":
         next = adjustEntityGauge(next, effect.entityId, effect.key, effect.delta);
         break;
@@ -21,6 +35,9 @@ export function applyEffects(
         break;
       case "setFlag":
         next.flags[effect.key] = effect.value;
+        if (next.world.entities.story) {
+          next = setEntityProperty(next, "story", effect.key, effect.value);
+        }
         break;
       case "addScene":
         if (
@@ -62,9 +79,10 @@ function cloneState(state: GameState): GameState {
           {
             ...entity,
             tags: [...entity.tags],
-            gauges: { ...entity.gauges },
-            quantities: { ...entity.quantities },
-            flags: { ...entity.flags }
+            properties: { ...entity.properties },
+            gauges: entity.gauges ? { ...entity.gauges } : undefined,
+            quantities: entity.quantities ? { ...entity.quantities } : undefined,
+            flags: entity.flags ? { ...entity.flags } : undefined
           }
         ])
       )

@@ -1,8 +1,7 @@
 import type { Effect, GameContent, GameState, Scene } from "@aphebis/core";
 
 export type AuditedEffectKind =
-  | "entityGauge"
-  | "entityQuantity";
+  | "property";
 
 export type EffectAuditTarget = {
   id: string;
@@ -94,8 +93,8 @@ function getAuditedEffectTarget(effect: Effect): AuditedEffectTargetSeed | undef
   switch (effect.kind) {
     case "entityGauge":
       return {
-        id: `entity:${effect.entityId}.gauge:${effect.key}`,
-        kind: effect.kind,
+        id: `entity:${effect.entityId}.property:${effect.key}`,
+        kind: "property",
         ownerId: effect.entityId,
         key: effect.key,
         label: `${effect.entityId}.${effect.key}`,
@@ -103,12 +102,21 @@ function getAuditedEffectTarget(effect: Effect): AuditedEffectTargetSeed | undef
       };
     case "entityQuantity":
       return {
-        id: `entity:${effect.entityId}.quantity:${effect.key}`,
-        kind: effect.kind,
+        id: `entity:${effect.entityId}.property:${effect.key}`,
+        kind: "property",
         ownerId: effect.entityId,
         key: effect.key,
         label: `${effect.entityId}.${effect.key}`,
         delta: effect.delta
+      };
+    case "changeProperty":
+      return {
+        id: `entity:${effect.entityId}.property:${effect.property}`,
+        kind: "property",
+        ownerId: effect.entityId,
+        key: effect.property,
+        label: `${effect.entityId}.${effect.property}`,
+        delta: getChangePropertyAuditDelta(effect)
       };
     default:
       return undefined;
@@ -129,19 +137,14 @@ function seedBaselineTargets(
   state: GameState
 ): void {
   for (const entity of Object.values(state.world.entities)) {
-    for (const [key, value] of Object.entries(entity.gauges)) {
-      const id = `entity:${entity.id}.gauge:${key}`;
+    for (const [key, value] of Object.entries(entity.properties)) {
+      if (typeof value !== "number") {
+        continue;
+      }
+      const id = `entity:${entity.id}.property:${key}`;
       targets.set(
         id,
-        createEmptyTarget(id, "entityGauge", entity.id, key, value ?? 0)
-      );
-    }
-
-    for (const [key, value] of Object.entries(entity.quantities)) {
-      const id = `entity:${entity.id}.quantity:${key}`;
-      targets.set(
-        id,
-        createEmptyTarget(id, "entityQuantity", entity.id, key, value ?? 0)
+        createEmptyTarget(id, "property", entity.id, key, value)
       );
     }
   }
@@ -278,4 +281,11 @@ function finalizeTarget(target: MutableEffectAuditTarget): EffectAuditTarget {
 
 function formatAuditNumber(value: number): number {
   return Number(value.toFixed(3));
+}
+
+function getChangePropertyAuditDelta(
+  effect: Extract<Effect, { kind: "changeProperty" }>
+): number {
+  const amount = effect.amount ?? 0;
+  return effect.direction === "decrease" ? -amount : amount;
 }

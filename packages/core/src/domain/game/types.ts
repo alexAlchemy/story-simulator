@@ -1,6 +1,7 @@
 import type { Scene } from "../scenes/types";
 import type { BoundedGaugeDefinition, SignedGaugeDefinition } from "../semantics/types";
 import type { WorldState } from "../world/types";
+import type { PropertyDefinition } from "../properties";
 
 export type SemanticGaugeDefinition =
   | BoundedGaugeDefinition<string, string>
@@ -28,6 +29,7 @@ export type GameContent = {
   dayPlan: Record<number, string[]>;
   endDay: number;
   semantics?: {
+    propertyDefinitions?: Record<string, PropertyDefinition>;
     entityGaugeDefinitions?: Record<string, SemanticGaugeDefinition>;
   };
 };

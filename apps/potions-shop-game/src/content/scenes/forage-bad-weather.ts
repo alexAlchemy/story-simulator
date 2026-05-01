@@ -14,9 +14,9 @@ const scene: Scene = {
   availability: {
     all: [
       {
-        kind: "entityQuantity",
+        kind: "property",
         entityId: "shop",
-        key: "stock",
+        property: "stock",
         max: 2
       }
     ]
