@@ -2,6 +2,8 @@
 
 ## Decision
 
+Terminology note: [ADR: Properties](./ADR-Properties.md) supersedes the `gauge` and standalone `flag` vocabulary used in examples here. Read continuous state as `scale` or `spectrum` properties, and rule-relevant booleans as `flag` properties. The token decision still stands.
+
 > The initial core will not include first-class relationship tokens.
 
 > Continuous emotional state is represented with gauges. Rule-relevant qualitative facts are represented with flags. Narrative history remains available through resolved scenes and log entries.

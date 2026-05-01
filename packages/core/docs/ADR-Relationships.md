@@ -2,6 +2,8 @@
 
 ## Decision
 
+Terminology note: [ADR: Properties](./ADR-Properties.md) supersedes the `gauge`, `quantity`, and `flag` vocabulary used in examples here. The relationship decision still stands: player-facing relationship-like state remains system-level and does not require first-class core relationship edges.
+
 > For the initial vertical slice, Aphebis assumes a single player character. Relationship-like state is modelled as local disposition toward the player, not as first-class graph edges.
 
 > This avoids prematurely introducing general relationship graphs, edge semantics, and graph database thinking. A first-class relationship model may be introduced later if the engine needs non-player-to-non-player relationships, many-to-many social graphs, directional relationship asymmetry, or reusable relationship occurrences.

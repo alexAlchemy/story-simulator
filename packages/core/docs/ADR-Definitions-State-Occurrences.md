@@ -4,6 +4,8 @@
 
 For now, authored definitions are immutable content; runtime state stores mutable facts and references definitions by id.
 
+Terminology note: [ADR: Properties](./ADR-Properties.md) supersedes future `GaugeDefinition` / `GaugeValue` naming with `PropertyDefinition` / `PropertyValue`. The definition/state/occurrence split in this ADR still stands.
+
 The current names `Scene` and `GameContent` are good enough for this stage. `Scene` is acting as an authored scene definition, and `GameContent` is acting as the authored game definition, but renaming them now would add churn without clarifying the current vertical slice.
 
 This ADR uses "occurrence" for the future runtime appearance of authored content, rather than "instance", because "instance" is too loose across code, domain, and persistence discussions.
@@ -38,7 +40,7 @@ Once the world model starts creaking, split things like:
 WorldDefinition / WorldState
 EntityDefinition / EntityState
 RelationshipDefinition / RelationshipState
-GaugeDefinition / GaugeValue
+PropertyDefinition / PropertyValue
 ```
 
 This matters when mutable state and authored truth are getting tangled.
