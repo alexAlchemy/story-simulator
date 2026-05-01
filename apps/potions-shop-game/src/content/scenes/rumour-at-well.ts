@@ -1,11 +1,11 @@
-import type { SceneCard } from "@aphebis/core";
+import type { Scene } from "@aphebis/core";
 import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: The town has started explaining your shop to itself.
  * Reputation pressure: do you quiet the story, use it, or ask the town to carry some of it for you?
  */
-const scene: SceneCard = {
+const scene: Scene = {
   id: "rumour-at-well",
   title: "Rumour at the Well",
   type: "town",

@@ -1,11 +1,11 @@
-import type { SceneCard } from "@aphebis/core";
+import type { Scene } from "@aphebis/core";
 import { decreaseEntityGauge, decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: A rival seller offers a cheaper cure outside your door.
  * Competitive ethics: do you defend the customer, the business, or the town's freedom to choose?
  */
-const scene: SceneCard = {
+const scene: Scene = {
   id: "rivals-cheap-cure",
   title: "The Rival's Cheap Cure",
   type: "town",

@@ -1,11 +1,11 @@
-import type { SceneCard } from "@aphebis/core";
+import type { Scene } from "@aphebis/core";
 import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: You discover your apprentice has hidden a mistake—a cracked vial in the back shelf.
  * A mirror for your leadership: are you a mentor, a manager, or just too tired to be either?
  */
-const scene: SceneCard = {
+const scene: Scene = {
   id: "apprentice-hiding-mistake",
   title: "Apprentice Hiding a Mistake",
   type: "staff",

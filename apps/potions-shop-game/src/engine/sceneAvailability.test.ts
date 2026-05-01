@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { content } from "../content/scenes";
 import { createInitialState } from "../content/initialState";
-import type { GameContent, SceneCard } from "@aphebis/core";
+import type { GameContent, Scene } from "@aphebis/core";
 import { advanceDay } from "@aphebis/core";
 import { resolveChoice } from "@aphebis/core";
 import {
@@ -138,7 +138,7 @@ describe("sceneAvailability", () => {
     };
 
     const issues = validateSceneAvailability(
-      fixtureContent.scenes.broken as SceneCard,
+      fixtureContent.scenes.broken as Scene,
       fixtureContent
     );
 

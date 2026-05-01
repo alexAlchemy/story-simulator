@@ -1,4 +1,4 @@
-import type { SceneCard } from "@aphebis/core";
+import type { Scene } from "@aphebis/core";
 import {
   decreaseEntityGauge,
   decreaseRelationshipDimension,
@@ -11,7 +11,7 @@ import {
  * PREMISE: The apprentice lingers after closing with a cup of tea and too much on their mind.
  * The player is bribed, deflected, or invited in: what kind of closeness do you allow?
  */
-const scene: SceneCard = {
+const scene: Scene = {
   id: "after-hours-tea",
   title: "After-Hours Tea",
   type: "staff",

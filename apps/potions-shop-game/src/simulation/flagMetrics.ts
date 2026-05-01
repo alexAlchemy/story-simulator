@@ -2,7 +2,7 @@ import type {
   Effect,
   GameContent,
   GameState,
-  SceneCard,
+  Scene,
   SceneChoice
 } from "@aphebis/core";
 import { createInitialState } from "../content/initialState";
@@ -187,13 +187,13 @@ function buildFlagSimulationReport(
   };
 }
 
-function chooseScene(visibleScenes: SceneCard[], target: ChoiceTarget): SceneCard {
+function chooseScene(visibleScenes: Scene[], target: ChoiceTarget): Scene {
   return (
     visibleScenes.find((scene) => scene.id === target.sceneId) ?? visibleScenes[0]
   );
 }
 
-function chooseChoice(scene: SceneCard, target: ChoiceTarget): SceneChoice {
+function chooseChoice(scene: Scene, target: ChoiceTarget): SceneChoice {
   if (scene.id === target.sceneId) {
     const targetedChoice = scene.choices.find(
       (choice) => choice.id === target.choiceId

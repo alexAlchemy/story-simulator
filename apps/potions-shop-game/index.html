@@ -121,7 +121,7 @@
               <template x-for="scene in visibleScenes" :key="scene.id">
                 <button
                   type="button"
-                  class="scene-card"
+                  class="scene"
                   :class="{ selected: selectedSceneId === scene.id }"
                   @click="selectScene(scene.id)"
                 >

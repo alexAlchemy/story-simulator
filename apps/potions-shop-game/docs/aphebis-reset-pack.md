@@ -514,7 +514,7 @@ Public setting gives a Pressure Bane.
 
 Scenes should usually be enterable whenever fictionally plausible. Prior play should change their odds, costs, risks, and available leverage.
 
-A scene card can advertise:
+A scene can advertise:
 
 * boons
 * banes
@@ -527,7 +527,7 @@ This allows underprepared, premature, messy, emotional play — which is often w
 
 ## 2.13 Timed scenes, clocks, expiry, and transformation
 
-Scene cards can have clocks.
+Scenes can have clocks.
 
 Types:
 
@@ -1241,7 +1241,7 @@ type GameState = {
   resolvedScenes: string[];
 };
 
-type SceneCard = {
+type Scene = {
   id: string;
   title: string;
   type: "customer" | "staff" | "shop" | "town" | "reflection" | "brew";
@@ -1315,4 +1315,4 @@ Do not build yet:
 
 The prototype should test this thesis:
 
-> A small set of authored, stateful scene cards combined with lightweight shop sim state can create a compelling solo Drama Play loop, where the player’s choices shape not only whether the shop survives, but what kind of person the shopkeeper becomes.
+> A small set of authored, stateful scenes combined with lightweight shop sim state can create a compelling solo Drama Play loop, where the player’s choices shape not only whether the shop survives, but what kind of person the shopkeeper becomes.

@@ -1,7 +1,7 @@
 import type {
   GameContent,
   GameState,
-  SceneCard,
+  Scene,
   SceneChoice
 } from "@aphebis/core";
 import { createInitialState } from "../content/initialState";
@@ -128,7 +128,7 @@ function simulatePlaythroughRun(
 function snapshotState(
   state: GameState,
   turn: number,
-  scene?: SceneCard,
+  scene?: Scene,
   choice?: SceneChoice
 ): TurnSnapshot {
   return {

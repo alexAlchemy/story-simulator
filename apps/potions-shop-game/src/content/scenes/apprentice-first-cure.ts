@@ -1,11 +1,11 @@
-import type { SceneCard } from "@aphebis/core";
+import type { Scene } from "@aphebis/core";
 import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: A parent returns to thank the apprentice for advice that helped, but the remedy was incomplete.
  * Growth under scrutiny: do you protect confidence, accuracy, or the relationship between them?
  */
-const scene: SceneCard = {
+const scene: Scene = {
   id: "apprentice-first-cure",
   title: "The Apprentice's First Cure",
   type: "staff",

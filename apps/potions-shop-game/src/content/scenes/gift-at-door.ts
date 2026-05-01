@@ -1,11 +1,11 @@
-import type { SceneCard } from "@aphebis/core";
+import type { Scene } from "@aphebis/core";
 import { flags, log, player, relation, scenes, shop } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: Rare moonleaf appears at your door, tied with blue thread, no note, no explanation.
  * An invitation into mystery: what kindness asks for nothing, and what does silence really mean?
  */
-const scene: SceneCard = {
+const scene: Scene = {
   id: "gift-at-door",
   title: "A Gift Left at the Door",
   type: "town",

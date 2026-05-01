@@ -1,4 +1,4 @@
-import type { SceneCard } from "@aphebis/core";
+import type { Scene } from "@aphebis/core";
 import apprenticeBreaksRule from "./apprentice-breaks-rule";
 import apprenticeAsksTrust from "./apprentice-asks-trust";
 import apprenticeFirstCure from "./apprentice-first-cure";
@@ -14,7 +14,7 @@ import giftGiverRevealed from "./gift-giver-revealed";
 import rivalsCheapCure from "./rivals-cheap-cure";
 import rumourAtWell from "./rumour-at-well";
 
-const sceneList: SceneCard[] = [
+const sceneList: Scene[] = [
   desperateStablehand,
   apprenticeHidingMistake,
   giftAtDoor,
@@ -31,7 +31,7 @@ const sceneList: SceneCard[] = [
   debtCalledIn
 ];
 
-export const scenes: Record<string, SceneCard> = Object.fromEntries(sceneList.map((scene) => [scene.id, scene]));
+export const scenes: Record<string, Scene> = Object.fromEntries(sceneList.map((scene) => [scene.id, scene]));
 
 export {
   apprenticeBreaksRule,

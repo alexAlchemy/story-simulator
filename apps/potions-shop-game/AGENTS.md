@@ -97,7 +97,7 @@ Use a clear separation between:
 
 1. **Domain model**
    - Types and data structures.
-   - GameState, SceneCard, Choice, Effect, Clock, Boon, Bane.
+   - GameState, Scene, Choice, Effect, Clock, Boon, Bane.
 
 2. **Engine/services layer**
    - Pure or mostly pure functions.

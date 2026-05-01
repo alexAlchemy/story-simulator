@@ -4,7 +4,7 @@ export type { GameContent, GameLogEntry, GameState } from "./game/types";
 export type {
   SceneAvailability,
   SceneAvailabilityCondition,
-  SceneCard,
+  Scene,
   SceneChoice,
   SceneNumericComparison,
   SceneSemanticComparison,

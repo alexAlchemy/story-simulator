@@ -1,11 +1,11 @@
-import type { SceneCard } from "@aphebis/core";
+import type { Scene } from "@aphebis/core";
 import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: The apprentice gives away a minor potion without asking.
  * Kindness strains the shop rules: what kind of person are you teaching them to become?
  */
-const scene: SceneCard = {
+const scene: Scene = {
   id: "apprentice-breaks-rule",
   title: "The Apprentice Breaks a Rule",
   type: "staff",

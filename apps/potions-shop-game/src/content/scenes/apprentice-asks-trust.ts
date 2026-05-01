@@ -1,11 +1,11 @@
-import type { SceneCard } from "@aphebis/core";
+import type { Scene } from "@aphebis/core";
 import { decreaseEntityGauge, decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: Your apprentice asks to handle the front counter alone while you work the back room.
  * A test of delegation: do you make room for someone else to become capable, or protect the till?
  */
-const scene: SceneCard = {
+const scene: Scene = {
   id: "apprentice-asks-trust",
   title: "Apprentice Asks for Trust",
   type: "staff",

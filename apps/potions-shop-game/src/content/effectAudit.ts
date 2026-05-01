@@ -1,4 +1,4 @@
-import type { Effect, GameContent, GameState, SceneCard } from "@aphebis/core";
+import type { Effect, GameContent, GameState, Scene } from "@aphebis/core";
 
 export type AuditedEffectKind =
   | "entityGauge"
@@ -211,7 +211,7 @@ function createEmptyTarget(
 function recordDelta(
   targets: Map<string, MutableEffectAuditTarget>,
   target: AuditedEffectTargetSeed,
-  scene: SceneCard,
+  scene: Scene,
   choiceId: string
 ): void {
   const { delta } = target;

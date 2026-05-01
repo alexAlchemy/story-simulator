@@ -1,11 +1,11 @@
-import type { SceneCard } from "@aphebis/core";
+import type { Scene } from "@aphebis/core";
 import { decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: An old hedge-witch admits the moonleaf was hers—a test of what you do with unpriced kindness.
  * Building connection through judgment: can a relationship that begins as a test become genuine?
  */
-const scene: SceneCard = {
+const scene: Scene = {
   id: "gift-giver-revealed",
   title: "The Gift Giver Revealed",
   type: "town",

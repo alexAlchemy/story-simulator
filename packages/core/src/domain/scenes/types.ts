@@ -70,7 +70,7 @@ export type SceneAvailabilityCondition =
       present?: boolean;
     };
 
-export type SceneCard = {
+export type Scene = {
   id: string;
   title: string;
   type: SceneType;

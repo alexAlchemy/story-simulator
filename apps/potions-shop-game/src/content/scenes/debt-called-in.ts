@@ -1,11 +1,11 @@
-import type { SceneCard } from "@aphebis/core";
+import type { Scene } from "@aphebis/core";
 import { decreaseEntityGauge, decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: Gratitude becomes leverage when a helped family asks for a rule to bend back.
  * Social debt: do you accept, refuse, or formalise the pressure before it owns you?
  */
-const scene: SceneCard = {
+const scene: Scene = {
   id: "debt-called-in",
   title: "A Debt Called In",
   type: "shop",

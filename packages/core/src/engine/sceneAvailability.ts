@@ -4,7 +4,7 @@ import type {
   SceneNumericComparison,
   SceneSemanticComparison,
   SceneAvailabilityCondition,
-  SceneCard,
+  Scene,
   SemanticGaugeDefinition,
   WorldState
 } from "../domain";
@@ -20,7 +20,7 @@ import {
 } from "./worldAccess";
 
 export function canSeeScene(
-  scene: SceneCard,
+  scene: Scene,
   state: GameState,
   content: GameContent
 ): boolean {
@@ -47,7 +47,7 @@ export function canSeeScene(
 }
 
 export function validateSceneAvailability(
-  scene: SceneCard,
+  scene: Scene,
   content: GameContent,
   world?: WorldState
 ): string[] {

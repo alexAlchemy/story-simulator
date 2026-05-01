@@ -1,11 +1,11 @@
-import type { SceneCard } from "@aphebis/core";
+import type { Scene } from "@aphebis/core";
 import { decreaseEntityGauge, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: A regular customer notices your exhaustion and offers ordinary help.
  * Intimacy at the counter: do you accept care, preserve boundaries, or make help transactional?
  */
-const scene: SceneCard = {
+const scene: Scene = {
   id: "familiar-customer",
   title: "The Familiar Customer",
   type: "customer",

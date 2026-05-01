@@ -9,7 +9,7 @@ export type {
 export type {
   SceneAvailability,
   SceneAvailabilityCondition,
-  SceneCard,
+  Scene,
   SceneChoice,
   SceneNumericComparison,
   SceneSemanticComparison,

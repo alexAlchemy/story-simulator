@@ -1,4 +1,4 @@
-import type { SceneCard } from "../scenes/types";
+import type { Scene } from "../scenes/types";
 import type { BoundedGaugeDefinition, SignedGaugeDefinition } from "../semantics/types";
 import type { WorldState } from "../world/types";
 
@@ -24,7 +24,7 @@ export type GameState = {
 };
 
 export type GameContent = {
-  scenes: Record<string, SceneCard>;
+  scenes: Record<string, Scene>;
   dayPlan: Record<number, string[]>;
   endDay: number;
   semantics?: {

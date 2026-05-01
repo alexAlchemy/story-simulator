@@ -1,11 +1,11 @@
-import type { SceneCard } from "@aphebis/core";
+import type { Scene } from "@aphebis/core";
 import { flags, log, player, relation, shop } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: A soaked stranger arrives at closing with three copper coins and a dying sister.
  * The shop's first test: does a potion shop serve the desperate, or just those who can pay?
  */
-const scene: SceneCard = {
+const scene: Scene = {
   id: "desperate-stablehand",
   title: "The Desperate Stablehand",
   type: "customer",

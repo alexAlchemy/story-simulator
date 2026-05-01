@@ -1,11 +1,11 @@
-import type { SceneCard } from "@aphebis/core";
+import type { Scene } from "@aphebis/core";
 import { log, player, shop } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: Midnight arrives. The shop is quiet. You count the coins twice and the number stays wrong.
  * A private reckoning: what does survival cost when measured in sleep, work, and self-care?
  */
-const scene: SceneCard = {
+const scene: Scene = {
   id: "counting-coins",
   title: "Counting Coins at Midnight",
   type: "reflection",

@@ -251,8 +251,8 @@ h3 {
 .actions .primary,
 .empty-tableau .primary,
 .choices button:hover,
-.scene-card:hover,
-.scene-card.selected {
+.scene:hover,
+.scene.selected {
   background: #315f59;
   color: #fffdf6;
 }
@@ -377,7 +377,7 @@ h3 {
   color: #fffdf6;
 }
 
-.scene-card {
+.scene {
   display: grid;
   gap: 8px;
   width: 100%;
@@ -390,7 +390,7 @@ h3 {
   text-align: left;
 }
 
-.scene-card small {
+.scene small {
   display: -webkit-box;
   overflow: hidden;
   color: inherit;

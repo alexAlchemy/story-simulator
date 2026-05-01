@@ -1,11 +1,11 @@
-import type { SceneCard } from "@aphebis/core";
+import type { Scene } from "@aphebis/core";
 import { decreaseEntityGauge, gainQuantity, increaseEntityGauge, increaseRelationshipDimension } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: The shelves are thin and the marsh path is slick with rain—but mooncap mushrooms bloom.
  * A test of resource hunger: how much of tomorrow's strength do you burn to ease today's shortage?
  */
-const scene: SceneCard = {
+const scene: Scene = {
   id: "forage-bad-weather",
   title: "Forage in Bad Weather",
   type: "shop",
