@@ -8,13 +8,11 @@ import {
 import {
   coinsDefinition,
   entityGaugeDefinitions,
-  relationshipDimensionDefinitions,
   stockDefinition
 } from "@aphebis/system-cosy-shop";
 import {
   getEntityGauge,
-  getEntityQuantity,
-  getRelationshipDimension
+  getEntityQuantity
 } from "@aphebis/core";
 
 export type DashboardRow = {
@@ -45,14 +43,6 @@ export type EntityCardViewModel = {
   tags: string[];
   gauges: StateRow[];
   quantities: StateRow[];
-  flags: StateRow[];
-};
-
-export type RelationshipCardViewModel = {
-  id: string;
-  from: string;
-  to: string;
-  dimensions: StateRow[];
   flags: StateRow[];
 };
 
@@ -96,19 +86,17 @@ export function getValueRows(state: GameState): DashboardRow[] {
   ];
 }
 
-export function getRelationshipRows(state: GameState): DashboardRow[] {
+export function getStandingRows(state: GameState): DashboardRow[] {
   return [
     {
       key: "apprenticeTrust",
       label: "Apprentice Trust",
-      value: formatNumericValue(
-        getRelationshipDimension(state, "apprentice->player", "trust")
-      )
+      value: formatNumericValue(getEntityGauge(state, "apprentice", "trust"))
     },
     {
-      key: "townTrust",
-      label: "Town Trust",
-      value: formatNumericValue(getRelationshipDimension(state, "town->shop", "trust"))
+      key: "shopStanding",
+      label: "Shop Standing",
+      value: formatNumericValue(getEntityGauge(state, "shop", "shopStanding"))
     }
   ];
 }
@@ -117,7 +105,7 @@ export function getDashboardRows(state: GameState): DashboardRow[] {
   return [
     ...getResourceRows(state),
     ...getValueRows(state),
-    ...getRelationshipRows(state)
+    ...getStandingRows(state)
   ];
 }
 
@@ -133,19 +121,6 @@ export function getEntityCards(
     gauges: toStateRows(entity.gauges, semanticContext),
     quantities: toStateRows(entity.quantities, semanticContext),
     flags: toStateRows(entity.flags)
-  }));
-}
-
-export function getRelationshipCards(
-  state: GameState,
-  semanticContext: WorldStateSemanticContext
-): RelationshipCardViewModel[] {
-  return Object.values(state.world.relationships).map((relationship) => ({
-    id: relationship.id,
-    from: state.world.entities[relationship.from]?.displayName ?? relationship.from,
-    to: state.world.entities[relationship.to]?.displayName ?? relationship.to,
-    dimensions: toStateRows(relationship.dimensions, semanticContext),
-    flags: toStateRows(relationship.flags)
   }));
 }
 
@@ -188,9 +163,7 @@ function getSemanticValue(
   value: number,
   semanticContext: WorldStateSemanticContext
 ): SemanticValue | undefined {
-  const boundedDefinition =
-    entityGaugeDefinitions[key as keyof typeof entityGaugeDefinitions] ??
-    relationshipDimensionDefinitions[key as keyof typeof relationshipDimensionDefinitions];
+  const boundedDefinition = entityGaugeDefinitions[key as keyof typeof entityGaugeDefinitions];
 
   if (boundedDefinition?.family === "boundedGauge") {
     return describeBoundedGauge(boundedDefinition, value);

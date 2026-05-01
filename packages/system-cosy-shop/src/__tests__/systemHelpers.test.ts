@@ -6,7 +6,6 @@ import {
   flags,
   log,
   player,
-  relation,
   scenes,
   shiftAmountDeltas,
   shop,
@@ -64,12 +63,18 @@ describe("cosy shop system helpers", () => {
     });
   });
 
-  it("turns relationship grammar into core relationship effects", () => {
-    expect(relation("town", "shop").gainTrust("slightly")).toEqual({
-      kind: "relationshipDimension",
-      relationshipId: "town->shop",
-      key: "trust",
+  it("turns standing grammar into core entity effects", () => {
+    expect(shop.gainStanding("slightly")).toEqual({
+      kind: "entityGauge",
+      entityId: "shop",
+      key: "shopStanding",
       delta: 0.1
+    });
+    expect(apprentice.gainTrust("moderately")).toEqual({
+      kind: "entityGauge",
+      entityId: "apprentice",
+      key: "trust",
+      delta: 0.2
     });
   });
 
@@ -97,13 +102,13 @@ describe("cosy shop system helpers", () => {
     expect(world.entities.player.gaugeRanges).toMatchObject({
       compassion: { minimumValue: -1, maximumValue: 1 }
     });
-    expect(world.relationships["apprentice->player"].dimensions).toMatchObject({
+    expect(world.entities.apprentice.gauges).toMatchObject({
       trust: 0,
       affection: 0,
       fear: 0
     });
-    expect(world.relationships["town->shop"].dimensions).toMatchObject({
-      trust: 0,
+    expect(world.entities.shop.gauges).toMatchObject({
+      shopStanding: 0,
       goodwill: 0
     });
   });

@@ -48,7 +48,6 @@ describe("content integrity", () => {
             ![
               "entityGauge",
               "entityQuantity",
-              "relationshipDimension",
               "setFlag",
               "addScene",
               "removeScene",

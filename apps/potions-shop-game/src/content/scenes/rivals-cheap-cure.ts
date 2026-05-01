@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "@aphebis/system-cosy-shop";
+import { decreaseEntityGauge, gainQuantity, increaseEntityGauge, spendQuantity } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: A rival seller offers a cheaper cure outside your door.
@@ -34,8 +34,8 @@ const scene: Scene = {
       label: "Warn customers honestly",
       description: "Name the risk without making it a duel.",
       effects: [
-        increaseRelationshipDimension("town->shop", "trust", "slightly"),
-        increaseRelationshipDimension("town->shop", "goodwill", "slightly"),
+        increaseEntityGauge("shop", "shopStanding", "slightly"),
+        increaseEntityGauge("shop", "goodwill", "slightly"),
         increaseEntityGauge("town", "gossipHeat", "slightly"),
         spendQuantity("shop", "coins", 2),
         { kind: "log", text: "Some listen. Some resent listening. No one can say you lied." }
@@ -60,7 +60,7 @@ const scene: Scene = {
       description: "Refuse to turn the street into a trial.",
       effects: [
         decreaseEntityGauge("player", "prudence", "slightly"),
-        decreaseRelationshipDimension("town->shop", "goodwill", "slightly"),
+        decreaseEntityGauge("shop", "goodwill", "slightly"),
         increaseEntityGauge("town", "gossipHeat", "slightly"),
         { kind: "log", text: "The street makes its own judgement, as streets always do." }
       ]

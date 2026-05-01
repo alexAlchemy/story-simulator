@@ -1,10 +1,6 @@
 import type { WorldState } from "@aphebis/core";
-import { relationshipId } from "@aphebis/core";
 
 export function createCosyShopWorld(): WorldState {
-  const apprenticeToPlayer = relationshipId("apprentice", "player");
-  const townToShop = relationshipId("town", "shop");
-
   return {
     entities: {
       player: {
@@ -31,7 +27,10 @@ export function createCosyShopWorld(): WorldState {
         kind: "shop",
         displayName: "The Potion Shop",
         tags: ["business", "apothecary"],
-        gauges: {},
+        gauges: {
+          shopStanding: 0,
+          goodwill: 0
+        },
         quantities: {
           coins: 18,
           stock: 3
@@ -44,7 +43,10 @@ export function createCosyShopWorld(): WorldState {
         displayName: "The Apprentice",
         tags: ["staff", "apprentice"],
         gauges: {
-          confidence: 0.35
+          confidence: 0.35,
+          trust: 0,
+          affection: 0,
+          fear: 0
         },
         quantities: {},
         flags: {}
@@ -58,29 +60,6 @@ export function createCosyShopWorld(): WorldState {
           gossipHeat: 0.2
         },
         quantities: {},
-        flags: {}
-      }
-    },
-    relationships: {
-      [apprenticeToPlayer]: {
-        id: apprenticeToPlayer,
-        from: "apprentice",
-        to: "player",
-        dimensions: {
-          trust: 0,
-          affection: 0,
-          fear: 0
-        },
-        flags: {}
-      },
-      [townToShop]: {
-        id: townToShop,
-        from: "town",
-        to: "shop",
-        dimensions: {
-          trust: 0,
-          goodwill: 0
-        },
         flags: {}
       }
     }

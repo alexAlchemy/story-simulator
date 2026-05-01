@@ -2,8 +2,7 @@ import type { Effect, GameContent, GameState, Scene } from "@aphebis/core";
 
 export type AuditedEffectKind =
   | "entityGauge"
-  | "entityQuantity"
-  | "relationshipDimension";
+  | "entityQuantity";
 
 export type EffectAuditTarget = {
   id: string;
@@ -111,15 +110,6 @@ function getAuditedEffectTarget(effect: Effect): AuditedEffectTargetSeed | undef
         label: `${effect.entityId}.${effect.key}`,
         delta: effect.delta
       };
-    case "relationshipDimension":
-      return {
-        id: `relationship:${effect.relationshipId}.dimension:${effect.key}`,
-        kind: effect.kind,
-        ownerId: effect.relationshipId,
-        key: effect.key,
-        label: `${effect.relationshipId}.${effect.key}`,
-        delta: effect.delta
-      };
     default:
       return undefined;
   }
@@ -156,21 +146,6 @@ function seedBaselineTargets(
     }
   }
 
-  for (const relationship of Object.values(state.world.relationships)) {
-    for (const [key, value] of Object.entries(relationship.dimensions)) {
-      const id = `relationship:${relationship.id}.dimension:${key}`;
-      targets.set(
-        id,
-        createEmptyTarget(
-          id,
-          "relationshipDimension",
-          relationship.id,
-          key,
-          value ?? 0
-        )
-      );
-    }
-  }
 }
 
 function createEmptyTarget(

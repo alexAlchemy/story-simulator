@@ -9,13 +9,11 @@ import { resolveChoice } from "@aphebis/core";
 import { getVisibleScenes } from "@aphebis/core";
 import {
   getEntityCards,
-  getRelationshipRows,
   getResourceRows,
   getValueRows,
-  getRelationshipCards,
+  getStandingRows,
   type DashboardRow,
   type EntityCardViewModel,
-  type RelationshipCardViewModel,
   type WorldStateSemanticContext
 } from "../engine/selectors";
 
@@ -41,9 +39,8 @@ type AppModel = {
   selectedScene: Scene | null;
   resourceRows: DashboardRow[];
   valueRows: DashboardRow[];
-  relationshipRows: DashboardRow[];
+  standingRows: DashboardRow[];
   entityCards: EntityCardViewModel[];
-  relationshipCards: RelationshipCardViewModel[];
   worldStateSemanticContext: WorldStateSemanticContext;
   recentLog: GameState["log"];
   showEmptyTableau: boolean;
@@ -127,14 +124,11 @@ function createAppModel(): AppModel {
     get valueRows() {
       return getValueRows(this.state);
     },
-    get relationshipRows() {
-      return getRelationshipRows(this.state);
+    get standingRows() {
+      return getStandingRows(this.state);
     },
     get entityCards() {
       return getEntityCards(this.state, this.worldStateSemanticContext);
-    },
-    get relationshipCards() {
-      return getRelationshipCards(this.state, this.worldStateSemanticContext);
     },
     get worldStateSemanticContext() {
       return {
@@ -188,21 +182,6 @@ function createEntityCard(entityId: string) {
   };
 }
 
-function createRelationshipCard(relationshipId: string) {
-  return {
-    relationshipId,
-    currentRelationship(cards: RelationshipCardViewModel[]) {
-      const relationship = cards.find((card) => card.id === this.relationshipId);
-
-      if (!relationship) {
-        throw new Error(`Missing relationship card view model: ${this.relationshipId}`);
-      }
-
-      return relationship;
-    }
-  };
-}
-
 declare global {
   interface Window {
     Alpine: typeof Alpine;
@@ -215,5 +194,4 @@ window.potionsShop = createAppModel;
 Alpine.data("dashboardPanel", createDashboardPanel);
 Alpine.data("worldStatePanel", createWorldStatePanel);
 Alpine.data("entityCard", createEntityCard);
-Alpine.data("relationshipCard", createRelationshipCard);
 Alpine.start();

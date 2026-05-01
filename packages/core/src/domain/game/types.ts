@@ -29,6 +29,5 @@ export type GameContent = {
   endDay: number;
   semantics?: {
     entityGaugeDefinitions?: Record<string, SemanticGaugeDefinition>;
-    relationshipDimensionDefinitions?: Record<string, SemanticGaugeDefinition>;
   };
 };

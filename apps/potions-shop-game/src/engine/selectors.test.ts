@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createInitialState } from "../content/initialState";
 import { adjustEntityGauge } from "@aphebis/core";
-import { getDashboardRows, getEntityCards, getRelationshipCards } from "./selectors";
+import { getDashboardRows, getEntityCards } from "./selectors";
 
 describe("selectors", () => {
   const semanticContext = {
@@ -20,7 +20,7 @@ describe("selectors", () => {
       { key: "prudence", label: "Prudence", value: 0 },
       { key: "ambition", label: "Ambition", value: 0 },
       { key: "apprenticeTrust", label: "Apprentice Trust", value: 0 },
-      { key: "townTrust", label: "Town Trust", value: 0 }
+      { key: "shopStanding", label: "Shop Standing", value: 0 }
     ]);
   });
 
@@ -116,8 +116,11 @@ describe("selectors", () => {
         }
       }
     ]);
-    expect(cards.find((card) => card.id === "apprentice")?.gauges[0]).toMatchObject({
-      key: "confidence",
+    expect(
+      cards
+        .find((card) => card.id === "apprentice")
+        ?.gauges.find((row) => row.key === "confidence")
+    ).toMatchObject({
       semantic: {
         label: "Unsure",
         description: "There is ability here, but hesitation too."
@@ -132,71 +135,4 @@ describe("selectors", () => {
     });
   });
 
-  it("builds relationship cards with entity display names", () => {
-    const cards = getRelationshipCards(createInitialState(), semanticContext);
-
-    expect(cards).toEqual([
-      {
-        id: "apprentice->player",
-        from: "The Apprentice",
-        to: "The Shopkeeper",
-        dimensions: [
-          {
-            key: "trust",
-            label: "Trust",
-            value: 0,
-            semantic: {
-              label: "Distrustful",
-              description: "The bond is guarded and uncertain."
-            }
-          },
-          {
-            key: "affection",
-            label: "Affection",
-            value: 0,
-            semantic: {
-              label: "Cool",
-              description: "There is little personal warmth here."
-            }
-          },
-          {
-            key: "fear",
-            label: "Fear",
-            value: 0,
-            semantic: {
-              label: "Unafraid",
-              description: "Fear is not shaping the relationship."
-            }
-          }
-        ],
-        flags: []
-      },
-      {
-        id: "town->shop",
-        from: "Briarwick",
-        to: "The Potion Shop",
-        dimensions: [
-          {
-            key: "trust",
-            label: "Trust",
-            value: 0,
-            semantic: {
-              label: "Distrustful",
-              description: "The bond is guarded and uncertain."
-            }
-          },
-          {
-            key: "goodwill",
-            label: "Goodwill",
-            value: 0,
-            semantic: {
-              label: "Indifferent",
-              description: "There is little active goodwill to draw on."
-            }
-          }
-        ],
-        flags: []
-      }
-    ]);
-  });
 });

@@ -3,8 +3,7 @@ import { createInitialState } from "../content/initialState";
 import { applyEffects } from "@aphebis/core";
 import {
   getEntityGauge,
-  getEntityQuantity,
-  getRelationshipDimension
+  getEntityQuantity
 } from "@aphebis/core";
 
 describe("applyEffects", () => {
@@ -16,12 +15,7 @@ describe("applyEffects", () => {
       [
         { kind: "entityQuantity", entityId: "shop", key: "coins", delta: 5 },
         { kind: "entityGauge", entityId: "player", key: "compassion", delta: 0.2 },
-        {
-          kind: "relationshipDimension",
-          relationshipId: "town->shop",
-          key: "trust",
-          delta: 0.1
-        },
+        { kind: "entityGauge", entityId: "shop", key: "shopStanding", delta: 0.1 },
         { kind: "setFlag", key: "sample_flag", value: true },
         { kind: "addScene", sceneId: "counting-coins" },
         { kind: "removeScene", sceneId: "gift-at-door" },
@@ -32,7 +26,7 @@ describe("applyEffects", () => {
 
     expect(getEntityQuantity(next, "shop", "coins")).toBe(23);
     expect(getEntityGauge(next, "player", "compassion")).toBe(0.2);
-    expect(getRelationshipDimension(next, "town->shop", "trust")).toBe(0.1);
+    expect(getEntityGauge(next, "shop", "shopStanding")).toBe(0.1);
     expect(next.flags.sample_flag).toBe(true);
     expect(next.sceneTableau).toContain("counting-coins");
     expect(next.sceneTableau).not.toContain("gift-at-door");

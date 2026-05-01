@@ -2,17 +2,10 @@ import type {
   Effect,
   EntityId,
   GaugeKey,
-  QuantityKey,
-  RelationshipDimensionKey,
-  RelationshipId
+  QuantityKey
 } from "@aphebis/core";
-import { relationshipId } from "@aphebis/core";
 
-import type {
-  CosyShopGaugeKey,
-  CosyShopQuantityKey,
-  CosyShopRelationshipDimensionKey
-} from "./keys";
+import type { CosyShopGaugeKey, CosyShopQuantityKey } from "./keys";
 
 export type ShiftAmount = "slightly" | "moderately" | "strongly";
 
@@ -38,22 +31,6 @@ export function decreaseEntityGauge(
   return entityGauge(entityId, key, -shiftAmountDeltas[amount]);
 }
 
-export function increaseRelationshipDimension(
-  relationshipId: RelationshipId,
-  key: RelationshipDimensionKey,
-  amount: ShiftAmount
-): Effect {
-  return relationshipDimension(relationshipId, key, shiftAmountDeltas[amount]);
-}
-
-export function decreaseRelationshipDimension(
-  relationshipId: RelationshipId,
-  key: RelationshipDimensionKey,
-  amount: ShiftAmount
-): Effect {
-  return relationshipDimension(relationshipId, key, -shiftAmountDeltas[amount]);
-}
-
 export function gainQuantity(
   entityId: EntityId,
   key: QuantityKey,
@@ -74,7 +51,15 @@ export const shop = {
   gainStock: (amount: number): Effect => gainCosyQuantity("shop", "stock", amount),
   spendStock: (amount: number): Effect => spendCosyQuantity("shop", "stock", amount),
   gainCoins: (amount: number): Effect => gainCosyQuantity("shop", "coins", amount),
-  spendCoins: (amount: number): Effect => spendCosyQuantity("shop", "coins", amount)
+  spendCoins: (amount: number): Effect => spendCosyQuantity("shop", "coins", amount),
+  gainStanding: (amount: ShiftAmount): Effect =>
+    increaseCosyEntityGauge("shop", "shopStanding", amount),
+  loseStanding: (amount: ShiftAmount): Effect =>
+    decreaseCosyEntityGauge("shop", "shopStanding", amount),
+  gainGoodwill: (amount: ShiftAmount): Effect =>
+    increaseCosyEntityGauge("shop", "goodwill", amount),
+  loseGoodwill: (amount: ShiftAmount): Effect =>
+    decreaseCosyEntityGauge("shop", "goodwill", amount)
 };
 
 export const player = {
@@ -100,7 +85,19 @@ export const apprentice = {
   gainConfidence: (amount: ShiftAmount): Effect =>
     increaseCosyEntityGauge("apprentice", "confidence", amount),
   loseConfidence: (amount: ShiftAmount): Effect =>
-    decreaseCosyEntityGauge("apprentice", "confidence", amount)
+    decreaseCosyEntityGauge("apprentice", "confidence", amount),
+  gainTrust: (amount: ShiftAmount): Effect =>
+    increaseCosyEntityGauge("apprentice", "trust", amount),
+  loseTrust: (amount: ShiftAmount): Effect =>
+    decreaseCosyEntityGauge("apprentice", "trust", amount),
+  gainAffection: (amount: ShiftAmount): Effect =>
+    increaseCosyEntityGauge("apprentice", "affection", amount),
+  loseAffection: (amount: ShiftAmount): Effect =>
+    decreaseCosyEntityGauge("apprentice", "affection", amount),
+  gainFear: (amount: ShiftAmount): Effect =>
+    increaseCosyEntityGauge("apprentice", "fear", amount),
+  loseFear: (amount: ShiftAmount): Effect =>
+    decreaseCosyEntityGauge("apprentice", "fear", amount)
 };
 
 export const town = {
@@ -109,22 +106,6 @@ export const town = {
   loseGossipHeat: (amount: ShiftAmount): Effect =>
     decreaseCosyEntityGauge("town", "gossipHeat", amount)
 };
-
-export function relation(from: EntityId, to: EntityId) {
-  const id = relationshipId(from, to);
-
-  return {
-    gainTrust: (amount: ShiftAmount): Effect => gainDimension(id, "trust", amount),
-    loseTrust: (amount: ShiftAmount): Effect => loseDimension(id, "trust", amount),
-    gainGoodwill: (amount: ShiftAmount): Effect => gainDimension(id, "goodwill", amount),
-    loseGoodwill: (amount: ShiftAmount): Effect => loseDimension(id, "goodwill", amount),
-    gainAffection: (amount: ShiftAmount): Effect => gainDimension(id, "affection", amount),
-    loseAffection: (amount: ShiftAmount): Effect => loseDimension(id, "affection", amount),
-    gainFear: (amount: ShiftAmount): Effect => gainDimension(id, "fear", amount),
-    loseFear: (amount: ShiftAmount): Effect => loseDimension(id, "fear", amount),
-    gainObligation: (amount: ShiftAmount): Effect => gainDimension(id, "obligation", amount)
-  };
-}
 
 export const scenes = {
   add: (sceneId: string): Effect => ({ kind: "addScene", sceneId }),
@@ -171,34 +152,10 @@ function decreaseCosyEntityGauge(
   return decreaseEntityGauge(entityId, key, amount);
 }
 
-function gainDimension(
-  id: RelationshipId,
-  key: CosyShopRelationshipDimensionKey,
-  amount: ShiftAmount
-): Effect {
-  return increaseRelationshipDimension(id, key, amount);
-}
-
-function loseDimension(
-  id: RelationshipId,
-  key: CosyShopRelationshipDimensionKey,
-  amount: ShiftAmount
-): Effect {
-  return decreaseRelationshipDimension(id, key, amount);
-}
-
 function entityGauge(entityId: EntityId, key: GaugeKey, delta: number): Effect {
   return { kind: "entityGauge", entityId, key, delta };
 }
 
 function entityQuantity(entityId: EntityId, key: QuantityKey, delta: number): Effect {
   return { kind: "entityQuantity", entityId, key, delta };
-}
-
-function relationshipDimension(
-  relationshipId: RelationshipId,
-  key: RelationshipDimensionKey,
-  delta: number
-): Effect {
-  return { kind: "relationshipDimension", relationshipId, key, delta };
 }

@@ -137,13 +137,13 @@ Do not add new global meters for people or groups.
 
 Bad:
 - apprenticeTrust
-- townTrust
+- floatingMoodScore
 - rivalHate
 
 Good:
-- relationship apprentice->player dimension trust
-- relationship town->shop dimension trust
-- relationship rival->player dimension resentment
+- apprentice.trust
+- shop.shopStanding
+- shop.goodwill
 
 People, groups, shops, and places should be entities.
 
@@ -152,13 +152,12 @@ Material quantities belong to entities:
 - shop.stock
 - player.fatigue
 
-Relationship qualities belong to relationships:
+Social qualities belong to the entity that owns that slice of state:
 - trust
 - affection
-- respect
 - fear
-- resentment
-- obligation
+- shopStanding
+- goodwill
 
 Semantic primitives describe what state means. They must not fire events, add scenes, or decide NPC behaviour.
 

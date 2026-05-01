@@ -3,10 +3,7 @@ import type {
   EntityState,
   GameState,
   GaugeKey,
-  QuantityKey,
-  RelationshipDimensionKey,
-  RelationshipId,
-  RelationshipState
+  QuantityKey
 } from "../domain";
 
 export function getEntity(state: GameState, entityId: EntityId): EntityState {
@@ -32,26 +29,6 @@ export function getEntityQuantity(
   key: QuantityKey
 ): number {
   return getEntity(state, entityId).quantities[key] ?? 0;
-}
-
-export function getRelationship(
-  state: GameState,
-  relationshipId: RelationshipId
-): RelationshipState {
-  const relationship = state.world.relationships[relationshipId];
-  if (!relationship) {
-    throw new Error(`Unknown relationship id: ${relationshipId}`);
-  }
-
-  return relationship;
-}
-
-export function getRelationshipDimension(
-  state: GameState,
-  relationshipId: RelationshipId,
-  key: RelationshipDimensionKey
-): number {
-  return getRelationship(state, relationshipId).dimensions[key] ?? 0;
 }
 
 export function setEntityGauge(
@@ -127,32 +104,6 @@ export function adjustEntityQuantity(
     key,
     getEntityQuantity(state, entityId, key) + delta
   );
-}
-
-export function adjustRelationshipDimension(
-  state: GameState,
-  relationshipId: RelationshipId,
-  key: RelationshipDimensionKey,
-  delta: number
-): GameState {
-  const relationship = getRelationship(state, relationshipId);
-
-  return {
-    ...state,
-    world: {
-      ...state.world,
-      relationships: {
-        ...state.world.relationships,
-        [relationshipId]: {
-          ...relationship,
-          dimensions: {
-            ...relationship.dimensions,
-            [key]: clamp01((relationship.dimensions[key] ?? 0) + delta)
-          }
-        }
-      }
-    }
-  };
 }
 
 function clamp01(value: number): number {

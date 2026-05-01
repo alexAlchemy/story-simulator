@@ -1,9 +1,9 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension } from "@aphebis/system-cosy-shop";
+import { decreaseEntityGauge, increaseEntityGauge } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: A parent returns to thank the apprentice for advice that helped, but the remedy was incomplete.
- * Growth under scrutiny: do you protect confidence, accuracy, or the relationship between them?
+ * Growth under scrutiny: do you protect confidence, accuracy, or the bond between you?
  */
 const scene: Scene = {
   id: "apprentice-first-cure",
@@ -15,14 +15,14 @@ const scene: Scene = {
     all: [{ kind: "day", min: 3 }],
     any: [
       {
-        kind: "relationshipDimension",
-        relationshipId: "apprentice->player",
+        kind: "entityGauge",
+        entityId: "apprentice",
         key: "affection",
         minLabel: "Warm"
       },
       {
-        kind: "relationshipDimension",
-        relationshipId: "apprentice->player",
+        kind: "entityGauge",
+        entityId: "apprentice",
         key: "trust",
         minLabel: "Trusting"
       }
@@ -35,8 +35,8 @@ const scene: Scene = {
       description: "Let the apprentice feel the warmth of a win.",
       effects: [
         increaseEntityGauge("apprentice", "confidence", "moderately"),
-        increaseRelationshipDimension("apprentice->player", "affection", "moderately"),
-        decreaseRelationshipDimension("apprentice->player", "fear", "slightly"),
+        increaseEntityGauge("apprentice", "affection", "moderately"),
+        decreaseEntityGauge("apprentice", "fear", "slightly"),
         decreaseEntityGauge("player", "prudence", "slightly"),
         { kind: "log", text: "The apprentice stands a little taller for the rest of the afternoon." }
       ]
@@ -47,7 +47,7 @@ const scene: Scene = {
       description: "Protect the truth without turning the praise sour.",
       effects: [
         increaseEntityGauge("apprentice", "confidence", "slightly"),
-        increaseRelationshipDimension("apprentice->player", "trust", "slightly"),
+        increaseEntityGauge("apprentice", "trust", "slightly"),
         { kind: "log", text: "They copy the dosage note twice and keep the thank-you like a secret." }
       ]
     },
@@ -57,8 +57,8 @@ const scene: Scene = {
       description: "Make competence public, including the rough edge.",
       effects: [
         decreaseEntityGauge("apprentice", "confidence", "slightly"),
-        increaseRelationshipDimension("apprentice->player", "fear", "slightly"),
-        decreaseRelationshipDimension("apprentice->player", "affection", "slightly"),
+        increaseEntityGauge("apprentice", "fear", "slightly"),
+        decreaseEntityGauge("apprentice", "affection", "slightly"),
         { kind: "log", text: "The explanation is accurate, quiet, and hard for both of you." }
       ]
     }

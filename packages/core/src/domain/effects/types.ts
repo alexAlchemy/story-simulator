@@ -1,15 +1,9 @@
-import type { EntityId, RelationshipId } from "../ids";
-import type { GaugeKey, QuantityKey, RelationshipDimensionKey } from "../world/keys";
+import type { EntityId } from "../ids";
+import type { GaugeKey, QuantityKey } from "../world/keys";
 
 export type Effect =
   | { kind: "entityGauge"; entityId: EntityId; key: GaugeKey; delta: number }
   | { kind: "entityQuantity"; entityId: EntityId; key: QuantityKey; delta: number }
-  | {
-      kind: "relationshipDimension";
-      relationshipId: RelationshipId;
-      key: RelationshipDimensionKey;
-      delta: number;
-    }
   | { kind: "setFlag"; key: string; value: boolean }
   | { kind: "addScene"; sceneId: string }
   | { kind: "removeScene"; sceneId: string }

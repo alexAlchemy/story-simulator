@@ -1,6 +1,6 @@
-import type { EntityId, RelationshipId } from "../ids";
+import type { EntityId } from "../ids";
 import type { Effect } from "../effects/types";
-import type { GaugeKey, QuantityKey, RelationshipDimensionKey } from "../world/keys";
+import type { GaugeKey, QuantityKey } from "../world/keys";
 
 export type SceneType = string;
 
@@ -53,13 +53,7 @@ export type SceneAvailabilityCondition =
       kind: "entityQuantity";
       entityId: EntityId;
       key: QuantityKey;
-    } & SceneNumericComparison)
-  | ({
-      kind: "relationshipDimension";
-      relationshipId: RelationshipId;
-      key: RelationshipDimensionKey;
-    } & SceneNumericComparison &
-    SceneSemanticComparison);
+    } & SceneNumericComparison);
 
 export type Scene = {
   id: string;

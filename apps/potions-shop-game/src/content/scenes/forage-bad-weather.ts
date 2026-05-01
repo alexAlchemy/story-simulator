@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, gainQuantity, increaseEntityGauge, increaseRelationshipDimension } from "@aphebis/system-cosy-shop";
+import { decreaseEntityGauge, gainQuantity, increaseEntityGauge } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: The shelves are thin and the marsh path is slick with rain—but mooncap mushrooms bloom.
@@ -37,7 +37,7 @@ const scene: Scene = {
       label: "Send the apprentice with instructions",
       effects: [
         gainQuantity("shop", "stock", 1),
-        increaseRelationshipDimension("apprentice->player", "trust", "slightly"),
+        increaseEntityGauge("apprentice", "trust", "slightly"),
         increaseEntityGauge("player", "prudence", "slightly"),
         { kind: "log", text: "They return soaked, proud, and carrying almost the right mushrooms." }
       ]

@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "@aphebis/system-cosy-shop";
+import { decreaseEntityGauge, increaseEntityGauge, spendQuantity } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: The apprentice gives away a minor potion without asking.
@@ -20,8 +20,8 @@ const scene: Scene = {
         spendQuantity("shop", "stock", 1),
         increaseEntityGauge("player", "compassion", "moderately"),
         decreaseEntityGauge("player", "prudence", "slightly"),
-        increaseRelationshipDimension("apprentice->player", "affection", "moderately"),
-        decreaseRelationshipDimension("apprentice->player", "fear", "slightly"),
+        increaseEntityGauge("apprentice", "affection", "moderately"),
+        decreaseEntityGauge("apprentice", "fear", "slightly"),
         { kind: "log", text: "Their relief is too bright to look at directly." }
       ]
     },
@@ -31,8 +31,8 @@ const scene: Scene = {
       description: "A shop cannot run on surprise mercy.",
       effects: [
         decreaseEntityGauge("apprentice", "confidence", "slightly"),
-        increaseRelationshipDimension("apprentice->player", "fear", "moderately"),
-        decreaseRelationshipDimension("apprentice->player", "affection", "slightly"),
+        increaseEntityGauge("apprentice", "fear", "moderately"),
+        decreaseEntityGauge("apprentice", "affection", "slightly"),
         increaseEntityGauge("player", "prudence", "moderately"),
         decreaseEntityGauge("player", "compassion", "slightly"),
         { kind: "log", text: "They nod at every rule and touch nothing without asking all morning." }
@@ -45,8 +45,8 @@ const scene: Scene = {
       effects: [
         spendQuantity("shop", "coins", 1),
         increaseEntityGauge("apprentice", "confidence", "moderately"),
-        increaseRelationshipDimension("apprentice->player", "trust", "slightly"),
-        increaseRelationshipDimension("town->shop", "goodwill", "slightly"),
+        increaseEntityGauge("apprentice", "trust", "slightly"),
+        increaseEntityGauge("shop", "goodwill", "slightly"),
         { kind: "log", text: "The new chalk rule is short, strict, and somehow gentle." }
       ]
     }

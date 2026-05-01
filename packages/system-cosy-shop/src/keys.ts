@@ -4,16 +4,11 @@ export type CosyShopGaugeKey =
   | "prudence"
   | "ambition"
   | "confidence"
-  | "gossipHeat";
-
-export type CosyShopQuantityKey = "coins" | "stock";
-
-export type CosyShopRelationshipDimensionKey =
+  | "gossipHeat"
   | "trust"
   | "affection"
-  | "respect"
   | "fear"
-  | "resentment"
-  | "obligation"
-  | "goodwill"
-  | "familiarity";
+  | "shopStanding"
+  | "goodwill";
+
+export type CosyShopQuantityKey = "coins" | "stock";

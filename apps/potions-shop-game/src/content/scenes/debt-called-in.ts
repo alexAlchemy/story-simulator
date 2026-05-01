@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "@aphebis/system-cosy-shop";
+import { decreaseEntityGauge, gainQuantity, increaseEntityGauge, spendQuantity } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: Gratitude becomes leverage when a helped family asks for a rule to bend back.
@@ -28,7 +28,7 @@ const scene: Scene = {
       effects: [
         gainQuantity("shop", "coins", 6),
         spendQuantity("shop", "stock", 1),
-        increaseRelationshipDimension("town->shop", "goodwill", "slightly"),
+        increaseEntityGauge("shop", "goodwill", "slightly"),
         increaseEntityGauge("town", "gossipHeat", "moderately"),
         decreaseEntityGauge("player", "prudence", "moderately"),
         { kind: "log", text: "The cousin pays in advance and leaves through the side door." }
@@ -39,8 +39,8 @@ const scene: Scene = {
       label: "Refuse the pressure gently",
       description: "Keep the old kindness from becoming a hook.",
       effects: [
-        increaseRelationshipDimension("town->shop", "goodwill", "slightly"),
-        increaseRelationshipDimension("town->shop", "trust", "slightly"),
+        increaseEntityGauge("shop", "goodwill", "slightly"),
+        increaseEntityGauge("shop", "shopStanding", "slightly"),
         spendQuantity("shop", "coins", 1),
         decreaseEntityGauge("player", "ambition", "slightly"),
         { kind: "log", text: "The stablehand looks embarrassed, then relieved to still be welcome." }
@@ -54,8 +54,8 @@ const scene: Scene = {
         gainQuantity("shop", "coins", 3),
         increaseEntityGauge("player", "prudence", "slightly"),
         decreaseEntityGauge("player", "compassion", "slightly"),
-        increaseRelationshipDimension("town->shop", "trust", "slightly"),
-        decreaseRelationshipDimension("town->shop", "goodwill", "slightly"),
+        increaseEntityGauge("shop", "shopStanding", "slightly"),
+        decreaseEntityGauge("shop", "goodwill", "slightly"),
         { kind: "log", text: "The paper protects everyone and warms no one." }
       ]
     }

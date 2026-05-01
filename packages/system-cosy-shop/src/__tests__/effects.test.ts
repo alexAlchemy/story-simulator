@@ -1,10 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   decreaseEntityGauge,
-  decreaseRelationshipDimension,
   gainQuantity,
   increaseEntityGauge,
-  increaseRelationshipDimension,
   spendQuantity
 } from "../effects";
 
@@ -22,22 +20,6 @@ describe("semantic effect helpers", () => {
       entityId: "player",
       key: "prudence",
       delta: -0.2
-    });
-  });
-
-  it("turns human-sized relationship dimension changes into numeric effects", () => {
-    expect(increaseRelationshipDimension("apprentice->player", "trust", "moderately")).toEqual({
-      kind: "relationshipDimension",
-      relationshipId: "apprentice->player",
-      key: "trust",
-      delta: 0.2
-    });
-
-    expect(decreaseRelationshipDimension("apprentice->player", "fear", "slightly")).toEqual({
-      kind: "relationshipDimension",
-      relationshipId: "apprentice->player",
-      key: "fear",
-      delta: -0.1
     });
   });
 

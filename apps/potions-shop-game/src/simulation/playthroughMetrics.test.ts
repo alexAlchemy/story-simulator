@@ -3,7 +3,7 @@ import { content } from "../content/scenes";
 import { simulatePlaythroughMetrics } from "./playthroughMetrics";
 
 describe("simulatePlaythroughMetrics", () => {
-  it("averages resources, relationships, and values by turn", () => {
+  it("averages resources, standing, and values by turn", () => {
     const report = simulatePlaythroughMetrics(content, {
       runs: 25,
       rng: seededRng(1234)
@@ -20,9 +20,9 @@ describe("simulatePlaythroughMetrics", () => {
         stock: 3,
         fatigue: 0
       },
-      relationships: {
+      standing: {
         apprenticeTrust: 0,
-        townTrust: 0
+        shopStanding: 0
       },
       values: {
         compassion: 0,

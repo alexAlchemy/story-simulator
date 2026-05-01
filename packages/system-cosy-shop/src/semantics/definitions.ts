@@ -10,10 +10,7 @@ import {
   compareLabels as compareThresholdLabels,
   describeGauge as describeCoreGauge
 } from "@aphebis/core";
-import type {
-  CosyShopGaugeKey,
-  CosyShopRelationshipDimensionKey
-} from "../keys";
+import type { CosyShopGaugeKey } from "../keys";
 
 export type FatigueLabel =
   | "Rested"
@@ -163,7 +160,7 @@ export const trustThresholds = [
     rank: 3,
     min: 0.7,
     label: "Trusting",
-    description: "The relationship can bear ordinary strain."
+    description: "The bond can bear ordinary strain."
   },
   {
     rank: 4,
@@ -401,11 +398,11 @@ export const respectThresholds = [
 ] as const satisfies readonly SemanticThreshold<RespectLabel>[];
 
 export const fearThresholds = [
-  { rank: 0, min: 0, label: "Unafraid", description: "Fear is not shaping the relationship." },
+  { rank: 0, min: 0, label: "Unafraid", description: "Fear is not shaping the bond." },
   { rank: 1, min: 0.2, label: "Uneasy", description: "There is discomfort, but not alarm." },
   { rank: 2, min: 0.45, label: "Cautious", description: "Fear is making people careful." },
   { rank: 3, min: 0.7, label: "Frightened", description: "Fear is steering what feels possible." },
-  { rank: 4, min: 0.9, label: "Dreadful", description: "The relationship is dominated by dread." }
+  { rank: 4, min: 0.9, label: "Dreadful", description: "The bond is dominated by dread." }
 ] as const satisfies readonly SemanticThreshold<FearLabel>[];
 
 export const resentmentThresholds = [
@@ -413,27 +410,27 @@ export const resentmentThresholds = [
   { rank: 1, min: 0.2, label: "Irritated", description: "A small slight is still being felt." },
   { rank: 2, min: 0.45, label: "Sore", description: "The hurt is present enough to colour trust." },
   { rank: 3, min: 0.7, label: "Bitter", description: "Resentment is actively shaping reactions." },
-  { rank: 4, min: 0.9, label: "Grievance", description: "The relationship now carries a serious grievance." }
+  { rank: 4, min: 0.9, label: "Grievance", description: "The bond now carries a serious grievance." }
 ] as const satisfies readonly SemanticThreshold<ResentmentLabel>[];
 
 export const obligationThresholds = [
   { rank: 0, min: 0, label: "Free", description: "No meaningful debt is pressing here." },
   { rank: 1, min: 0.2, label: "Owing", description: "A small debt or duty is remembered." },
   { rank: 2, min: 0.45, label: "Indebted", description: "The obligation is hard to ignore." },
-  { rank: 3, min: 0.7, label: "Bound", description: "Duty is strongly constraining the relationship." },
+  { rank: 3, min: 0.7, label: "Bound", description: "Duty is strongly constraining the bond." },
   { rank: 4, min: 0.9, label: "Beholden", description: "Obligation has become a defining bond." }
 ] as const satisfies readonly SemanticThreshold<ObligationLabel>[];
 
 export const goodwillThresholds = [
   { rank: 0, min: 0, label: "Indifferent", description: "There is little active goodwill to draw on." },
   { rank: 1, min: 0.2, label: "Open", description: "People are willing to give the shop a chance." },
-  { rank: 2, min: 0.45, label: "Kindly", description: "The relationship leans toward generosity." },
+  { rank: 2, min: 0.45, label: "Kindly", description: "The local mood leans toward generosity." },
   { rank: 3, min: 0.7, label: "Generous", description: "Goodwill is strong enough to soften mistakes." },
   { rank: 4, min: 0.9, label: "Protective", description: "People are inclined to defend the bond." }
 ] as const satisfies readonly SemanticThreshold<GoodwillLabel>[];
 
 export const familiarityThresholds = [
-  { rank: 0, min: 0, label: "Unknown", description: "The relationship has little shared history." },
+  { rank: 0, min: 0, label: "Unknown", description: "There is little shared history." },
   { rank: 1, min: 0.2, label: "Recognized", description: "There is enough contact to be remembered." },
   { rank: 2, min: 0.45, label: "Known", description: "Patterns and habits are becoming legible." },
   { rank: 3, min: 0.7, label: "Comfortable", description: "Familiarity makes interaction easier." },
@@ -473,6 +470,10 @@ export const signedGaugeDefinition = <TKey extends string, TLabel extends string
 export const fatigueDefinition = boundedGaugeDefinition("fatigue", fatigueThresholds);
 
 export const trustDefinition = boundedGaugeDefinition("trust", trustThresholds);
+export const shopStandingDefinition = boundedGaugeDefinition(
+  "shopStanding",
+  trustThresholds
+);
 
 export const compassionDefinition = signedGaugeDefinition(
   "compassion",
@@ -521,24 +522,15 @@ export const entityGaugeDefinitions = {
   prudence: prudenceDefinition,
   ambition: ambitionDefinition,
   confidence: confidenceDefinition,
-  gossipHeat: gossipHeatDefinition
+  gossipHeat: gossipHeatDefinition,
+  trust: trustDefinition,
+  affection: affectionDefinition,
+  fear: fearDefinition,
+  shopStanding: shopStandingDefinition,
+  goodwill: goodwillDefinition
 } satisfies Record<
   CosyShopGaugeKey,
   BoundedGaugeDefinition<string, string> | SignedGaugeDefinition<string, string>
->;
-
-export const relationshipDimensionDefinitions = {
-  trust: trustDefinition,
-  affection: affectionDefinition,
-  respect: respectDefinition,
-  fear: fearDefinition,
-  resentment: resentmentDefinition,
-  obligation: obligationDefinition,
-  goodwill: goodwillDefinition,
-  familiarity: familiarityDefinition
-} satisfies Record<
-  CosyShopRelationshipDimensionKey,
-  BoundedGaugeDefinition<string, string>
 >;
 
 export const coinsDefinition: OpenQuantityDefinition<"coins", CoinLabel, CoinsContext> = {
@@ -569,9 +561,7 @@ export function describeStockContext(expectedDemand: number): OpenQuantityContex
   return stockDefinition.describeContext({ expectedDemand });
 }
 
-export type CosyShopSemanticGaugeKey =
-  | CosyShopGaugeKey
-  | CosyShopRelationshipDimensionKey;
+export type CosyShopSemanticGaugeKey = CosyShopGaugeKey;
 
 export type CosyShopSemanticGaugeDefinition =
   | BoundedGaugeDefinition<string, string>
@@ -593,9 +583,7 @@ export function compareLabels(
 }
 
 function getGaugeDefinition(key: CosyShopSemanticGaugeKey): CosyShopSemanticGaugeDefinition {
-  const definition =
-    entityGaugeDefinitions[key as CosyShopGaugeKey] ??
-    relationshipDimensionDefinitions[key as CosyShopRelationshipDimensionKey];
+  const definition = entityGaugeDefinitions[key as CosyShopGaugeKey];
 
   if (!definition) {
     throw new Error(`Unknown cosy shop semantic gauge "${key}".`);

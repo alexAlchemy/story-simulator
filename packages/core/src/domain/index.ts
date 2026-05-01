@@ -1,4 +1,4 @@
-export type { EntityId, RelationshipId } from "./ids";
+export type { EntityId } from "./ids";
 export type { Effect, EffectContext } from "./effects/types";
 export type {
   GameContent,
@@ -15,11 +15,9 @@ export type {
   SceneSemanticComparison,
   SceneType
 } from "./scenes/types";
-export type { GaugeKey, QuantityKey, RelationshipDimensionKey } from "./world/keys";
-export { relationshipId } from "./world/relationshipId";
+export type { GaugeKey, QuantityKey } from "./world/keys";
 export type {
   EntityKind,
   EntityState,
-  RelationshipState,
   WorldState
 } from "./world/types";

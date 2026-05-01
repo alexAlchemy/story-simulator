@@ -1,12 +1,12 @@
 import type { GameContent, GameState } from "@aphebis/core";
-import { getEntityGauge, getEntityQuantity, getRelationshipDimension } from "@aphebis/core";
+import { getEntityGauge, getEntityQuantity } from "@aphebis/core";
 import type { CosyShopGaugeKey } from "@aphebis/system-cosy-shop";
 
 export type EndingSummary = {
   title: string;
   shopOutcome: string;
   identityOutcome: string;
-  relationshipOutcome: string;
+  socialOutcome: string;
   futureHook: string;
 };
 
@@ -18,12 +18,8 @@ export function buildEnding(state: GameState, content: EndingContent): EndingSum
   const coins = getEntityQuantity(state, "shop", "coins");
   const paidRent = coins >= content.rentAmount;
   const dominantValue = getDominantValue(state);
-  const apprenticeTrust = getRelationshipDimension(
-    state,
-    "apprentice->player",
-    "trust"
-  );
-  const townTrust = getRelationshipDimension(state, "town->shop", "trust");
+  const apprenticeTrust = getEntityGauge(state, "apprentice", "trust");
+  const shopStanding = getEntityGauge(state, "shop", "shopStanding");
 
   return {
     title: paidRent ? "The Door Opens Again" : "The Rent Bell Rings",
@@ -31,14 +27,14 @@ export function buildEnding(state: GameState, content: EndingContent): EndingSum
       ? `You count out ${content.rentAmount} coins for rent and keep ${coins - content.rentAmount} behind the counter. The shop survives the week.`
       : `You are short by ${content.rentAmount - coins} coins. The landlord leaves with a promise, a warning, or both.`,
     identityOutcome: identityText(dominantValue),
-    relationshipOutcome:
+    socialOutcome:
       apprenticeTrust >= 0.2
         ? "Your apprentice stays late without being asked, trusting that this place can become kinder than the week was."
         : apprenticeTrust < 0
           ? "Your apprentice avoids your eyes while sweeping, and the quiet between you feels expensive."
           : "Your apprentice remains, uncertain but watching closely what kind of shopkeeper you are becoming.",
     futureHook:
-      townTrust >= 0.2
+      shopStanding >= 0.2
         ? "By morning, someone has left bread, lavender, and a new problem on the step."
         : "By morning, the town knows your door is still there, but not yet whether it is open to them."
   };

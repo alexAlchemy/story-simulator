@@ -14,8 +14,7 @@ import {
 } from "../domain/semantics";
 import {
   getEntityGauge,
-  getEntityQuantity,
-  getRelationshipDimension
+  getEntityQuantity
 } from "./worldAccess";
 
 export function canSeeScene(
@@ -85,22 +84,6 @@ export function validateSceneAvailability(
           );
         }
         break;
-      case "relationshipDimension":
-        if (world && !world.relationships[condition.relationshipId]) {
-          issues.push(
-            `${scene.id}: relationshipDimension availability references unknown relationship "${condition.relationshipId}"`
-          );
-        }
-        issues.push(
-          ...validateSemanticComparison(
-            scene.id,
-            condition.kind,
-            condition.key,
-            condition,
-            content.semantics?.relationshipDimensionDefinitions
-          )
-        );
-        break;
       case "day":
       case "flag":
         break;
@@ -140,12 +123,6 @@ function matchesSceneAvailabilityCondition(
       return matchesNumericComparison(
         getEntityQuantity(state, condition.entityId, condition.key),
         condition
-      );
-    case "relationshipDimension":
-      return matchesSemanticState(
-        getRelationshipDimension(state, condition.relationshipId, condition.key),
-        condition,
-        content.semantics?.relationshipDimensionDefinitions?.[condition.key]
       );
     default:
       assertNever(condition);

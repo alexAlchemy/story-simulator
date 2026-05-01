@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "@aphebis/system-cosy-shop";
+import { decreaseEntityGauge, increaseEntityGauge, spendQuantity } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: The town has started explaining your shop to itself.
@@ -18,7 +18,7 @@ const scene: Scene = {
       description: "Give the town fewer shadows to embroider.",
       effects: [
         decreaseEntityGauge("town", "gossipHeat", "moderately"),
-        increaseRelationshipDimension("town->shop", "trust", "slightly"),
+        increaseEntityGauge("shop", "shopStanding", "slightly"),
         increaseEntityGauge("player", "fatigue", "slightly"),
         { kind: "log", text: "By noon, the story is smaller, duller, and more nearly true." }
       ]
@@ -30,7 +30,7 @@ const scene: Scene = {
       effects: [
         increaseEntityGauge("town", "gossipHeat", "moderately"),
         increaseEntityGauge("player", "ambition", "slightly"),
-        decreaseRelationshipDimension("town->shop", "goodwill", "slightly"),
+        decreaseEntityGauge("shop", "goodwill", "slightly"),
         { kind: "log", text: "The next customer asks whether your bottles glow when no one watches." }
       ]
     },
@@ -39,7 +39,7 @@ const scene: Scene = {
       label: "Ask a regular to speak for you",
       description: "Let someone else's faith become part of the shop's voice.",
       effects: [
-        increaseRelationshipDimension("town->shop", "goodwill", "moderately"),
+        increaseEntityGauge("shop", "goodwill", "moderately"),
         decreaseEntityGauge("town", "gossipHeat", "slightly"),
         spendQuantity("shop", "coins", 2),
         decreaseEntityGauge("player", "ambition", "slightly"),

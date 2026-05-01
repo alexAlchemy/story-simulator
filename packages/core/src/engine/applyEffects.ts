@@ -1,8 +1,7 @@
 import type { Effect, EffectContext, GameState } from "../domain";
 import {
   adjustEntityGauge,
-  adjustEntityQuantity,
-  adjustRelationshipDimension
+  adjustEntityQuantity
 } from "./worldAccess";
 
 export function applyEffects(
@@ -19,14 +18,6 @@ export function applyEffects(
         break;
       case "entityQuantity":
         next = adjustEntityQuantity(next, effect.entityId, effect.key, effect.delta);
-        break;
-      case "relationshipDimension":
-        next = adjustRelationshipDimension(
-          next,
-          effect.relationshipId,
-          effect.key,
-          effect.delta
-        );
         break;
       case "setFlag":
         next.flags[effect.key] = effect.value;
@@ -74,16 +65,6 @@ function cloneState(state: GameState): GameState {
             gauges: { ...entity.gauges },
             quantities: { ...entity.quantities },
             flags: { ...entity.flags }
-          }
-        ])
-      ),
-      relationships: Object.fromEntries(
-        Object.entries(state.world.relationships).map(([id, relationship]) => [
-          id,
-          {
-            ...relationship,
-            dimensions: { ...relationship.dimensions },
-            flags: { ...relationship.flags }
           }
         ])
       )

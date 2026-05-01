@@ -5,12 +5,11 @@ import {
   entityGaugeDefinitions,
   fatigueDefinition,
   coinsDefinition,
-  relationshipDimensionDefinitions,
   stockDefinition,
   signedGaugeDefinition,
   trustDefinition
 } from "../semantics/definitions";
-import type { CosyShopGaugeKey, CosyShopRelationshipDimensionKey } from "../keys";
+import type { CosyShopGaugeKey } from "../keys";
 import {
   describeBoundedGauge,
   describeOpenQuantity,
@@ -47,41 +46,30 @@ describe("semantic primitives", () => {
     });
   });
 
-  it("keeps trust reusable as a generic relationship dimension", () => {
+  it("keeps trust reusable as a social gauge", () => {
     expect(describeBoundedGauge(trustDefinition, 0.1).label).toBe("Distrustful");
     expect(describeBoundedGauge(trustDefinition, 0.5).label).toBe("Tentative");
     expect(describeBoundedGauge(trustDefinition, 0.95).label).toBe("Devoted");
   });
 
-  it("defines semantic descriptions for every world gauge and relationship dimension", () => {
+  it("defines semantic descriptions for every world gauge", () => {
     const gaugeKeys = [
       "fatigue",
       "compassion",
       "prudence",
       "ambition",
       "confidence",
-      "gossipHeat"
-    ] satisfies CosyShopGaugeKey[];
-    const relationshipDimensionKeys = [
+      "gossipHeat",
       "trust",
       "affection",
-      "respect",
       "fear",
-      "resentment",
-      "obligation",
-      "goodwill",
-      "familiarity"
-    ] satisfies CosyShopRelationshipDimensionKey[];
+      "shopStanding",
+      "goodwill"
+    ] satisfies CosyShopGaugeKey[];
 
     expect(Object.keys(entityGaugeDefinitions).sort()).toEqual([...gaugeKeys].sort());
-    expect(Object.keys(relationshipDimensionDefinitions).sort()).toEqual(
-      [...relationshipDimensionKeys].sort()
-    );
 
-    for (const definition of [
-      ...Object.values(entityGaugeDefinitions),
-      ...Object.values(relationshipDimensionDefinitions)
-    ]) {
+    for (const definition of Object.values(entityGaugeDefinitions)) {
       const described =
         definition.family === "signedGauge"
           ? describeSignedGauge(definition, 0)

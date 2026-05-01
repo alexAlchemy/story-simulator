@@ -10,8 +10,7 @@ import { resolveChoice } from "@aphebis/core";
 import { getVisibleScenes } from "@aphebis/core";
 import {
   getEntityGauge,
-  getEntityQuantity,
-  getRelationshipDimension
+  getEntityQuantity
 } from "@aphebis/core";
 
 export type StateMetricSnapshot = {
@@ -20,9 +19,9 @@ export type StateMetricSnapshot = {
     stock: number;
     fatigue: number;
   };
-  relationships: {
+  standing: {
     apprenticeTrust: number;
-    townTrust: number;
+    shopStanding: number;
   };
   values: {
     compassion: number;
@@ -141,13 +140,9 @@ function snapshotState(
       stock: getEntityQuantity(state, "shop", "stock"),
       fatigue: getEntityGauge(state, "player", "fatigue")
     },
-    relationships: {
-      apprenticeTrust: getRelationshipDimension(
-        state,
-        "apprentice->player",
-        "trust"
-      ),
-      townTrust: getRelationshipDimension(state, "town->shop", "trust")
+    standing: {
+      apprenticeTrust: getEntityGauge(state, "apprentice", "trust"),
+      shopStanding: getEntityGauge(state, "shop", "shopStanding")
     },
     values: {
       compassion: getEntityGauge(state, "player", "compassion"),
@@ -192,12 +187,12 @@ function averageMetricSnapshots(snapshots: StateMetricSnapshot[]): StateMetricSn
       stock: average(snapshots, (snapshot) => snapshot.resources.stock),
       fatigue: average(snapshots, (snapshot) => snapshot.resources.fatigue)
     },
-    relationships: {
+    standing: {
       apprenticeTrust: average(
         snapshots,
-        (snapshot) => snapshot.relationships.apprenticeTrust
+        (snapshot) => snapshot.standing.apprenticeTrust
       ),
-      townTrust: average(snapshots, (snapshot) => snapshot.relationships.townTrust)
+      shopStanding: average(snapshots, (snapshot) => snapshot.standing.shopStanding)
     },
     values: {
       compassion: average(snapshots, (snapshot) => snapshot.values.compassion),

@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { flags, log, player, relation, shop } from "@aphebis/system-cosy-shop";
+import { flags, log, player, shop } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: A soaked stranger arrives at closing with three copper coins and a dying sister.
@@ -19,7 +19,7 @@ const scene: Scene = {
       effects: [
         shop.spendStock(1),
         player.gainCompassion("moderately"),
-        relation("town", "shop").gainTrust("slightly"),
+        shop.gainStanding("slightly"),
         flags.set("stablehand_helped", true),
         flags.set("stablehand_grateful", true),
         log("The stablehand leaves clutching the draught like a candle in the rain.")
@@ -34,7 +34,7 @@ const scene: Scene = {
         shop.gainCoins(3),
         player.gainPrudence("slightly"),
         player.gainCompassion("slightly"),
-        relation("town", "shop").gainTrust("slightly"),
+        shop.gainStanding("slightly"),
         log("Three wet coins land in the drawer, lighter than they should feel.")
       ]
     },
@@ -44,7 +44,7 @@ const scene: Scene = {
       description: "You cannot keep the doors open by giving away what you need.",
       effects: [
         player.gainPrudence("moderately"),
-        relation("town", "shop").loseTrust("slightly"),
+        shop.loseStanding("slightly"),
         flags.set("stablehand_refused", true),
         log("He nods once, too politely, and the bell over the door sounds colder.")
       ]

@@ -9,7 +9,7 @@ import {
   validateSceneAvailability
 } from "@aphebis/core";
 import { getVisibleScenes } from "@aphebis/core";
-import { getRelationshipDimension } from "@aphebis/core";
+import { getEntityGauge } from "@aphebis/core";
 import { entityGaugeDefinitions } from "@aphebis/system-cosy-shop";
 
 describe("sceneAvailability", () => {
@@ -29,9 +29,7 @@ describe("sceneAvailability", () => {
     expect(visibleSceneIds).toContain("apprentice-first-cure");
 
     state = resolveChoice(state, "apprentice-first-cure", "praise-in-public", content);
-    expect(getRelationshipDimension(state, "apprentice->player", "affection")).toBeGreaterThan(
-      0.7
-    );
+    expect(getEntityGauge(state, "apprentice", "affection")).toBeGreaterThan(0.7);
   });
 
   it("reveals the forage scene when stock pressure becomes high enough", () => {

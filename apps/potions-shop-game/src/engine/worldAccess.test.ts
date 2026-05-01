@@ -3,14 +3,12 @@ import { createInitialState } from "../content/initialState";
 import {
   adjustEntityGauge,
   adjustEntityQuantity,
-  adjustRelationshipDimension,
   getEntityGauge,
-  getEntityQuantity,
-  getRelationshipDimension
+  getEntityQuantity
 } from "@aphebis/core";
 
 describe("worldAccess", () => {
-  it("clones state immutably when updating entities and relationships", () => {
+  it("clones state immutably when updating entities", () => {
     const state = createInitialState();
     const next = adjustEntityQuantity(state, "shop", "coins", 4);
 
@@ -21,22 +19,22 @@ describe("worldAccess", () => {
     expect(getEntityQuantity(next, "shop", "coins")).toBe(22);
   });
 
-  it("clamps quantities at zero and bounded gauges/dimensions to 0..1", () => {
+  it("clamps quantities at zero and bounded gauges to 0..1", () => {
     let state = createInitialState();
 
     state = adjustEntityQuantity(state, "shop", "stock", -99);
     state = adjustEntityGauge(state, "player", "fatigue", 2);
-    state = adjustRelationshipDimension(state, "town->shop", "trust", 2);
+    state = adjustEntityGauge(state, "shop", "shopStanding", 2);
 
     expect(getEntityQuantity(state, "shop", "stock")).toBe(0);
     expect(getEntityGauge(state, "player", "fatigue")).toBe(1);
-    expect(getRelationshipDimension(state, "town->shop", "trust")).toBe(1);
+    expect(getEntityGauge(state, "shop", "shopStanding")).toBe(1);
 
     state = adjustEntityGauge(state, "player", "fatigue", -99);
-    state = adjustRelationshipDimension(state, "town->shop", "trust", -99);
+    state = adjustEntityGauge(state, "shop", "shopStanding", -99);
 
     expect(getEntityGauge(state, "player", "fatigue")).toBe(0);
-    expect(getRelationshipDimension(state, "town->shop", "trust")).toBe(0);
+    expect(getEntityGauge(state, "shop", "shopStanding")).toBe(0);
   });
 
   it("preserves negative values for signed entity gauges", () => {
@@ -54,9 +52,6 @@ describe("worldAccess", () => {
 
     expect(() => getEntityGauge(state, "ghost", "fatigue")).toThrow(
       "Unknown entity id: ghost"
-    );
-    expect(() => getRelationshipDimension(state, "ghost->shop", "trust")).toThrow(
-      "Unknown relationship id: ghost->shop"
     );
   });
 });

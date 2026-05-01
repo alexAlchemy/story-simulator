@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { flags, log, player, relation, scenes, shop } from "@aphebis/system-cosy-shop";
+import { flags, log, player, scenes, shop } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: Rare moonleaf appears at your door, tied with blue thread, no note, no explanation.
@@ -27,7 +27,7 @@ const scene: Scene = {
       id: "ask-around",
       label: "Ask around town",
       effects: [
-        relation("town", "shop").gainTrust("slightly"),
+        shop.gainStanding("slightly"),
         player.gainPrudence("slightly"),
         scenes.add("gift-giver-revealed"),
         log("By noon, three people have theories and nobody has an answer.")
@@ -39,7 +39,7 @@ const scene: Scene = {
       effects: [
         shop.gainStock(1),
         player.gainCompassion("slightly"),
-        relation("town", "shop").gainTrust("slightly"),
+        shop.gainStanding("slightly"),
         flags.set("left_thanks_for_gift", true),
         log("The charm warms once at dusk, as if someone passed close enough to notice.")
       ]

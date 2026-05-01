@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, increaseEntityGauge, increaseRelationshipDimension, spendQuantity } from "@aphebis/system-cosy-shop";
+import { decreaseEntityGauge, increaseEntityGauge, spendQuantity } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: A regular customer notices your exhaustion and offers ordinary help.
@@ -15,10 +15,10 @@ const scene: Scene = {
     {
       id: "accept-help",
       label: "Accept the help",
-      description: "Let the relationship be warmer than the receipt.",
+      description: "Let the exchange be warmer than the receipt.",
       effects: [
         decreaseEntityGauge("player", "fatigue", "moderately"),
-        increaseRelationshipDimension("town->shop", "goodwill", "slightly"),
+        increaseEntityGauge("shop", "goodwill", "slightly"),
         decreaseEntityGauge("player", "ambition", "slightly"),
         { kind: "log", text: "They sweep badly, but they hum while doing it, and the room softens." }
       ]
@@ -29,7 +29,7 @@ const scene: Scene = {
       description: "Thank them, but close the shop yourself.",
       effects: [
         increaseEntityGauge("player", "fatigue", "slightly"),
-        increaseRelationshipDimension("town->shop", "trust", "slightly"),
+        increaseEntityGauge("shop", "shopStanding", "slightly"),
         { kind: "log", text: "They leave with respect intact and a little unanswered kindness." }
       ]
     },
@@ -40,7 +40,7 @@ const scene: Scene = {
       effects: [
         spendQuantity("shop", "coins", 2),
         decreaseEntityGauge("player", "fatigue", "slightly"),
-        increaseRelationshipDimension("town->shop", "goodwill", "slightly"),
+        increaseEntityGauge("shop", "goodwill", "slightly"),
         { kind: "log", text: "The bargain is fair, though something tender goes unnamed." }
       ]
     }

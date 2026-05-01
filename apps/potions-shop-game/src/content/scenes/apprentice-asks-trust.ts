@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, decreaseRelationshipDimension, gainQuantity, increaseEntityGauge, increaseRelationshipDimension } from "@aphebis/system-cosy-shop";
+import { decreaseEntityGauge, gainQuantity, increaseEntityGauge } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: Your apprentice asks to handle the front counter alone while you work the back room.
@@ -18,8 +18,8 @@ const scene: Scene = {
       effects: [
         gainQuantity("shop", "coins", 5),
         decreaseEntityGauge("player", "fatigue", "slightly"),
-        increaseRelationshipDimension("apprentice->player", "trust", "moderately"),
-        increaseRelationshipDimension("apprentice->player", "affection", "slightly"),
+        increaseEntityGauge("apprentice", "trust", "moderately"),
+        increaseEntityGauge("apprentice", "affection", "slightly"),
         { kind: "log", text: "They mispronounce one tincture and make three honest sales anyway." }
       ]
     },
@@ -28,8 +28,8 @@ const scene: Scene = {
       label: "Supervise closely",
       effects: [
         gainQuantity("shop", "coins", 4),
-        decreaseRelationshipDimension("apprentice->player", "trust", "slightly"),
-        decreaseRelationshipDimension("apprentice->player", "affection", "slightly"),
+        decreaseEntityGauge("apprentice", "trust", "slightly"),
+        decreaseEntityGauge("apprentice", "affection", "slightly"),
         increaseEntityGauge("player", "prudence", "slightly"),
         { kind: "log", text: "Nothing goes wrong, which somehow proves less than either of you hoped." }
       ]

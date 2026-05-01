@@ -1,5 +1,5 @@
-import type { EntityId, RelationshipId } from "../ids";
-import type { GaugeKey, QuantityKey, RelationshipDimensionKey } from "./keys";
+import type { EntityId } from "../ids";
+import type { GaugeKey, QuantityKey } from "./keys";
 
 export type EntityKind = string;
 
@@ -14,15 +14,6 @@ export type EntityState = {
   flags: Record<string, boolean>;
 };
 
-export type RelationshipState = {
-  id: RelationshipId;
-  from: EntityId;
-  to: EntityId;
-  dimensions: Partial<Record<RelationshipDimensionKey, number>>;
-  flags: Record<string, boolean>;
-};
-
 export type WorldState = {
   entities: Record<EntityId, EntityState>;
-  relationships: Record<RelationshipId, RelationshipState>;
 };

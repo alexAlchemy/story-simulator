@@ -34,7 +34,7 @@ describe("scene choice effect audit", () => {
       potentialPositive75: 0.6,
       potentialMaximum: 0.8
     });
-    expect(audit.targets.find((target) => target.label === "town->shop.trust")).toMatchObject({
+    expect(audit.targets.find((target) => target.label === "shop.shopStanding")).toMatchObject({
       increments: 10,
       decrements: 2,
       initialValue: 0,
@@ -54,7 +54,7 @@ describe("scene choice effect audit", () => {
       totalChanges: 5,
       totalDelta: 0.3
     });
-    expect(audit.targets.find((target) => target.label === "town->shop.goodwill")).toMatchObject({
+    expect(audit.targets.find((target) => target.label === "shop.goodwill")).toMatchObject({
       increments: 7,
       decrements: 3,
       totalChanges: 10,
@@ -66,13 +66,13 @@ describe("scene choice effect audit", () => {
       totalChanges: 7,
       totalDelta: 0.5
     });
-    expect(audit.targets.find((target) => target.label === "apprentice->player.affection")).toMatchObject({
+    expect(audit.targets.find((target) => target.label === "apprentice.affection")).toMatchObject({
       increments: 8,
       decrements: 4,
       totalChanges: 12,
       totalDelta: 1.1
     });
-    expect(audit.targets.find((target) => target.label === "apprentice->player.fear")).toMatchObject({
+    expect(audit.targets.find((target) => target.label === "apprentice.fear")).toMatchObject({
       increments: 2,
       decrements: 2,
       totalChanges: 4,

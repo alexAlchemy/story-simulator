@@ -4,8 +4,7 @@ import { createInitialState } from "../content/initialState";
 import { resolveChoice } from "@aphebis/core";
 import {
   getEntityGauge,
-  getEntityQuantity,
-  getRelationshipDimension
+  getEntityQuantity
 } from "@aphebis/core";
 
 describe("resolveChoice", () => {
@@ -36,7 +35,7 @@ describe("resolveChoice", () => {
 
     expect(getEntityQuantity(next, "shop", "stock")).toBe(2);
     expect(getEntityGauge(next, "player", "compassion")).toBe(0.2);
-    expect(getRelationshipDimension(next, "town->shop", "trust")).toBe(0.1);
+    expect(getEntityGauge(next, "shop", "shopStanding")).toBe(0.1);
     expect(next.flags.stablehand_helped).toBe(true);
     expect(next.flags.stablehand_grateful).toBe(true);
     expect(next.sceneTableau).not.toContain("desperate-stablehand");

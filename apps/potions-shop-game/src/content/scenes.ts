@@ -1,10 +1,7 @@
 import type { GameContent } from "@aphebis/core";
 import { dayPlan } from "./dayPlan";
 import { scenes } from "./scenes/index";
-import {
-  entityGaugeDefinitions,
-  relationshipDimensionDefinitions
-} from "@aphebis/system-cosy-shop";
+import { entityGaugeDefinitions } from "@aphebis/system-cosy-shop";
 
 export { scenes };
 
@@ -18,8 +15,7 @@ export const content: PotionsShopContent = {
   dayPlan,
   endDay: 5,
   semantics: {
-    entityGaugeDefinitions,
-    relationshipDimensionDefinitions
+    entityGaugeDefinitions
   },
   rentDueDay: 5,
   rentAmount: 30

@@ -87,8 +87,8 @@
             </div>
 
             <div class="panel">
-              <h2>Relationships</h2>
-              <template x-for="item in relationshipRows" :key="item.key">
+              <h2>Standing</h2>
+              <template x-for="item in standingRows" :key="item.key">
                 <div class="stat-row">
                   <span x-text="item.label"></span>
                   <strong x-text="item.value"></strong>
@@ -166,7 +166,7 @@
                 <h2 x-text="ending.title"></h2>
                 <p x-text="ending.shopOutcome"></p>
                 <p x-text="ending.identityOutcome"></p>
-                <p x-text="ending.relationshipOutcome"></p>
+                <p x-text="ending.socialOutcome"></p>
                 <p class="hook" x-text="ending.futureHook"></p>
               </article>
             </template>
@@ -248,7 +248,7 @@
             <h2 x-text="ending.title"></h2>
             <p x-text="ending.shopOutcome"></p>
             <p x-text="ending.identityOutcome"></p>
-            <p x-text="ending.relationshipOutcome"></p>
+            <p x-text="ending.socialOutcome"></p>
             <p class="hook" x-text="ending.futureHook"></p>
           </article>
         </template>
@@ -297,7 +297,7 @@
       >
         <div class="section-heading">
           <h2>World State</h2>
-          <span x-text="entityCards.length + ' entities, ' + relationshipCards.length + ' relationships'"></span>
+          <span x-text="entityCards.length + ' entities'"></span>
         </div>
 
         <div class="state-grid">
@@ -358,54 +358,6 @@
                       </div>
                     </template>
                   </div>
-                </article>
-              </template>
-            </div>
-          </section>
-
-          <section aria-label="Relationships">
-            <h2>Relationships</h2>
-            <div class="state-card-list">
-              <template x-for="relationship in relationshipCards" :key="relationship.id">
-                <article class="state-card" x-data="relationshipCard(relationship.id)">
-                  <div class="state-card-head">
-                    <div>
-                      <span class="scene-type">relationship</span>
-                      <h3>
-                        <span x-text="currentRelationship(relationshipCards).from"></span>
-                        <span> to </span>
-                        <span x-text="currentRelationship(relationshipCards).to"></span>
-                      </h3>
-                    </div>
-                    <small x-text="currentRelationship(relationshipCards).id"></small>
-                  </div>
-
-                  <div class="state-section" x-show="currentRelationship(relationshipCards).dimensions.length">
-                    <h4>Dimensions</h4>
-                    <template x-for="item in currentRelationship(relationshipCards).dimensions" :key="item.key">
-                      <div class="stat-row compact">
-                        <span x-text="item.label"></span>
-                        <span class="stat-value">
-                          <strong x-text="item.value"></strong>
-                          <small x-show="item.semantic" x-text="item.semantic ? item.semantic.label + ': ' + item.semantic.description : ''"></small>
-                        </span>
-                      </div>
-                    </template>
-                  </div>
-
-                  <div class="state-section" x-show="currentRelationship(relationshipCards).flags.length">
-                    <h4>Flags</h4>
-                    <template x-for="item in currentRelationship(relationshipCards).flags" :key="item.key">
-                      <div class="stat-row compact">
-                        <span x-text="item.label"></span>
-                        <span class="stat-value">
-                          <strong x-text="item.value"></strong>
-                          <small x-show="item.semantic" x-text="item.semantic ? item.semantic.label + ': ' + item.semantic.description : ''"></small>
-                        </span>
-                      </div>
-                    </template>
-                  </div>
-
                 </article>
               </template>
             </div>

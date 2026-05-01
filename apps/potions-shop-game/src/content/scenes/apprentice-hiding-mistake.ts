@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, decreaseRelationshipDimension, flags, increaseEntityGauge, increaseRelationshipDimension } from "@aphebis/system-cosy-shop";
+import { decreaseEntityGauge, flags, increaseEntityGauge } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: You discover your apprentice has hidden a mistake—a cracked vial in the back shelf.
@@ -16,8 +16,8 @@ const scene: Scene = {
       id: "ask-gently",
       label: "Ask gently what happened",
       effects: [
-        increaseRelationshipDimension("apprentice->player", "trust", "moderately"),
-        increaseRelationshipDimension("apprentice->player", "affection", "strongly"),
+        increaseEntityGauge("apprentice", "trust", "moderately"),
+        increaseEntityGauge("apprentice", "affection", "strongly"),
         flags.set("mistake_handled_gently", true),
         increaseEntityGauge("player", "compassion", "slightly"),
         increaseEntityGauge("player", "fatigue", "slightly"),
@@ -28,8 +28,8 @@ const scene: Scene = {
       id: "lesson",
       label: "Turn it into a lesson",
       effects: [
-        increaseRelationshipDimension("apprentice->player", "trust", "slightly"),
-        increaseRelationshipDimension("apprentice->player", "affection", "slightly"),
+        increaseEntityGauge("apprentice", "trust", "slightly"),
+        increaseEntityGauge("apprentice", "affection", "slightly"),
         increaseEntityGauge("player", "prudence", "slightly"),
         { kind: "log", text: "You clean the glass together and write a safer shelf rule in chalk." }
       ]
@@ -38,7 +38,7 @@ const scene: Scene = {
       id: "sharp-confrontation",
       label: "Confront them sharply",
       effects: [
-        decreaseRelationshipDimension("apprentice->player", "trust", "moderately"),
+        decreaseEntityGauge("apprentice", "trust", "moderately"),
         increaseEntityGauge("player", "ambition", "slightly"),
         decreaseEntityGauge("player", "fatigue", "slightly"),
         { kind: "log", text: "The shop is efficient for the next hour, and painfully quiet." }
