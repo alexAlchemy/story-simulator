@@ -20,13 +20,7 @@ const scene: Scene = {
         shop.spendStock(1),
         player.gainCompassion("moderately"),
         relation("town", "shop").gainTrust("slightly"),
-        relation("town", "shop").addToken({
-          id: "stablehand-helped",
-          kind: "favour",
-          label: "Helped the stablehand's sister",
-          description: "Word may spread that the shop helps desperate families.",
-          sourceSceneId: "desperate-stablehand"
-        }),
+        flags.set("stablehand_helped", true),
         flags.set("stablehand_grateful", true),
         log("The stablehand leaves clutching the draught like a candle in the rain.")
       ]

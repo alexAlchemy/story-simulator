@@ -4,8 +4,7 @@ import type {
   GaugeKey,
   QuantityKey,
   RelationshipDimensionKey,
-  RelationshipId,
-  RelationshipToken
+  RelationshipId
 } from "@aphebis/core";
 import { relationshipId } from "@aphebis/core";
 
@@ -123,10 +122,7 @@ export function relation(from: EntityId, to: EntityId) {
     loseAffection: (amount: ShiftAmount): Effect => loseDimension(id, "affection", amount),
     gainFear: (amount: ShiftAmount): Effect => gainDimension(id, "fear", amount),
     loseFear: (amount: ShiftAmount): Effect => loseDimension(id, "fear", amount),
-    gainObligation: (amount: ShiftAmount): Effect => gainDimension(id, "obligation", amount),
-    addDebt: (token: Omit<RelationshipToken, "kind"> & { kind?: string }): Effect =>
-      addRelationshipToken(id, { ...token, kind: token.kind ?? "debt" }),
-    addToken: (token: RelationshipToken): Effect => addRelationshipToken(id, token)
+    gainObligation: (amount: ShiftAmount): Effect => gainDimension(id, "obligation", amount)
   };
 }
 
@@ -205,11 +201,4 @@ function relationshipDimension(
   delta: number
 ): Effect {
   return { kind: "relationshipDimension", relationshipId, key, delta };
-}
-
-function addRelationshipToken(
-  relationshipId: RelationshipId,
-  token: RelationshipToken
-): Effect {
-  return { kind: "addRelationshipToken", relationshipId, token };
 }

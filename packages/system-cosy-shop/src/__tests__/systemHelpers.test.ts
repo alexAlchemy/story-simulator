@@ -64,28 +64,12 @@ describe("cosy shop system helpers", () => {
     });
   });
 
-  it("turns relationship grammar into core relationship effects and tokens", () => {
+  it("turns relationship grammar into core relationship effects", () => {
     expect(relation("town", "shop").gainTrust("slightly")).toEqual({
       kind: "relationshipDimension",
       relationshipId: "town->shop",
       key: "trust",
       delta: 0.1
-    });
-    expect(
-      relation("apprentice", "player").addDebt({
-        id: "borrowed-potion",
-        label: "Borrowed a potion",
-        sourceSceneId: "sample"
-      })
-    ).toEqual({
-      kind: "addRelationshipToken",
-      relationshipId: "apprentice->player",
-      token: {
-        id: "borrowed-potion",
-        kind: "debt",
-        label: "Borrowed a potion",
-        sourceSceneId: "sample"
-      }
     });
   });
 

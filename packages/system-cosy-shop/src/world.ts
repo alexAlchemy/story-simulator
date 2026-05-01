@@ -71,8 +71,7 @@ export function createCosyShopWorld(): WorldState {
           affection: 0,
           fear: 0
         },
-        flags: {},
-        tokens: []
+        flags: {}
       },
       [townToShop]: {
         id: townToShop,
@@ -82,8 +81,7 @@ export function createCosyShopWorld(): WorldState {
           trust: 0,
           goodwill: 0
         },
-        flags: {},
-        tokens: []
+        flags: {}
       }
     }
   };

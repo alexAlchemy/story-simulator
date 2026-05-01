@@ -82,7 +82,7 @@ describe("sceneAvailability", () => {
     );
   });
 
-  it("requires the stablehand token before debt-called-in can appear", () => {
+  it("requires the stablehand-helped flag before debt-called-in can appear", () => {
     let state = createInitialState();
 
     state = resolveChoice(state, "desperate-stablehand", "free-draught", content);

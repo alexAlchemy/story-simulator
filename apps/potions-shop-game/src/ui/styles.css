@@ -602,8 +602,7 @@ pre {
   gap: 6px;
 }
 
-.tag-list span,
-.token-row span {
+.tag-list span {
   padding: 4px 7px;
   border-radius: 999px;
   background: #e8ded0;
@@ -615,24 +614,6 @@ pre {
 .state-section {
   display: grid;
   gap: 2px;
-}
-
-.token-row {
-  display: grid;
-  gap: 6px;
-  padding: 10px;
-  border-radius: 6px;
-  background: #f8ecd8;
-}
-
-.token-row span {
-  width: fit-content;
-}
-
-.token-row p {
-  margin-bottom: 0;
-  color: #596254;
-  line-height: 1.4;
 }
 
 [x-cloak] {

@@ -1,6 +1,5 @@
 import type { Effect, EffectContext, GameState } from "../domain";
 import {
-  addRelationshipToken,
   adjustEntityGauge,
   adjustEntityQuantity,
   adjustRelationshipDimension
@@ -28,9 +27,6 @@ export function applyEffects(
           effect.key,
           effect.delta
         );
-        break;
-      case "addRelationshipToken":
-        next = addRelationshipToken(next, effect.relationshipId, effect.token);
         break;
       case "setFlag":
         next.flags[effect.key] = effect.value;
@@ -87,8 +83,7 @@ function cloneState(state: GameState): GameState {
           {
             ...relationship,
             dimensions: { ...relationship.dimensions },
-            flags: { ...relationship.flags },
-            tokens: relationship.tokens.map((token) => ({ ...token }))
+            flags: { ...relationship.flags }
           }
         ])
       )

@@ -6,8 +6,7 @@ import type {
   QuantityKey,
   RelationshipDimensionKey,
   RelationshipId,
-  RelationshipState,
-  RelationshipToken
+  RelationshipState
 } from "../domain";
 
 export function getEntity(state: GameState, entityId: EntityId): EntityState {
@@ -150,31 +149,6 @@ export function adjustRelationshipDimension(
             ...relationship.dimensions,
             [key]: clamp01((relationship.dimensions[key] ?? 0) + delta)
           }
-        }
-      }
-    }
-  };
-}
-
-export function addRelationshipToken(
-  state: GameState,
-  relationshipId: RelationshipId,
-  token: RelationshipToken
-): GameState {
-  const relationship = getRelationship(state, relationshipId);
-  if (relationship.tokens.some((existing) => existing.id === token.id)) {
-    return state;
-  }
-
-  return {
-    ...state,
-    world: {
-      ...state.world,
-      relationships: {
-        ...state.world.relationships,
-        [relationshipId]: {
-          ...relationship,
-          tokens: [...relationship.tokens, token]
         }
       }
     }

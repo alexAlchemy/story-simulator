@@ -371,9 +371,9 @@ Same action, different meaning.
 
 Relationship state should be semantic, not just numeric.
 
-Useful dramatic tokens:
+Useful dramatic flags for the thin slice:
 
-| Token         | Meaning                                             |
+| Flag          | Meaning                                             |
 | ------------- | --------------------------------------------------- |
 | **Bond**      | A meaningful connection or shared history           |
 | **String**    | Emotional leverage one character holds over another |
@@ -386,7 +386,7 @@ Useful dramatic tokens:
 Example:
 
 ```text
-Mara has a String on you: “You admitted you were afraid of being abandoned.”
+admittedFearOfAbandonment: true
 ```
 
 This is far richer than:

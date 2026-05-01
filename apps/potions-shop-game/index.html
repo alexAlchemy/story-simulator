@@ -406,16 +406,6 @@
                     </template>
                   </div>
 
-                  <div class="state-section" x-show="currentRelationship(relationshipCards).tokens.length">
-                    <h4>Tokens</h4>
-                    <template x-for="token in currentRelationship(relationshipCards).tokens" :key="token.id">
-                      <div class="token-row">
-                        <strong x-text="token.label"></strong>
-                        <span x-text="token.kind"></span>
-                        <p x-show="token.description" x-text="token.description"></p>
-                      </div>
-                    </template>
-                  </div>
                 </article>
               </template>
             </div>

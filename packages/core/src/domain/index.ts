@@ -21,6 +21,5 @@ export type {
   EntityKind,
   EntityState,
   RelationshipState,
-  RelationshipToken,
   WorldState
 } from "./world/types";

@@ -169,8 +169,7 @@ describe("selectors", () => {
             }
           }
         ],
-        flags: [],
-        tokens: []
+        flags: []
       },
       {
         id: "town->shop",
@@ -196,8 +195,7 @@ describe("selectors", () => {
             }
           }
         ],
-        flags: [],
-        tokens: []
+        flags: []
       }
     ]);
   });

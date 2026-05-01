@@ -63,28 +63,4 @@ describe("applyEffects", () => {
 
     expect(getEntityQuantity(next, "shop", "stock")).toBe(0);
   });
-
-  it("applies relationship tokens", () => {
-    const next = applyEffects(
-      createInitialState(),
-      [
-        {
-          kind: "addRelationshipToken",
-          relationshipId: "apprentice->player",
-          token: {
-            id: "test-token",
-            kind: "promise",
-            label: "A test promise"
-          }
-        }
-      ],
-      { day: 1, sceneId: "test-scene" }
-    );
-
-    expect(next.world.relationships["apprentice->player"].tokens).toContainEqual({
-      id: "test-token",
-      kind: "promise",
-      label: "A test promise"
-    });
-  });
 });

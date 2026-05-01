@@ -1,7 +1,6 @@
 import type { EntityId, RelationshipId } from "../ids";
 import type { Effect } from "../effects/types";
 import type { GaugeKey, QuantityKey, RelationshipDimensionKey } from "../world/keys";
-import type { RelationshipToken } from "../world/types";
 
 export type SceneType = string;
 
@@ -60,15 +59,7 @@ export type SceneAvailabilityCondition =
       relationshipId: RelationshipId;
       key: RelationshipDimensionKey;
     } & SceneNumericComparison &
-    SceneSemanticComparison)
-  | {
-      kind: "relationshipToken";
-      relationshipId: RelationshipId;
-      tokenId?: string;
-      tokenKind?: RelationshipToken["kind"];
-      tokenLabelIncludes?: string;
-      present?: boolean;
-    };
+    SceneSemanticComparison);
 
 export type Scene = {
   id: string;

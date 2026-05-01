@@ -3,14 +3,6 @@ import type { GaugeKey, QuantityKey, RelationshipDimensionKey } from "./keys";
 
 export type EntityKind = string;
 
-export type RelationshipToken = {
-  id: string;
-  kind: string;
-  label: string;
-  description?: string;
-  sourceSceneId?: string;
-};
-
 export type EntityState = {
   id: EntityId;
   kind: EntityKind;
@@ -28,7 +20,6 @@ export type RelationshipState = {
   to: EntityId;
   dimensions: Partial<Record<RelationshipDimensionKey, number>>;
   flags: Record<string, boolean>;
-  tokens: RelationshipToken[];
 };
 
 export type WorldState = {

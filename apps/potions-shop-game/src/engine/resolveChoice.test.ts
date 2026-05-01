@@ -37,13 +37,7 @@ describe("resolveChoice", () => {
     expect(getEntityQuantity(next, "shop", "stock")).toBe(2);
     expect(getEntityGauge(next, "player", "compassion")).toBe(0.2);
     expect(getRelationshipDimension(next, "town->shop", "trust")).toBe(0.1);
-    expect(next.world.relationships["town->shop"].tokens).toContainEqual({
-      id: "stablehand-helped",
-      kind: "favour",
-      label: "Helped the stablehand's sister",
-      description: "Word may spread that the shop helps desperate families.",
-      sourceSceneId: "desperate-stablehand"
-    });
+    expect(next.flags.stablehand_helped).toBe(true);
     expect(next.flags.stablehand_grateful).toBe(true);
     expect(next.sceneTableau).not.toContain("desperate-stablehand");
     expect(next.resolvedScenes).toContain("desperate-stablehand");

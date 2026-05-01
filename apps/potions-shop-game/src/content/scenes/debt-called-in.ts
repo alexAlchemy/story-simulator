@@ -15,9 +15,8 @@ const scene: Scene = {
     all: [
       { kind: "day", min: 4 },
       {
-        kind: "relationshipToken",
-        relationshipId: "town->shop",
-        tokenId: "stablehand-helped"
+        kind: "flag",
+        key: "stablehand_helped"
       }
     ]
   },

@@ -15,7 +15,6 @@ import {
 import {
   getEntityGauge,
   getEntityQuantity,
-  getRelationship,
   getRelationshipDimension
 } from "./worldAccess";
 
@@ -102,13 +101,6 @@ export function validateSceneAvailability(
           )
         );
         break;
-      case "relationshipToken":
-        if (world && !world.relationships[condition.relationshipId]) {
-          issues.push(
-            `${scene.id}: relationshipToken availability references unknown relationship "${condition.relationshipId}"`
-          );
-        }
-        break;
       case "day":
       case "flag":
         break;
@@ -155,8 +147,6 @@ function matchesSceneAvailabilityCondition(
         condition,
         content.semantics?.relationshipDimensionDefinitions?.[condition.key]
       );
-    case "relationshipToken":
-      return matchesRelationshipToken(state, condition);
     default:
       assertNever(condition);
   }
@@ -227,34 +217,6 @@ function matchesNumericComparison(
   }
 
   return true;
-}
-
-function matchesRelationshipToken(
-  state: GameState,
-  condition: Extract<SceneAvailabilityCondition, { kind: "relationshipToken" }>
-): boolean {
-  const relationship = getRelationship(state, condition.relationshipId);
-  const token = relationship.tokens.find((candidate) => {
-    if (condition.tokenId !== undefined && candidate.id !== condition.tokenId) {
-      return false;
-    }
-
-    if (condition.tokenKind !== undefined && candidate.kind !== condition.tokenKind) {
-      return false;
-    }
-
-    if (
-      condition.tokenLabelIncludes !== undefined &&
-      !candidate.label.toLowerCase().includes(condition.tokenLabelIncludes.toLowerCase())
-    ) {
-      return false;
-    }
-
-    return true;
-  });
-
-  const present = condition.present ?? true;
-  return present ? Boolean(token) : !token;
 }
 
 function validateSemanticComparison<

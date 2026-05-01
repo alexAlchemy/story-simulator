@@ -1,4 +1,4 @@
-import type { EntityState, GameState, RelationshipState } from "@aphebis/core";
+import type { EntityState, GameState } from "@aphebis/core";
 import {
   describeBoundedGauge,
   describeOpenQuantity,
@@ -54,7 +54,6 @@ export type RelationshipCardViewModel = {
   to: string;
   dimensions: StateRow[];
   flags: StateRow[];
-  tokens: RelationshipState["tokens"];
 };
 
 export function getResourceRows(state: GameState): DashboardRow[] {
@@ -146,8 +145,7 @@ export function getRelationshipCards(
     from: state.world.entities[relationship.from]?.displayName ?? relationship.from,
     to: state.world.entities[relationship.to]?.displayName ?? relationship.to,
     dimensions: toStateRows(relationship.dimensions, semanticContext),
-    flags: toStateRows(relationship.flags),
-    tokens: relationship.tokens.map((token) => ({ ...token }))
+    flags: toStateRows(relationship.flags)
   }));
 }
 

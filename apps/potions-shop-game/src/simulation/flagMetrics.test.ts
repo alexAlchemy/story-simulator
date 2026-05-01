@@ -10,8 +10,10 @@ describe("simulateFlagMetrics", () => {
 
     expect(report.flagsDefinedInContent).toEqual([
       "left_thanks_for_gift",
+      "mistake_handled_gently",
       "mysterious_gift_accepted",
       "stablehand_grateful",
+      "stablehand_helped",
       "stablehand_refused"
     ]);
     expect(report.flagsNeverObserved).toEqual([]);

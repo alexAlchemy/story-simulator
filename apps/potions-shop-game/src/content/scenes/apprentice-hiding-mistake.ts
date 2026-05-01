@@ -1,5 +1,5 @@
 import type { Scene } from "@aphebis/core";
-import { decreaseEntityGauge, decreaseRelationshipDimension, increaseEntityGauge, increaseRelationshipDimension } from "@aphebis/system-cosy-shop";
+import { decreaseEntityGauge, decreaseRelationshipDimension, flags, increaseEntityGauge, increaseRelationshipDimension } from "@aphebis/system-cosy-shop";
 
 /**
  * PREMISE: You discover your apprentice has hidden a mistake—a cracked vial in the back shelf.
@@ -18,17 +18,7 @@ const scene: Scene = {
       effects: [
         increaseRelationshipDimension("apprentice->player", "trust", "moderately"),
         increaseRelationshipDimension("apprentice->player", "affection", "strongly"),
-        {
-          kind: "addRelationshipToken",
-          relationshipId: "apprentice->player",
-          token: {
-            id: "mistake-handled-gently",
-            kind: "promise",
-            label: "Mistakes can be admitted",
-            description: "The apprentice has seen that honesty is not always punished.",
-            sourceSceneId: "apprentice-hiding-mistake"
-          }
-        },
+        flags.set("mistake_handled_gently", true),
         increaseEntityGauge("player", "compassion", "slightly"),
         increaseEntityGauge("player", "fatigue", "slightly"),
         { kind: "log", text: "The story comes out slowly: fear first, then the mistake itself." }

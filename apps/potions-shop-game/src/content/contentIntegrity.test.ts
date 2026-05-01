@@ -49,7 +49,6 @@ describe("content integrity", () => {
               "entityGauge",
               "entityQuantity",
               "relationshipDimension",
-              "addRelationshipToken",
               "setFlag",
               "addScene",
               "removeScene",
@@ -60,16 +59,6 @@ describe("content integrity", () => {
 
       expect(legacyEffects, sceneId).toEqual([]);
     }
-  });
-
-  it("defines relationship tokens on at least two choices", () => {
-    const tokenChoiceCount = Object.values(scenes)
-      .flatMap((scene) => scene.choices)
-      .filter((choice) =>
-        choice.effects.some((effect) => effect.kind === "addRelationshipToken")
-      ).length;
-
-    expect(tokenChoiceCount).toBeGreaterThanOrEqual(2);
   });
 
   it("validates scene availability references and labels", () => {
