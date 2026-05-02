@@ -4,6 +4,7 @@ export * from "./domain/semantics";
 export * from "./engine/advanceDay";
 export * from "./engine/applyEffects";
 export * from "./engine/resolveChoice";
+export * from "./engine/sceneAftermath";
 export * from "./engine/sceneBeats";
 export * from "./engine/sceneAvailability";
 export * from "./engine/sceneTableau";

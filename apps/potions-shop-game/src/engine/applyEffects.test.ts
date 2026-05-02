@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createInitialState } from "../content/initialState";
-import { applyEffects } from "@aphebis/core";
+import { applyEffects, applyEffectsWithTrace } from "@aphebis/core";
 import {
   getBooleanProperty,
   getNumericProperty
@@ -83,5 +83,44 @@ describe("applyEffects", () => {
     );
 
     expect(getNumericProperty(next, "shop", "stock")).toBe(0);
+  });
+
+  it("returns a trace of state changes when applying effects with trace", () => {
+    const result = applyEffectsWithTrace(
+      createInitialState(),
+      [
+        {
+          kind: "changeProperty",
+          entityId: "shop",
+          property: "stock",
+          direction: "decrease",
+          amount: 1
+        },
+        { kind: "setProperty", entityId: "story", property: "sample_flag", value: true },
+        { kind: "removeScene", sceneId: "gift-at-door" },
+        { kind: "log", text: "A test consequence happened." }
+      ],
+      { day: 1, sceneId: "test-scene", propertyDefinitions }
+    );
+
+    expect(result.state.sceneTableau).not.toContain("gift-at-door");
+    expect(result.changes).toMatchObject([
+      {
+        kind: "propertyChanged",
+        entityId: "shop",
+        property: "stock",
+        before: 3,
+        after: 2
+      },
+      {
+        kind: "propertyChanged",
+        entityId: "story",
+        property: "sample_flag",
+        before: undefined,
+        after: true
+      },
+      { kind: "sceneRemoved", sceneId: "gift-at-door" },
+      { kind: "logAdded", text: "A test consequence happened." }
+    ]);
   });
 });

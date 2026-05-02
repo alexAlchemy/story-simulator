@@ -1,6 +1,8 @@
 import type { GameContent, GameState } from "../domain";
-import { applyEffects } from "./applyEffects";
+import type { SceneAftermathViewModel } from "../domain";
+import { applyEffects, applyEffectsWithTrace } from "./applyEffects";
 import { canSeeScene } from "./sceneAvailability";
+import { buildSceneAftermath } from "./sceneAftermath";
 import {
   applyLocalEffects,
   createActiveSceneSession,
@@ -9,14 +11,28 @@ import {
   isBeatScene
 } from "./sceneBeats";
 
+export type ChoiceResolutionOutcome = {
+  state: GameState;
+  aftermath?: SceneAftermathViewModel;
+};
+
 export function resolveChoice(
   state: GameState,
   sceneId: string,
   choiceId: string,
   content: GameContent
 ): GameState {
+  return resolveChoiceWithOutcome(state, sceneId, choiceId, content).state;
+}
+
+export function resolveChoiceWithOutcome(
+  state: GameState,
+  sceneId: string,
+  choiceId: string,
+  content: GameContent
+): ChoiceResolutionOutcome {
   if (state.ended) {
-    return state;
+    return { state };
   }
 
   const scene = content.scenes[sceneId];
@@ -60,11 +76,13 @@ export function resolveChoice(
     : withEffects;
 
   return {
-    ...followUpLog,
-    sceneTableau: followUpLog.sceneTableau.filter((id) => id !== sceneId),
-    resolvedScenes: followUpLog.resolvedScenes.includes(sceneId)
-      ? followUpLog.resolvedScenes
-      : [...followUpLog.resolvedScenes, sceneId]
+    state: {
+      ...followUpLog,
+      sceneTableau: followUpLog.sceneTableau.filter((id) => id !== sceneId),
+      resolvedScenes: followUpLog.resolvedScenes.includes(sceneId)
+        ? followUpLog.resolvedScenes
+        : [...followUpLog.resolvedScenes, sceneId]
+    }
   };
 }
 
@@ -73,7 +91,7 @@ function resolveBeatChoice(
   sceneId: string,
   choiceId: string,
   content: GameContent
-): GameState {
+): ChoiceResolutionOutcome {
   const scene = content.scenes[sceneId];
   const existingSession = state.activeScene;
 
@@ -111,11 +129,12 @@ function resolveBeatChoice(
     }
   };
 
-  const withEffects = applyEffects(withSession, choice.effects ?? [], {
+  const appliedEffects = applyEffectsWithTrace(withSession, choice.effects ?? [], {
     day: state.day,
     sceneId,
     propertyDefinitions: content.semantics?.propertyDefinitions
   });
+  const withEffects = appliedEffects.state;
 
   const followUpLog = choice.followUpText
     ? applyEffects(
@@ -131,22 +150,36 @@ function resolveBeatChoice(
     }
 
     return {
-      ...followUpLog,
-      activeScene: {
-        sceneId,
-        currentBeatId: choice.nextBeatId,
-        localState,
-        choicesMade
+      state: {
+        ...followUpLog,
+        activeScene: {
+          sceneId,
+          currentBeatId: choice.nextBeatId,
+          localState,
+          choicesMade
+        }
       }
     };
   }
 
-  return {
+  const resolvedState = {
     ...followUpLog,
     activeScene: undefined,
     sceneTableau: followUpLog.sceneTableau.filter((id) => id !== sceneId),
     resolvedScenes: followUpLog.resolvedScenes.includes(sceneId)
       ? followUpLog.resolvedScenes
       : [...followUpLog.resolvedScenes, sceneId]
+  };
+
+  return {
+    state: resolvedState,
+    aftermath: buildSceneAftermath(
+      scene,
+      choice,
+      state,
+      resolvedState,
+      appliedEffects.changes,
+      content
+    )
   };
 }

@@ -57,6 +57,52 @@
 
       </header>
 
+      <template x-if="currentAftermath">
+        <section class="aftermath-backdrop" role="dialog" aria-modal="true" aria-labelledby="aftermath-title">
+          <article class="aftermath-panel">
+            <div class="scene-detail-head">
+              <span class="scene-type" x-text="currentAftermath.sceneTitle"></span>
+              <h2 id="aftermath-title" x-text="currentAftermath.title"></h2>
+            </div>
+
+            <p class="aftermath-narration" x-text="currentAftermath.narration"></p>
+
+            <template x-if="currentAftermath.changes.length">
+              <section class="aftermath-section" aria-label="What changed">
+                <h3>What changed</h3>
+                <div class="aftermath-change-list">
+                  <template x-for="change in currentAftermath.changes" :key="change.entityId + ':' + change.property">
+                    <div class="aftermath-change">
+                      <span x-text="change.label"></span>
+                      <strong>
+                        <span x-text="change.before"></span>
+                        <span aria-hidden="true">-&gt;</span>
+                        <span x-text="change.after"></span>
+                      </strong>
+                    </div>
+                  </template>
+                </div>
+              </section>
+            </template>
+
+            <template x-if="currentAftermath.futureEchoText.length">
+              <section class="aftermath-section" aria-label="Future echoes">
+                <h3>Future echoes</h3>
+                <ul class="future-echo-list">
+                  <template x-for="echo in currentAftermath.futureEchoText" :key="echo">
+                    <li x-text="echo"></li>
+                  </template>
+                </ul>
+              </section>
+            </template>
+
+            <button type="button" class="primary aftermath-close" @click="dismissAftermath()">
+              Return to the shop
+            </button>
+          </article>
+        </section>
+      </template>
+
       <section
         x-data="dashboardPanel()"
         x-show="activeTab === 'dashboard'"

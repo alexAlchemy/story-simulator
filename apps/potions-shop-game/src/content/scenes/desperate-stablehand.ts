@@ -135,7 +135,21 @@ const scene: Scene = {
             log(
               "The stablehand leaves with the draught held under his coat. Your apprentice says nothing, but starts cleaning the counter more slowly than usual."
             )
-          ]
+          ],
+          aftermath: {
+            narration:
+              "After listening to the stablehand's story, you gave him the fever draught and asked for nothing in return. He carried it home beneath his coat. Later, word comes back: by dusk, some colour had returned to his sister's cheeks.",
+            spotlightProperties: [
+              { entityId: "shop", property: "stock" },
+              { entityId: "player", property: "compassion" },
+              { entityId: "shop", property: "goodwill" },
+              { entityId: "apprentice", property: "trust" }
+            ],
+            futureEchoText: [
+              "Word may spread that your shop helps people who cannot pay.",
+              "Your apprentice will remember that you gave before asking for coin."
+            ]
+          }
         },
         {
           id: "sell-for-three",
@@ -150,7 +164,19 @@ const scene: Scene = {
             shop.gainStanding("slightly"),
             story.setFact("stablehand_helped", true),
             log("Three wet coins land in the drawer, lighter than they should feel.")
-          ]
+          ],
+          aftermath: {
+            narration:
+              "You took the stablehand's three wet coins, then wrote the rest of the price away. He left with the draught held close, grateful and ashamed in equal measure.",
+            spotlightProperties: [
+              { entityId: "shop", property: "stock" },
+              { entityId: "shop", property: "coins" },
+              { entityId: "player", property: "prudence" },
+              { entityId: "player", property: "compassion" },
+              { entityId: "shop", property: "shopStanding" }
+            ],
+            futureEchoText: ["The debt was forgiven, but the record of mercy remains."]
+          }
         },
         {
           id: "split-dose",
@@ -166,7 +192,18 @@ const scene: Scene = {
             log(
               "You divide the draught into two smaller bottles. He thanks you, but the second bottle on the counter looks suddenly fragile."
             )
-          ]
+          ],
+          aftermath: {
+            narration:
+              "You split the draught into two smaller bottles and warned him that half a cure is still only half a cure. He thanked you anyway, though his eyes kept returning to the weaker dose.",
+            spotlightProperties: [
+              { entityId: "shop", property: "stock" },
+              { entityId: "player", property: "prudence" },
+              { entityId: "player", property: "compassion" },
+              { entityId: "apprentice", property: "confidence" }
+            ],
+            futureEchoText: ["The choice may be remembered as careful mercy, or as a compromise."]
+          }
         },
         {
           id: "refuse",
@@ -179,7 +216,17 @@ const scene: Scene = {
             shop.loseStanding("slightly"),
             story.setFact("stablehand_refused", true),
             log("He nods once, too politely. You set water to boil before the bell stops moving.")
-          ]
+          ],
+          aftermath: {
+            narration:
+              "You kept the last fever draught and promised to brew through the night instead. The stablehand left empty-handed for now, and the kettle was already on before the bell stopped moving.",
+            spotlightProperties: [
+              { entityId: "player", property: "prudence" },
+              { entityId: "player", property: "fatigue" },
+              { entityId: "shop", property: "shopStanding" }
+            ],
+            futureEchoText: ["Some will see restraint. Others will remember the empty hands."]
+          }
         },
         {
           id: "written-guarantee",
@@ -194,7 +241,16 @@ const scene: Scene = {
             log(
               "You seal a note in shop wax. He takes it like it might burn him, then runs for the temple road."
             )
-          ]
+          ],
+          aftermath: {
+            narration:
+              "You sealed a guarantee in shop wax and sent the stablehand back toward the temple road. He ran with your name in his hand instead of a bottle.",
+            spotlightProperties: [
+              { entityId: "player", property: "prudence" },
+              { entityId: "shop", property: "shopStanding" }
+            ],
+            futureEchoText: ["Your name may carry farther than the draught would have."]
+          }
         }
       ]
     }

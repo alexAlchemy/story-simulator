@@ -2,10 +2,17 @@ import Alpine from "alpinejs";
 import "../ui/styles.css";
 import { content } from "../content/scenes";
 import { createInitialState } from "../content/initialState";
-import type { BeatChoice, GameState, Scene, SceneBeat, SceneChoice } from "@aphebis/core";
+import type {
+  BeatChoice,
+  GameState,
+  Scene,
+  SceneAftermathViewModel,
+  SceneBeat,
+  SceneChoice
+} from "@aphebis/core";
 import { advanceDay } from "@aphebis/core";
 import { buildEnding, type EndingSummary } from "../engine/buildEnding";
-import { resolveChoice } from "@aphebis/core";
+import { resolveChoiceWithOutcome } from "@aphebis/core";
 import { getVisibleScenes } from "@aphebis/core";
 import { getCurrentBeat, getSceneChoices, isBeatScene } from "@aphebis/core";
 import {
@@ -28,6 +35,7 @@ type AppModel = {
   sceneBrowserView: SceneBrowserView;
   selectedSceneId: string | null;
   ending: EndingSummary | null;
+  currentAftermath: SceneAftermathViewModel | null;
   init: () => void;
   restart: () => void;
   selectTab: (tab: AppTab) => void;
@@ -35,6 +43,7 @@ type AppModel = {
   openScene: (sceneId: string) => void;
   backToSceneList: () => void;
   choose: (choiceId: string) => void;
+  dismissAftermath: () => void;
   advance: () => void;
   visibleScenes: Scene[];
   selectedScene: Scene | null;
@@ -60,12 +69,14 @@ function createAppModel(): AppModel {
     sceneBrowserView: "list",
     selectedSceneId: null,
     ending: null,
+    currentAftermath: null,
     init() {
       this.selectedSceneId = this.visibleScenes[0]?.id ?? null;
     },
     restart() {
       this.state = createInitialState();
       this.ending = null;
+      this.currentAftermath = null;
       this.activeTab = "dashboard";
       this.sceneBrowserView = "list";
       this.selectedSceneId = this.visibleScenes[0]?.id ?? null;
@@ -91,7 +102,9 @@ function createAppModel(): AppModel {
         return;
       }
 
-      this.state = resolveChoice(this.state, this.selectedSceneId, choiceId, content);
+      const outcome = resolveChoiceWithOutcome(this.state, this.selectedSceneId, choiceId, content);
+      this.state = outcome.state;
+      this.currentAftermath = outcome.aftermath ?? null;
       if (this.state.activeScene) {
         this.selectedSceneId = this.state.activeScene.sceneId;
         return;
@@ -107,7 +120,11 @@ function createAppModel(): AppModel {
         this.ending = buildEnding(this.state, content);
       }
     },
+    dismissAftermath() {
+      this.currentAftermath = null;
+    },
     advance() {
+      this.currentAftermath = null;
       this.state = advanceDay(this.state, content);
       if (this.state.ended) {
         this.ending = buildEnding(this.state, content);

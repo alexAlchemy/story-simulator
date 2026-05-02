@@ -44,6 +44,38 @@ export type SceneChoice = {
   followUpText?: string;
 };
 
+export type SceneAftermathSpotlightProperty = {
+  entityId: EntityId;
+  property: string;
+};
+
+export type SceneAftermath = {
+  narration: string;
+  spotlightProperties?: SceneAftermathSpotlightProperty[];
+  futureEchoText?: string[];
+};
+
+export type SceneAftermathPropertyChange = {
+  entityId: EntityId;
+  entityName: string;
+  property: string;
+  label: string;
+  before: string;
+  after: string;
+  beforeValue: number | boolean | undefined;
+  afterValue: number | boolean | undefined;
+  spotlighted: boolean;
+};
+
+export type SceneAftermathViewModel = {
+  title: "Scene Aftermath";
+  sceneId: string;
+  sceneTitle: string;
+  narration: string;
+  changes: SceneAftermathPropertyChange[];
+  futureEchoText: string[];
+};
+
 export type BeatChoice = {
   id: string;
   label: string;
@@ -53,6 +85,7 @@ export type BeatChoice = {
   effects?: Effect[];
   nextBeatId?: string;
   endsScene?: boolean;
+  aftermath?: SceneAftermath;
   followUpText?: string;
   availability?: LocalAvailability;
 };

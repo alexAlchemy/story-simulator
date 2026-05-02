@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { content } from "../content/scenes";
 import { createInitialState } from "../content/initialState";
-import { resolveChoice } from "@aphebis/core";
+import { resolveChoice, resolveChoiceWithOutcome } from "@aphebis/core";
 import {
   getBooleanProperty,
   getSceneChoices,
@@ -68,6 +68,51 @@ describe("resolveChoice", () => {
     expect(getBooleanProperty(next, "story", "stablehand_grateful")).toBe(true);
     expect(next.sceneTableau).not.toContain("desperate-stablehand");
     expect(next.resolvedScenes).toContain("desperate-stablehand");
+  });
+
+  it("returns authored aftermath built from traced terminal beat effects", () => {
+    const started = resolveChoice(
+      createInitialState(),
+      "desperate-stablehand",
+      "ask-what-happened",
+      content
+    );
+    const complicated = resolveChoice(
+      started,
+      "desperate-stablehand",
+      "need-only-fact",
+      content
+    );
+    const outcome = resolveChoiceWithOutcome(
+      complicated,
+      "desperate-stablehand",
+      "free-draught",
+      content
+    );
+
+    expect(outcome.aftermath).toMatchObject({
+      title: "Scene Aftermath",
+      sceneId: "desperate-stablehand",
+      sceneTitle: "The Desperate Stablehand",
+      futureEchoText: [
+        "Word may spread that your shop helps people who cannot pay.",
+        "Your apprentice will remember that you gave before asking for coin."
+      ]
+    });
+    expect(outcome.aftermath?.narration).toContain("you gave him the fever draught");
+    expect(outcome.aftermath?.changes.map((change) => change.label)).toEqual([
+      "Stock",
+      "Compassion",
+      "Goodwill",
+      "Trust"
+    ]);
+    expect(outcome.aftermath?.changes[0]).toMatchObject({
+      entityId: "shop",
+      property: "stock",
+      before: "3",
+      after: "2",
+      spotlighted: true
+    });
   });
 
   it("uses local state to unlock later beat choices", () => {

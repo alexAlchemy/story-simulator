@@ -28,44 +28,89 @@ const scene: Scene = {
       }
     ]
   },
-  choices: [
-    {
-      id: "warn-honestly",
-      label: "Warn customers honestly",
-      description: "Name the risk without making it a duel.",
-      effects: [
-        increaseProperty("shop", "shopStanding", "slightly"),
-        increaseProperty("shop", "goodwill", "slightly"),
-        increaseProperty("town", "gossipHeat", "slightly"),
-        spendPropertyAmount("shop", "coins", 2),
-        { kind: "log", text: "Some listen. Some resent listening. No one can say you lied." }
-      ]
-    },
-    {
-      id: "undercut-rival",
-      label: "Undercut the rival for one afternoon",
-      description: "Win the crowd before the crowd decides what is true.",
-      effects: [
-        gainPropertyAmount("shop", "coins", 4),
-        spendPropertyAmount("shop", "stock", 2),
-        increaseProperty("player", "ambition", "moderately"),
-        decreaseProperty("player", "compassion", "slightly"),
-        increaseProperty("town", "gossipHeat", "moderately"),
-        { kind: "log", text: "By dusk, the rival is gone and the town is full of comparisons." }
-      ]
-    },
-    {
-      id: "let-town-choose",
-      label: "Let the town choose",
-      description: "Refuse to turn the street into a trial.",
-      effects: [
-        decreaseProperty("player", "prudence", "slightly"),
-        decreaseProperty("shop", "goodwill", "slightly"),
-        increaseProperty("town", "gossipHeat", "slightly"),
-        { kind: "log", text: "The street makes its own judgement, as streets always do." }
+  startBeatId: "seller-outside",
+  beats: {
+    "seller-outside": {
+      id: "seller-outside",
+      title: "Cheaper Fever Cure",
+      text:
+        "The travelling seller's sign is bright, cheap, and placed close enough to your door to feel deliberate. Their cure may work. It may also be mostly coloured water.",
+      choices: [
+        {
+          id: "warn-honestly",
+          label: "Warn customers honestly",
+          description: "Name the risk without making it a duel.",
+          endsScene: true,
+          effects: [
+            increaseProperty("shop", "shopStanding", "slightly"),
+            increaseProperty("shop", "goodwill", "slightly"),
+            increaseProperty("town", "gossipHeat", "slightly"),
+            spendPropertyAmount("shop", "coins", 2),
+            { kind: "log", text: "Some listen. Some resent listening. No one can say you lied." }
+          ],
+          aftermath: {
+            narration:
+              "You warned customers honestly and kept the warning from becoming a duel. Some listened, some resented listening, and no one could say you lied.",
+            spotlightProperties: [
+              { entityId: "shop", property: "shopStanding" },
+              { entityId: "shop", property: "goodwill" },
+              { entityId: "town", property: "gossipHeat" },
+              { entityId: "shop", property: "coins" }
+            ],
+            futureEchoText: ["The town heard you choose accuracy over spectacle."]
+          }
+        },
+        {
+          id: "undercut-rival",
+          label: "Undercut the rival for one afternoon",
+          description: "Win the crowd before the crowd decides what is true.",
+          endsScene: true,
+          effects: [
+            gainPropertyAmount("shop", "coins", 4),
+            spendPropertyAmount("shop", "stock", 2),
+            increaseProperty("player", "ambition", "moderately"),
+            decreaseProperty("player", "compassion", "slightly"),
+            increaseProperty("town", "gossipHeat", "moderately"),
+            { kind: "log", text: "By dusk, the rival is gone and the town is full of comparisons." }
+          ],
+          aftermath: {
+            narration:
+              "You undercut the rival before the crowd could settle. By dusk, the seller was gone and the town was full of comparisons.",
+            spotlightProperties: [
+              { entityId: "shop", property: "coins" },
+              { entityId: "shop", property: "stock" },
+              { entityId: "player", property: "ambition" },
+              { entityId: "player", property: "compassion" },
+              { entityId: "town", property: "gossipHeat" }
+            ],
+            futureEchoText: ["The street learned that your shop can compete when cornered."]
+          }
+        },
+        {
+          id: "let-town-choose",
+          label: "Let the town choose",
+          description: "Refuse to turn the street into a trial.",
+          endsScene: true,
+          effects: [
+            decreaseProperty("player", "prudence", "slightly"),
+            decreaseProperty("shop", "goodwill", "slightly"),
+            increaseProperty("town", "gossipHeat", "slightly"),
+            { kind: "log", text: "The street makes its own judgement, as streets always do." }
+          ],
+          aftermath: {
+            narration:
+              "You refused to turn the street into a trial. The crowd made its own judgement, as crowds do, and the seller kept calling out prices.",
+            spotlightProperties: [
+              { entityId: "player", property: "prudence" },
+              { entityId: "shop", property: "goodwill" },
+              { entityId: "town", property: "gossipHeat" }
+            ],
+            futureEchoText: ["The town was left to choose, and to own what it chose."]
+          }
+        }
       ]
     }
-  ]
+  }
 };
 
 export default scene;

@@ -68,14 +68,14 @@ describe("content integrity", () => {
 
   it("validates beat scene structure", () => {
     for (const scene of Object.values(scenes)) {
-      if (!scene.beats) {
-        continue;
-      }
+      expect(scene.beats, scene.id).toBeTruthy();
+      expect(scene.choices, scene.id).toBeUndefined();
+      const beats = scene.beats ?? {};
 
       expect(scene.startBeatId, scene.id).toBeTruthy();
-      expect(scene.beats[scene.startBeatId ?? ""], scene.id).toBeTruthy();
+      expect(beats[scene.startBeatId ?? ""], scene.id).toBeTruthy();
 
-      for (const [beatId, beat] of Object.entries(scene.beats)) {
+      for (const [beatId, beat] of Object.entries(beats)) {
         expect(beat.id, `${scene.id}:${beatId}`).toBe(beatId);
         expect(beat.choices.length, `${scene.id}:${beat.id}`).toBeGreaterThan(0);
 
@@ -87,8 +87,13 @@ describe("content integrity", () => {
             `${scene.id}:${choice.id} must either advance to a beat or end the scene`
           ).toBe(true);
 
+          if (endsScene) {
+            expect(choice.aftermath, `${scene.id}:${choice.id} must define aftermath`).toBeTruthy();
+            expect(choice.aftermath?.narration, `${scene.id}:${choice.id}`).toBeTruthy();
+          }
+
           if (choice.nextBeatId) {
-            expect(scene.beats[choice.nextBeatId], `${scene.id}:${choice.id}`).toBeTruthy();
+            expect(beats[choice.nextBeatId], `${scene.id}:${choice.id}`).toBeTruthy();
           }
 
           for (const effect of choice.localEffects ?? []) {
