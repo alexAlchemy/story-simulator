@@ -20,6 +20,35 @@ const scene: Scene = {
         "The apprentice admits it before you ask. A cough draught went to a child whose mother could not pay. The bottle was small. The rule was not.",
       choices: [
         {
+          id: "ask-their-reason",
+          label: "Ask why they chose it",
+          description:
+            "Hear the need behind the broken rule before deciding what lesson this becomes.",
+          nextBeatId: "rule-and-child"
+        },
+        {
+          id: "count-the-missing-stock",
+          label: "Count the missing stock",
+          description:
+            "Let the practical cost stand plainly beside the mercy before you answer.",
+          nextBeatId: "rule-and-child"
+        },
+        {
+          id: "step-outside",
+          label: "Look for the mother and child",
+          description:
+            "Check whether the kindness was urgent, careless, or both.",
+          nextBeatId: "rule-and-child"
+        }
+      ]
+    },
+    "rule-and-child": {
+      id: "rule-and-child",
+      title: "Rule and Child",
+      text:
+        "The child is still coughing in the lane, but less sharply now. The apprentice says they knew the rule, knew the price, and knew the mother would leave with nothing if they waited for permission.",
+      choices: [
+        {
           id: "defend-kindness",
           label: "Defend the act",
           description: "Let them know the impulse was not wrong.",

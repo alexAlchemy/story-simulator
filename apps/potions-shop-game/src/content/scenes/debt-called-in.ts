@@ -26,6 +26,35 @@ const scene: Scene = {
         "The stablehand returns with a cousin and a proposition. Paying customers could come your way, if one restricted tonic leaves quietly tonight.",
       choices: [
         {
+          id: "ask-who-needs-it",
+          label: "Ask who the tonic is for",
+          description:
+            "Make the cousin say the need aloud before deciding whether this is mercy or a quiet trade.",
+          nextBeatId: "side-door-offer"
+        },
+        {
+          id: "name-the-rule",
+          label: "Name the restricted rule",
+          description:
+            "Put the shop's boundary in the room before gratitude can blur it.",
+          nextBeatId: "side-door-offer"
+        },
+        {
+          id: "hear-the-offer",
+          label: "Hear the offer in full",
+          description:
+            "Let the practical upside become clear before deciding how much pressure you will accept.",
+          nextBeatId: "side-door-offer"
+        }
+      ]
+    },
+    "side-door-offer": {
+      id: "side-door-offer",
+      title: "The Side-Door Offer",
+      text:
+        "The cousin names a price, a promise of customers, and a side door where no one from the guild will see. The stablehand stares at the floor, grateful enough to hate the ask on your behalf.",
+      choices: [
+        {
           id: "accept-favour",
           label: "Accept the favour",
           description: "Let gratitude become a useful arrangement.",

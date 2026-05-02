@@ -37,6 +37,35 @@ const scene: Scene = {
         "The parent is grateful, the child recovered, and the apprentice is glowing. You also know the dosage advice was not quite right.",
       choices: [
         {
+          id: "ask-what-worked",
+          label: "Ask what helped most",
+          description:
+            "Let the parent tell the success story before you decide how to handle the flaw inside it.",
+          nextBeatId: "dosage-note"
+        },
+        {
+          id: "check-the-ledger",
+          label: "Check the dosage ledger",
+          description:
+            "Confirm the rough edge in writing before praise hardens into the whole truth.",
+          nextBeatId: "dosage-note"
+        },
+        {
+          id: "watch-apprentice",
+          label: "Watch your apprentice take the praise",
+          description:
+            "Notice whether this moment needs protection, correction, or a harder kind of lesson.",
+          nextBeatId: "dosage-note"
+        }
+      ]
+    },
+    "dosage-note": {
+      id: "dosage-note",
+      title: "The Dosage Note",
+      text:
+        "The ledger confirms it: the remedy was right, but the interval was too long. Luck and a mild fever did some of the saving. The parent is still smiling, and your apprentice is waiting to learn what this success means.",
+      choices: [
+        {
           id: "praise-in-public",
           label: "Praise them where the parent can hear",
           description: "Let the apprentice feel the warmth of a win.",

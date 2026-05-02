@@ -20,6 +20,35 @@ const scene: Scene = {
         "The regular has already noticed your shaking hands. They offer to sweep and shutter the shop while you sit, and the kindness arrives without a price.",
       choices: [
         {
+          id: "admit-tired",
+          label: "Admit the day has been long",
+          description:
+            "Let them see the need plainly before deciding whether help can cross the counter.",
+          nextBeatId: "unpriced-help"
+        },
+        {
+          id: "make-light-of-it",
+          label: "Make light of your hands",
+          description:
+            "Keep dignity in place while giving the kindness one more chance to retreat.",
+          nextBeatId: "unpriced-help"
+        },
+        {
+          id: "ask-why-offer",
+          label: "Ask why they are offering",
+          description:
+            "Find out whether this is pity, friendship, or just practical decency.",
+          nextBeatId: "unpriced-help"
+        }
+      ]
+    },
+    "unpriced-help": {
+      id: "unpriced-help",
+      title: "Unpriced Help",
+      text:
+        "They pick up the broom without claiming heroism. 'You sold my mother sleep last winter,' they say. 'Let me sell you ten minutes of sitting down.' The bell-rope waits by the door.",
+      choices: [
+        {
           id: "accept-help",
           label: "Accept the help",
           description: "Let the exchange be warmer than the receipt.",

@@ -20,8 +20,39 @@ const scene: Scene = {
         "The coins make the same small sound every time you count them. The total does not change, no matter how carefully you line the stacks.",
       choices: [
         {
+          id: "count-shortfall",
+          label: "Count the shortfall honestly",
+          description:
+            "Name the gap in the ledger before deciding whether tomorrow should cost more, last longer, or wait.",
+          nextBeatId: "rent-bell"
+        },
+        {
+          id: "check-shelf",
+          label: "Check what can still be sold",
+          description:
+            "Look for survival in stock and labor instead of staring only at the coins.",
+          nextBeatId: "rent-bell"
+        },
+        {
+          id: "listen-to-rain",
+          label: "Let the rain slow your hands",
+          description:
+            "Notice how tired you are before choosing what the shop is allowed to ask of you.",
+          nextBeatId: "rent-bell"
+        }
+      ]
+    },
+    "rent-bell": {
+      id: "rent-bell",
+      title: "The Rent Bell",
+      text:
+        "The rent bell is days away, but the sound is already in the room. The ledger offers no rescue, only three margins you might still adjust: price, work, or sleep.",
+      choices: [
+        {
           id: "raise-prices-tomorrow",
           label: "Plan to raise prices tomorrow",
+          description:
+            "Protect the shop's future by asking customers to carry more of tonight's pressure.",
           endsScene: true,
           effects: [
             player.gainPrudence("slightly"),
@@ -37,6 +68,8 @@ const scene: Scene = {
         {
           id: "work-late",
           label: "Work late bottling simple remedies",
+          description:
+            "Turn exhaustion into stock while there is still candle enough to make the shelves less bare.",
           endsScene: true,
           effects: [
             shop.gainStock(1),
@@ -58,6 +91,8 @@ const scene: Scene = {
         {
           id: "rest",
           label: "Close your eyes and rest",
+          description:
+            "Accept that the coin total will not improve tonight and protect the person who has to face tomorrow.",
           endsScene: true,
           effects: [
             player.recoverFatigue("moderately"),

@@ -20,8 +20,39 @@ const scene: Scene = {
         "The moonleaf is fresh, rare, and tied with blue thread. Whoever left it knew exactly when the shop door would open.",
       choices: [
         {
+          id: "inspect-thread",
+          label: "Inspect the knot and thread",
+          description:
+            "Look for intent before deciding whether the gift is generosity, bait, or a request made without words.",
+          nextBeatId: "unpriced-kindness"
+        },
+        {
+          id: "check-threshold",
+          label: "Check the threshold for signs",
+          description:
+            "Treat the doorway as evidence and decide how much mystery the shop can afford before opening.",
+          nextBeatId: "unpriced-kindness"
+        },
+        {
+          id: "wake-shop",
+          label: "Bring it inside before customers arrive",
+          description:
+            "Protect the rare herb first, then decide what accepting it might mean once the bell is awake.",
+          nextBeatId: "unpriced-kindness"
+        }
+      ]
+    },
+    "unpriced-kindness": {
+      id: "unpriced-kindness",
+      title: "Unpriced Kindness",
+      text:
+        "There is no curse-salt on the step, no threatening sigil, no dropped purse to prove an ordinary errand. Only the blue thread, a clean cut on each stem, and moonleaf your shop could use before noon.",
+      choices: [
+        {
           id: "accept-use",
           label: "Accept and use it",
+          description:
+            "Let the shop benefit from the gift now, even if the giver later expects your answer.",
           endsScene: true,
           effects: [
             shop.gainStock(2),
@@ -35,7 +66,8 @@ const scene: Scene = {
               "You brought the moonleaf inside and set it among your working stock. By midday its scent had threaded through the shop, useful and unsettling at once.",
             spotlightProperties: [
               { entityId: "shop", property: "stock" },
-              { entityId: "player", property: "ambition" }
+              { entityId: "player", property: "ambition" },
+              { entityId: "story", property: "mysterious_gift_accepted" }
             ],
             futureEchoText: ["Someone may come to see what you did with an unpriced gift."]
           }
@@ -43,6 +75,8 @@ const scene: Scene = {
         {
           id: "ask-around",
           label: "Ask around town",
+          description:
+            "Spend reputation and daylight on caution before letting the moonleaf become ordinary stock.",
           endsScene: true,
           effects: [
             shop.gainStanding("slightly"),
@@ -63,6 +97,8 @@ const scene: Scene = {
         {
           id: "leave-thanks",
           label: "Leave a thank-you charm by the door",
+          description:
+            "Accept less of the bounty and answer silence with courtesy instead of investigation.",
           endsScene: true,
           effects: [
             shop.gainStock(1),
@@ -77,7 +113,8 @@ const scene: Scene = {
             spotlightProperties: [
               { entityId: "shop", property: "stock" },
               { entityId: "player", property: "compassion" },
-              { entityId: "shop", property: "shopStanding" }
+              { entityId: "shop", property: "shopStanding" },
+              { entityId: "story", property: "left_thanks_for_gift" }
             ],
             futureEchoText: ["A quiet courtesy now waits by the threshold."]
           }

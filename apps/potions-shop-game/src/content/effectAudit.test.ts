@@ -13,7 +13,7 @@ describe("scene choice effect audit", () => {
 
     expect(audit).toMatchObject({
       totalScenes: 14,
-      totalChoices: 50,
+      totalChoices: 87,
       totalAuditedEffects: 139
     });
 

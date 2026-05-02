@@ -20,7 +20,9 @@ describe("sceneAvailability", () => {
       "apprentice-first-cure"
     );
 
+    state = resolveChoice(state, "after-hours-tea", "sit-beside-them", content);
     state = resolveChoice(state, "after-hours-tea", "listen-closely", content);
+    state = resolveChoice(state, "apprentice-hiding-mistake", "call-them-over", content);
     state = resolveChoice(state, "apprentice-hiding-mistake", "ask-gently", content);
     state = advanceDay(state, content);
     state = advanceDay(state, content);
@@ -28,6 +30,7 @@ describe("sceneAvailability", () => {
     const visibleSceneIds = getVisibleScenes(state, content).map((scene) => scene.id);
     expect(visibleSceneIds).toContain("apprentice-first-cure");
 
+    state = resolveChoice(state, "apprentice-first-cure", "watch-apprentice", content);
     state = resolveChoice(state, "apprentice-first-cure", "praise-in-public", content);
     expect(getNumericProperty(state, "apprentice", "affection")).toBeGreaterThan(0.7);
   });

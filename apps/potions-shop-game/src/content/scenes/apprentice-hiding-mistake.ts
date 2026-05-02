@@ -20,8 +20,25 @@ const scene: Scene = {
         "The cracked vial is tucked where a hurried hand hoped no one would look. Your apprentice watches you find it, face already braced for the shape of your response.",
       choices: [
         {
+          id: "call-them-over",
+          label: "Call them over",
+          description:
+            "Bring the mistake into the open before deciding whether this is carelessness, fear, or something else.",
+          nextBeatId: "what-spilled"
+        }
+      ]
+    },
+    "what-spilled": {
+      id: "what-spilled",
+      title: "What Spilled",
+      text:
+        "They come close enough for you to see the red line across one thumb. The vial held calming syrup, the batch you promised to save for fever cases. They were reaching for it after a customer snapped that apprentices always know less than the jars they dust. When it cracked, they hid it before the shame could reach your face.",
+      choices: [
+        {
           id: "ask-gently",
           label: "Ask gently what happened",
+          description:
+            "Make room for the full truth, even if it costs time and leaves the broken stock on your ledger.",
           endsScene: true,
           effects: [
             increaseProperty("apprentice", "trust", "moderately"),
@@ -33,12 +50,13 @@ const scene: Scene = {
           ],
           aftermath: {
             narration:
-              "You asked softly enough that the answer had somewhere to land. The story came out in pieces: a slip, a crack, then the fear of being thought careless.",
+              "You asked softly enough that the rest of the answer had somewhere to land. The story came out in pieces: the customer, the slip, the crack, then the fear of being thought careless.",
             spotlightProperties: [
               { entityId: "apprentice", property: "trust" },
               { entityId: "apprentice", property: "affection" },
               { entityId: "player", property: "compassion" },
-              { entityId: "player", property: "fatigue" }
+              { entityId: "player", property: "fatigue" },
+              { entityId: "story", property: "mistake_handled_gently" }
             ],
             futureEchoText: ["Your apprentice has learned that mistakes can be brought into the open."]
           }
@@ -46,6 +64,8 @@ const scene: Scene = {
         {
           id: "lesson",
           label: "Turn it into a lesson",
+          description:
+            "Keep blame small and convert the mistake into a rule the shop can actually use next time.",
           endsScene: true,
           effects: [
             increaseProperty("apprentice", "trust", "slightly"),
@@ -67,6 +87,8 @@ const scene: Scene = {
         {
           id: "sharp-confrontation",
           label: "Confront them sharply",
+          description:
+            "Make hiding the mistake more serious than breaking the vial, trading warmth for immediate discipline.",
           endsScene: true,
           effects: [
             decreaseProperty("apprentice", "trust", "moderately"),

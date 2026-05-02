@@ -24,6 +24,35 @@ const scene: Scene = {
         "The apprentice turns the cup between both hands. Whatever they meant to say has waited through sweeping, shutters, and the first long quiet after closing.",
       choices: [
         {
+          id: "sit-beside-them",
+          label: "Sit beside them at the counter",
+          description:
+            "Make the quiet less formal before deciding how much of the evening you can give.",
+          nextBeatId: "what-they-ask"
+        },
+        {
+          id: "keep-sorting",
+          label: "Keep sorting bottles while they speak",
+          description:
+            "Leave the door open for conversation without fully stepping away from the work.",
+          nextBeatId: "what-they-ask"
+        },
+        {
+          id: "ask-if-urgent",
+          label: "Ask if this needs tonight",
+          description:
+            "Find out whether the unfinished thought is a wound, a worry, or a need for company.",
+          nextBeatId: "what-they-ask"
+        }
+      ]
+    },
+    "what-they-ask": {
+      id: "what-they-ask",
+      title: "What They Ask",
+      text:
+        "At first it is only a story from before they came to the shop: a room where they were always corrected before they were heard. Then they look down at the tea and ask whether mistakes feel smaller after a person has somewhere to belong.",
+      choices: [
+        {
           id: "listen-closely",
           label: "Listen to the whole story",
           description: "Give the moment its full attention.",

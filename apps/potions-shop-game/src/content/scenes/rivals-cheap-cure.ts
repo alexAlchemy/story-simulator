@@ -37,6 +37,35 @@ const scene: Scene = {
         "The travelling seller's sign is bright, cheap, and placed close enough to your door to feel deliberate. Their cure may work. It may also be mostly coloured water.",
       choices: [
         {
+          id: "listen-to-pitch",
+          label: "Listen to the pitch",
+          description:
+            "Learn exactly what the rival is promising before you answer in public.",
+          nextBeatId: "crowd-compares"
+        },
+        {
+          id: "inspect-a-bottle",
+          label: "Inspect one of their bottles",
+          description:
+            "Look for evidence while the crowd watches how fair you are willing to be.",
+          nextBeatId: "crowd-compares"
+        },
+        {
+          id: "count-your-stock",
+          label: "Count what you can spare",
+          description:
+            "Check whether defending the shop could become a price war you can actually survive.",
+          nextBeatId: "crowd-compares"
+        }
+      ]
+    },
+    "crowd-compares": {
+      id: "crowd-compares",
+      title: "The Crowd Compares",
+      text:
+        "The rival promises fast relief for half your price. The liquid is thin but not obviously false, and the first customers are already comparing your window to their sign.",
+      choices: [
+        {
           id: "warn-honestly",
           label: "Warn customers honestly",
           description: "Name the risk without making it a duel.",

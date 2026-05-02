@@ -20,6 +20,35 @@ const scene: Scene = {
         "The neighbours stop talking too quickly. The shop has become a story at the well, and stories grow fastest when nobody answers them directly.",
       choices: [
         {
+          id: "ask-what-they-heard",
+          label: "Ask what they heard",
+          description:
+            "Pull the rumour into daylight before deciding whether to correct it or use it.",
+          nextBeatId: "well-story"
+        },
+        {
+          id: "draw-water-slowly",
+          label: "Draw water and listen",
+          description:
+            "Let the silence fill itself so you know which version of the shop has reached the well.",
+          nextBeatId: "well-story"
+        },
+        {
+          id: "greet-old-mara",
+          label: "Greet Old Mara first",
+          description:
+            "Find the friendliest witness before the story hardens around strangers.",
+          nextBeatId: "well-story"
+        }
+      ]
+    },
+    "well-story": {
+      id: "well-story",
+      title: "The Well Story",
+      text:
+        "The version at the well says your cures work, but only because you bargain with things under the floorboards. Old Mara snorts at that, then waits to see whether you will make the tale smaller, stranger, or communal.",
+      choices: [
+        {
           id: "answer-plainly",
           label: "Answer the rumours plainly",
           description: "Give the town fewer shadows to embroider.",

@@ -20,8 +20,39 @@ const scene: Scene = {
         "The hedge-witch smiles as if the silence was part of the gift. She admits the moonleaf was hers, and that she wanted to know what you do with kindness before it has terms.",
       choices: [
         {
+          id: "ask-why-test",
+          label: "Ask why she tested you",
+          description:
+            "Make her explain the judgment before you decide whether to invite more of it.",
+          nextBeatId: "terms-of-kindness"
+        },
+        {
+          id: "show-the-blue-thread",
+          label: "Show her the saved blue thread",
+          description:
+            "Answer her mystery with evidence that you noticed the hand behind the gift.",
+          nextBeatId: "terms-of-kindness"
+        },
+        {
+          id: "offer-tea-first",
+          label: "Offer tea before terms",
+          description:
+            "Try to turn a test into a visit before choosing what kind of relationship this becomes.",
+          nextBeatId: "terms-of-kindness"
+        }
+      ]
+    },
+    "terms-of-kindness": {
+      id: "terms-of-kindness",
+      title: "Terms of Kindness",
+      text:
+        "She says apprenticeships used to begin with riddles because clear bargains teach only caution. Then she glances at your shelves and admits caution is not a bad thing for a shop with rent due.",
+      choices: [
+        {
           id: "accept-mentor",
           label: "Accept her strange mentorship",
+          description:
+            "Take the stock and the relationship, while insisting that future lessons need cleaner terms.",
           endsScene: true,
           effects: [
             gainPropertyAmount("shop", "stock", 2),
@@ -43,6 +74,8 @@ const scene: Scene = {
         {
           id: "decline-test",
           label: "Decline the connection",
+          description:
+            "Keep authority over your threshold, even if refusing her costs standing and future help.",
           endsScene: true,
           effects: [
             increaseProperty("player", "ambition", "slightly"),

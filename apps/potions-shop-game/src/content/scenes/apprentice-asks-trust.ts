@@ -20,8 +20,39 @@ const scene: Scene = {
         "They ask for one hour at the counter while you work in the back room. The till, the bottles, and their hope all wait for your answer.",
       choices: [
         {
+          id: "ask-their-plan",
+          label: "Ask how they would handle a rush",
+          description:
+            "Let them show readiness before you decide whether trust means distance or guidance.",
+          nextBeatId: "bell-and-till"
+        },
+        {
+          id: "check-the-till",
+          label: "Check the till and common remedies",
+          description:
+            "Make the practical risks visible before their request becomes only an emotional one.",
+          nextBeatId: "bell-and-till"
+        },
+        {
+          id: "name-the-hour",
+          label: "Name what one hour means",
+          description:
+            "Put a clear boundary around the chance they are asking for.",
+          nextBeatId: "bell-and-till"
+        }
+      ]
+    },
+    "bell-and-till": {
+      id: "bell-and-till",
+      title: "Bell and Till",
+      text:
+        "They answer with more care than polish: three best-selling remedies, the price of each, and the promise to call you for anything bitter, blue, or bleeding. Outside, a customer shadow crosses the glass.",
+      choices: [
+        {
           id: "trust-counter",
           label: "Trust them with the counter",
+          description:
+            "Give them real responsibility and accept that a small mistake may be part of the lesson.",
           endsScene: true,
           effects: [
             gainPropertyAmount("shop", "coins", 5),
@@ -45,6 +76,8 @@ const scene: Scene = {
         {
           id: "supervise",
           label: "Supervise closely",
+          description:
+            "Protect the shop from preventable mistakes, even if the hour feels less like trust.",
           endsScene: true,
           effects: [
             gainPropertyAmount("shop", "coins", 4),

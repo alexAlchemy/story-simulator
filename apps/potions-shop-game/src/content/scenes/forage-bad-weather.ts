@@ -30,8 +30,39 @@ const scene: Scene = {
         "The shelves are thin, and the marsh path is shining with rain. Mooncap mushrooms bloom best in this weather, which feels like an accusation.",
       choices: [
         {
+          id: "check-shelf-gaps",
+          label: "Check which shelves are bare",
+          description:
+            "Measure the shortage before deciding whether the rain is worth answering.",
+          nextBeatId: "weather-deepens"
+        },
+        {
+          id: "watch-the-path",
+          label: "Watch the marsh path from the door",
+          description:
+            "Let the weather show its teeth before you choose who, if anyone, should go.",
+          nextBeatId: "weather-deepens"
+        },
+        {
+          id: "ask-apprentice-readiness",
+          label: "Ask if the apprentice knows mooncap",
+          description:
+            "Find out whether this can become training or whether the risk still belongs to you.",
+          nextBeatId: "weather-deepens"
+        }
+      ]
+    },
+    "weather-deepens": {
+      id: "weather-deepens",
+      title: "Weather Taking Its Due",
+      text:
+        "A cart wheel slips in the lane outside. The apprentice names mooncap's silver gills correctly, then hesitates over the poisonous lookalike. The shelves behind you answer with their own thin silence.",
+      choices: [
+        {
           id: "go-yourself",
           label: "Go yourself",
+          description:
+            "Spend your own strength to bring back the most stock and keep the dangerous lesson off someone else's shoulders.",
           endsScene: true,
           effects: [
             gainPropertyAmount("shop", "stock", 2),
@@ -53,6 +84,8 @@ const scene: Scene = {
         {
           id: "send-apprentice",
           label: "Send the apprentice with instructions",
+          description:
+            "Accept a smaller haul and some risk so the apprentice learns the work beyond the counter.",
           endsScene: true,
           effects: [
             gainPropertyAmount("shop", "stock", 1),
@@ -74,6 +107,8 @@ const scene: Scene = {
         {
           id: "stay-in",
           label: "Stay in and preserve your strength",
+          description:
+            "Leave the shelves thin rather than turn bad weather into another debt your body must pay.",
           endsScene: true,
           effects: [
             decreaseProperty("player", "fatigue", "slightly"),
