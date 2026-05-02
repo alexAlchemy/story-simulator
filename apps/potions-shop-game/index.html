@@ -140,10 +140,11 @@
                   <span class="scene-type" x-text="selectedScene.type"></span>
                   <h2 x-text="selectedScene.title"></h2>
                 </div>
-                <p x-text="selectedScene.description"></p>
+                <h3 x-show="selectedBeat?.title" x-text="selectedBeat?.title"></h3>
+                <p x-text="selectedSceneText"></p>
 
                 <div class="choices">
-                  <template x-for="choice in selectedScene.choices" :key="choice.id">
+                  <template x-for="choice in selectedSceneChoices" :key="choice.id">
                     <button type="button" @click="choose(choice.id)">
                       <strong x-text="choice.label"></strong>
                       <span x-show="choice.description" x-text="choice.description"></span>
@@ -229,10 +230,11 @@
               <span class="scene-type" x-text="selectedScene.type"></span>
               <h2 x-text="selectedScene.title"></h2>
             </div>
-            <p x-text="selectedScene.description"></p>
+            <h3 x-show="selectedBeat?.title" x-text="selectedBeat?.title"></h3>
+            <p x-text="selectedSceneText"></p>
 
             <div class="choices">
-              <template x-for="choice in selectedScene.choices" :key="choice.id">
+              <template x-for="choice in selectedSceneChoices" :key="choice.id">
                 <button type="button" @click="choose(choice.id)">
                   <strong x-text="choice.label"></strong>
                   <span x-show="choice.description" x-text="choice.description"></span>

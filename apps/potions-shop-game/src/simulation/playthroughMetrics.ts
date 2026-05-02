@@ -2,6 +2,7 @@ import type {
   GameContent,
   GameState,
   Scene,
+  BeatChoice,
   SceneChoice
 } from "@aphebis/core";
 import { createInitialState } from "../content/initialState";
@@ -9,6 +10,7 @@ import { advanceDay } from "@aphebis/core";
 import { resolveChoice } from "@aphebis/core";
 import { getVisibleScenes } from "@aphebis/core";
 import { getNumericProperty } from "@aphebis/core";
+import { getSceneChoices } from "@aphebis/core";
 
 export type StateMetricSnapshot = {
   resources: {
@@ -101,8 +103,11 @@ function simulatePlaythroughRun(
       continue;
     }
 
-    const scene = pickOne(visibleScenes, rng);
-    const choice = pickOne(scene.choices, rng);
+    const scene = state.activeScene
+      ? visibleScenes.find((candidate) => candidate.id === state.activeScene?.sceneId) ??
+        visibleScenes[0]
+      : pickOne(visibleScenes, rng);
+    const choice = pickOne(getSceneChoices(scene, state.activeScene), rng);
 
     state = resolveChoice(state, scene.id, choice.id, content);
     turn += 1;
@@ -125,7 +130,7 @@ function snapshotState(
   state: GameState,
   turn: number,
   scene?: Scene,
-  choice?: SceneChoice
+  choice?: SceneChoice | BeatChoice
 ): TurnSnapshot {
   return {
     turn,

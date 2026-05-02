@@ -71,6 +71,13 @@ function cloneState(state: GameState): GameState {
       )
     },
     sceneTableau: [...state.sceneTableau],
+    activeScene: state.activeScene
+      ? {
+          ...state.activeScene,
+          localState: { ...state.activeScene.localState },
+          choicesMade: [...state.activeScene.choicesMade]
+        }
+      : undefined,
     resolvedScenes: [...state.resolvedScenes],
     log: [...state.log]
   };

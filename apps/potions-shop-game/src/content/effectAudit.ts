@@ -1,4 +1,5 @@
 import type { Effect, GameContent, GameState, Scene } from "@aphebis/core";
+import { getAllSceneChoices } from "@aphebis/core";
 
 export type AuditedEffectKind =
   | "property";
@@ -63,10 +64,10 @@ export function auditSceneChoiceEffects(
   }
 
   for (const scene of Object.values(content.scenes)) {
-    for (const choice of scene.choices) {
+    for (const choice of getAllSceneChoices(scene)) {
       totalChoices += 1;
 
-      for (const effect of choice.effects) {
+      for (const effect of choice.effects ?? []) {
         const target = getAuditedEffectTarget(effect);
 
         if (!target) {

@@ -1246,7 +1246,6 @@ type Scene = {
   title: string;
   type: "customer" | "staff" | "shop" | "town" | "reflection" | "brew";
   description: string;
-  coreQuestion: string;
   boons?: string[];
   banes?: string[];
   choices: SceneChoice[];

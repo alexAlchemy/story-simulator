@@ -35,7 +35,7 @@ describe("sceneAvailability", () => {
   it("reveals the forage scene when stock pressure becomes high enough", () => {
     let state = createInitialState();
 
-    state = resolveChoice(state, "desperate-stablehand", "free-draught", content);
+    state = helpStablehand(state);
     state = advanceDay(state, content);
 
     expect(getVisibleScenes(state, content).map((scene) => scene.id)).toContain(
@@ -83,7 +83,7 @@ describe("sceneAvailability", () => {
   it("requires the stablehand-helped story fact before debt-called-in can appear", () => {
     let state = createInitialState();
 
-    state = resolveChoice(state, "desperate-stablehand", "free-draught", content);
+    state = helpStablehand(state);
     state = advanceDay(state, content);
     state = advanceDay(state, content);
     state = advanceDay(state, content);
@@ -146,3 +146,9 @@ describe("sceneAvailability", () => {
     ]);
   });
 });
+
+function helpStablehand(state: ReturnType<typeof createInitialState>) {
+  state = resolveChoice(state, "desperate-stablehand", "ask-what-happened", content);
+  state = resolveChoice(state, "desperate-stablehand", "need-only-fact", content);
+  return resolveChoice(state, "desperate-stablehand", "free-draught", content);
+}

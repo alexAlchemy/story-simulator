@@ -2,6 +2,7 @@ import type {
   Effect,
   GameContent,
   GameState,
+  BeatChoice,
   Scene,
   SceneChoice
 } from "@aphebis/core";
@@ -10,6 +11,7 @@ import { advanceDay } from "@aphebis/core";
 import { resolveChoice } from "@aphebis/core";
 import { getVisibleScenes } from "@aphebis/core";
 import { getBooleanProperty } from "@aphebis/core";
+import { getAllSceneChoices, getSceneChoices } from "@aphebis/core";
 
 export type StoryFactEffectDefinition = {
   sceneId: string;
@@ -78,8 +80,8 @@ export function collectStoryFactEffectDefinitions(
   const definitions: StoryFactEffectDefinition[] = [];
 
   for (const scene of Object.values(content.scenes)) {
-    for (const choice of scene.choices) {
-      for (const effect of choice.effects) {
+    for (const choice of getAllSceneChoices(scene)) {
+      for (const effect of choice.effects ?? []) {
         if (effect.kind === "setProperty" && effect.entityId === "story") {
           definitions.push({
             sceneId: scene.id,
@@ -115,8 +117,8 @@ function simulateRun(
       continue;
     }
 
-    const scene = chooseScene(visibleScenes, target);
-    const choice = chooseChoice(scene, target);
+    const scene = chooseScene(visibleScenes, target, state);
+    const choice = chooseChoice(scene, target, state);
 
     selectedChoices.push({
       sceneId: scene.id,
@@ -125,7 +127,7 @@ function simulateRun(
     });
 
     factEvents.push(
-      ...getSetStoryFactEffects(choice.effects).map((effect) => ({
+      ...getSetStoryFactEffects(choice.effects ?? []).map((effect) => ({
         runId,
         day: state.day,
         sceneId: scene.id,
@@ -188,15 +190,32 @@ function buildStoryFactSimulationReport(
   };
 }
 
-function chooseScene(visibleScenes: Scene[], target: ChoiceTarget): Scene {
+function chooseScene(
+  visibleScenes: Scene[],
+  target: ChoiceTarget,
+  state: GameState
+): Scene {
+  if (state.activeScene) {
+    return (
+      visibleScenes.find((scene) => scene.id === state.activeScene?.sceneId) ??
+      visibleScenes[0]
+    );
+  }
+
   return (
     visibleScenes.find((scene) => scene.id === target.sceneId) ?? visibleScenes[0]
   );
 }
 
-function chooseChoice(scene: Scene, target: ChoiceTarget): SceneChoice {
+function chooseChoice(
+  scene: Scene,
+  target: ChoiceTarget,
+  state: GameState
+): SceneChoice | BeatChoice {
+  const choices = getSceneChoices(scene, state.activeScene);
+
   if (scene.id === target.sceneId) {
-    const targetedChoice = scene.choices.find(
+    const targetedChoice = choices.find(
       (choice) => choice.id === target.choiceId
     );
 
@@ -205,7 +224,7 @@ function chooseChoice(scene: Scene, target: ChoiceTarget): SceneChoice {
     }
   }
 
-  return scene.choices[0];
+  return choices[0];
 }
 
 function getSetStoryFactEffects(

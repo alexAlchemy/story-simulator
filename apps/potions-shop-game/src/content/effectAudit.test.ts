@@ -13,17 +13,17 @@ describe("scene choice effect audit", () => {
 
     expect(audit).toMatchObject({
       totalScenes: 14,
-      totalChoices: 40,
-      totalAuditedEffects: 131
+      totalChoices: 50,
+      totalAuditedEffects: 139
     });
 
     expect(audit.targets.find((target) => target.label === "player.compassion")).toMatchObject({
-      increments: 7,
+      increments: 8,
       decrements: 3,
-      totalDelta: 0.6,
-      totalAbsoluteDelta: 1.2,
-      averageDelta: 0.06,
-      averageAbsoluteDelta: 0.12
+      totalDelta: 0.7,
+      totalAbsoluteDelta: 1.3,
+      averageDelta: 0.064,
+      averageAbsoluteDelta: 0.118
     });
     expect(audit.targets.find((target) => target.label === "player.ambition")).toMatchObject({
       increments: 7,
@@ -49,16 +49,16 @@ describe("scene choice effect audit", () => {
       averageAbsoluteDelta: 0.1
     });
     expect(audit.targets.find((target) => target.label === "apprentice.confidence")).toMatchObject({
-      increments: 3,
+      increments: 4,
       decrements: 2,
-      totalChanges: 5,
-      totalDelta: 0.3
+      totalChanges: 6,
+      totalDelta: 0.4
     });
     expect(audit.targets.find((target) => target.label === "shop.goodwill")).toMatchObject({
-      increments: 7,
+      increments: 8,
       decrements: 3,
-      totalChanges: 10,
-      totalDelta: 0.5
+      totalChanges: 11,
+      totalDelta: 0.6
     });
     expect(audit.targets.find((target) => target.label === "town.gossipHeat")).toMatchObject({
       increments: 5,

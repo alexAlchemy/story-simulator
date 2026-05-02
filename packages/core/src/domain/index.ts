@@ -20,15 +20,23 @@ export type {
   SpectrumPropertyDefinition
 } from "./properties";
 export type {
+  ActiveSceneSession,
   GameContent,
   GameLogEntry,
   GameState
 } from "./game/types";
 export type {
+  BeatChoice,
+  LocalAvailability,
+  LocalCondition,
+  LocalEffect,
+  LocalStateValue,
   SceneAvailability,
   SceneAvailabilityCondition,
+  SceneBeat,
   Scene,
   SceneChoice,
+  SceneLocalProperty,
   SceneNumericComparison,
   SceneSemanticComparison,
   SceneType

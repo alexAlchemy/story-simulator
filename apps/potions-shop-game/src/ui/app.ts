@@ -2,11 +2,12 @@ import Alpine from "alpinejs";
 import "../ui/styles.css";
 import { content } from "../content/scenes";
 import { createInitialState } from "../content/initialState";
-import type { GameState, Scene } from "@aphebis/core";
+import type { BeatChoice, GameState, Scene, SceneBeat, SceneChoice } from "@aphebis/core";
 import { advanceDay } from "@aphebis/core";
 import { buildEnding, type EndingSummary } from "../engine/buildEnding";
 import { resolveChoice } from "@aphebis/core";
 import { getVisibleScenes } from "@aphebis/core";
+import { getCurrentBeat, getSceneChoices, isBeatScene } from "@aphebis/core";
 import {
   getEntityCards,
   getResourceRows,
@@ -37,6 +38,9 @@ type AppModel = {
   advance: () => void;
   visibleScenes: Scene[];
   selectedScene: Scene | null;
+  selectedBeat: SceneBeat | null;
+  selectedSceneText: string;
+  selectedSceneChoices: Array<SceneChoice | BeatChoice>;
   resourceRows: DashboardRow[];
   valueRows: DashboardRow[];
   standingRows: DashboardRow[];
@@ -88,6 +92,11 @@ function createAppModel(): AppModel {
       }
 
       this.state = resolveChoice(this.state, this.selectedSceneId, choiceId, content);
+      if (this.state.activeScene) {
+        this.selectedSceneId = this.state.activeScene.sceneId;
+        return;
+      }
+
       this.selectedSceneId = this.visibleScenes[0]?.id ?? null;
       if (this.activeTab === "scenes") {
         this.sceneBrowserView = "list";
@@ -117,6 +126,23 @@ function createAppModel(): AppModel {
         return null;
       }
       return this.visibleScenes.find((scene) => scene.id === this.selectedSceneId) ?? null;
+    },
+    get selectedBeat() {
+      if (!this.selectedScene || !isBeatScene(this.selectedScene)) {
+        return null;
+      }
+
+      return getCurrentBeat(this.selectedScene, this.state.activeScene) ?? null;
+    },
+    get selectedSceneText() {
+      return this.selectedBeat?.text ?? this.selectedScene?.description ?? "";
+    },
+    get selectedSceneChoices() {
+      if (!this.selectedScene) {
+        return [];
+      }
+
+      return getSceneChoices(this.selectedScene, this.state.activeScene);
     },
     get resourceRows() {
       return getResourceRows(this.state);
