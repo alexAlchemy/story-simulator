@@ -20,6 +20,10 @@ efficiency, quality, and unlocks are useful. The goal is to connect those forms
 of progression to Aphebis's dramatic structure so that getting better at the shop
 also changes what kinds of scenes can happen.
 
+For the distinction between baseline victory, end states, and optional
+high-skill goals, see
+[Victory, Endings & Aspirational Routes](./victory-endings-and-routes.md).
+
 ## Progression Principles
 
 Good progression for this system should be:
