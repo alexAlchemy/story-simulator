@@ -4,6 +4,7 @@ import { createInitialState } from "../content/initialState";
 import { resolveChoice } from "@aphebis/core";
 import {
   getBooleanProperty,
+  getSceneChoices,
   getNumericProperty
 } from "@aphebis/core";
 
@@ -67,5 +68,58 @@ describe("resolveChoice", () => {
     expect(getBooleanProperty(next, "story", "stablehand_grateful")).toBe(true);
     expect(next.sceneTableau).not.toContain("desperate-stablehand");
     expect(next.resolvedScenes).toContain("desperate-stablehand");
+  });
+
+  it("uses local state to unlock later beat choices", () => {
+    const started = resolveChoice(
+      createInitialState(),
+      "desperate-stablehand",
+      "ask-what-happened",
+      content
+    );
+    const complicated = resolveChoice(
+      started,
+      "desperate-stablehand",
+      "need-only-fact",
+      content
+    );
+    const scene = content.scenes["desperate-stablehand"];
+
+    expect(
+      getSceneChoices(scene, complicated.activeScene).map((choice) => choice.id)
+    ).toContain("written-guarantee");
+  });
+
+  it("keeps conditional beat choices hidden when local state does not satisfy them", () => {
+    const started = resolveChoice(
+      createInitialState(),
+      "desperate-stablehand",
+      "call-apprentice",
+      content
+    );
+    const complicated = resolveChoice(
+      started,
+      "desperate-stablehand",
+      "ask-apprentice-stock",
+      content
+    );
+    const scene = content.scenes["desperate-stablehand"];
+
+    expect(
+      getSceneChoices(scene, complicated.activeScene).map((choice) => choice.id)
+    ).not.toContain("written-guarantee");
+  });
+
+  it("rejects resolving another scene while a beat scene is active", () => {
+    const started = resolveChoice(
+      createInitialState(),
+      "desperate-stablehand",
+      "ask-what-happened",
+      content
+    );
+
+    expect(() =>
+      resolveChoice(started, "apprentice-hiding-mistake", "ask-gently", content)
+    ).toThrow('Scene "desperate-stablehand" is already active');
   });
 });

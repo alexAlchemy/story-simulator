@@ -32,6 +32,10 @@ export function resolveChoice(
     throw new Error(`Scene is not currently available: ${sceneId}`);
   }
 
+  if (state.activeScene && state.activeScene.sceneId !== sceneId) {
+    throw new Error(`Scene "${state.activeScene.sceneId}" is already active`);
+  }
+
   if (isBeatScene(scene)) {
     return resolveBeatChoice(state, sceneId, choiceId, content);
   }

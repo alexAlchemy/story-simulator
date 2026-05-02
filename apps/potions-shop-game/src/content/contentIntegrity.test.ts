@@ -75,19 +75,35 @@ describe("content integrity", () => {
       expect(scene.startBeatId, scene.id).toBeTruthy();
       expect(scene.beats[scene.startBeatId ?? ""], scene.id).toBeTruthy();
 
-      for (const beat of Object.values(scene.beats)) {
+      for (const [beatId, beat] of Object.entries(scene.beats)) {
+        expect(beat.id, `${scene.id}:${beatId}`).toBe(beatId);
         expect(beat.choices.length, `${scene.id}:${beat.id}`).toBeGreaterThan(0);
 
         for (const choice of beat.choices) {
+          const advancesBeat = Boolean(choice.nextBeatId);
+          const endsScene = choice.endsScene === true;
+          expect(
+            advancesBeat !== endsScene,
+            `${scene.id}:${choice.id} must either advance to a beat or end the scene`
+          ).toBe(true);
+
           if (choice.nextBeatId) {
             expect(scene.beats[choice.nextBeatId], `${scene.id}:${choice.id}`).toBeTruthy();
           }
 
           for (const effect of choice.localEffects ?? []) {
             expect(scene.localProperties?.[effect.key], `${scene.id}:${choice.id}`).toBeTruthy();
+            if (effect.kind === "changeLocal") {
+              expect(
+                typeof scene.localProperties?.[effect.key]?.initial,
+                `${scene.id}:${choice.id}:${effect.key}`
+              ).toBe("number");
+            }
           }
         }
       }
+
+      expect(getUnreachableBeatIds(scene)).toEqual([]);
     }
   });
 
@@ -100,3 +116,29 @@ describe("content integrity", () => {
     expect(issues).toEqual([]);
   });
 });
+
+function getUnreachableBeatIds(scene: (typeof scenes)[string]): string[] {
+  if (!scene.beats || !scene.startBeatId) {
+    return [];
+  }
+
+  const reachable = new Set<string>();
+  const pending = [scene.startBeatId];
+
+  while (pending.length > 0) {
+    const beatId = pending.pop();
+    if (!beatId || reachable.has(beatId)) {
+      continue;
+    }
+
+    reachable.add(beatId);
+
+    for (const choice of scene.beats[beatId]?.choices ?? []) {
+      if (choice.nextBeatId) {
+        pending.push(choice.nextBeatId);
+      }
+    }
+  }
+
+  return Object.keys(scene.beats).filter((beatId) => !reachable.has(beatId));
+}
