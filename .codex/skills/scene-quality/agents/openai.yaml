@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scene Quality"
+  short_description: "Audit and improve authored game scenes"
+  default_prompt: "Use $scene-quality to audit this Scene object for structure, consequences, and prose quality."

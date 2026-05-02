@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "audit:scene": "vitest run src/content/sceneQualityAuditCli.test.ts --reporter=verbose --silent=false",
+    "audit:scenes": "vitest run src/content/sceneQualityAudit.test.ts",
     "test": "vitest run",
     "preview": "vite preview"
   },
